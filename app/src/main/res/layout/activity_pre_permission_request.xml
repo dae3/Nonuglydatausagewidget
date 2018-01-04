@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.dever.nonUglyDataUsageWidget.PrePermissionRequestActivity"
+    tools:layout_editor_absoluteY="81dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtUsagePermission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/why_permission_text"
+            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+        <TextView
+            android:id="@+id/txtPhonePermission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/why_scary_phone_permission"
+            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onContinueClick"
+            android:text="@string/btnContinueCaption" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

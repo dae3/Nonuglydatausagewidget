@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NUD</string>
+    <string name="why_permission_text">This is why we need this scary-sounding permission: because of the things.</string>
+    <string name="btnContinueCaption">Continue</string>
+    <string name="have_permissions_text">Yay we have the things!</string>
+    <string name="havent_permission_text">you need to give me the things</string>
+    <string name="why_scary_phone_permission">This is why we need the scary phone permission</string>
+</resources>
