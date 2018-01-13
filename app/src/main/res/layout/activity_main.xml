@@ -29,6 +29,13 @@
             android:textAlignment="center"
             tools:layout_editor_absoluteX="163dp"
             tools:layout_editor_absoluteY="324dp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onButtonClick"
+            android:text="Button" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

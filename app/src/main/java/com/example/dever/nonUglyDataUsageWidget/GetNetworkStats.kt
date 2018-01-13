@@ -7,12 +7,16 @@ import android.app.usage.NetworkStatsManager
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager.TYPE_MOBILE
+import android.preference.PreferenceManager
 import android.telephony.TelephonyManager
+import android.util.Log
+import java.text.SimpleDateFormat
 
-class GetNetworkStats(private var context : Context) {
+class GetNetworkStats(val interval: NetworkStatsInterval, private var context: Context) {
 
     private var nsm : NetworkStatsManager = context.getSystemService(NetworkStatsManager::class.java)
-    private lateinit var subscriberId : String
+    private var subscriberId : String
+    private var prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     init {
         if (!PermissionChecker.havePhoneStatePermission(context)) context.startActivity(Intent(context, PrePermissionRequestActivity::class.java))
@@ -28,7 +32,10 @@ class GetNetworkStats(private var context : Context) {
     }
 
     fun getNetworkStats() : Long {
-        var bucket = nsm.querySummaryForDevice(TYPE_MOBILE, subscriberId, Long.MIN_VALUE, Long.MAX_VALUE)
+        val df = SimpleDateFormat()
+        Log.d(context.packageName, interval.toString())
+
+        val bucket = nsm.querySummaryForDevice(TYPE_MOBILE, subscriberId, interval.startDate.timeInMillis, interval.endDate.timeInMillis)
         return bucket.rxBytes + bucket.txBytes
     }
 }

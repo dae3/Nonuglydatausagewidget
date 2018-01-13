@@ -30,7 +30,7 @@ class PrePermissionRequestActivity : Activity() {
         mTextViewPhone.text = if (PermissionChecker.havePhoneStatePermission(this)) "good" else "bad"
     }
 
-    fun onContinueClick(v: View) {
+    fun onContinueClick(@Suppress("UNUSED_PARAMETER") v: View) {
         if (!PermissionChecker.haveUsagePermission(this)) startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         if (!PermissionChecker.havePhoneStatePermission(this)) if (!PermissionChecker.havePhoneStatePermission(this)) this.requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), MYPERMREQ_READ_PHONE_STATE)
     }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/prefs_categorytitle_billingcycle">
+
+        <ListPreference
+            android:title="@string/prefs_itemtitle_intervaltype"
+            android:defaultValue="1"
+            android:key="@string/prefs_itemkey_intervaltype"
+            android:entries="@array/prefs_entries_intervaltype"
+            android:entryValues="@array/prefs_entryvalues_intervaltype" />
+
+        <EditTextPreference
+            android:title="@string/prefs_title_startdate"
+            android:defaultValue="1"
+            android:key="@string/prefs_key_billingcycle_startdate"
+            />
+
+
+    </PreferenceCategory>
+</PreferenceScreen>

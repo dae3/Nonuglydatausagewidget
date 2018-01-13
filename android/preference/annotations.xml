@@ -1,0 +1,5 @@
+<root>
+    <item name='android.preference.DialogPreference'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>
