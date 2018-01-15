@@ -19,5 +19,7 @@
     <string name="prefs_key_billingcycle_duration">prefs_billingcycle_duration</string>
     <string name="prefs_itemtitle_intervaltype">Interval type</string>
     <string name="prefs_itemkey_intervaltype">prefs_itemkey_intervaltype</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
 
