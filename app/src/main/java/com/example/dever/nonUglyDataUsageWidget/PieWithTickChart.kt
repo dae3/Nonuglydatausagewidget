@@ -18,6 +18,7 @@ class PieWithTickChart(val stats : NetworkStatsInterval, val width : Int, val he
     // ugh, a bit odd but kinda elegant at the same time
     //  canvas is declared as nullable because bitmap's getter seems to be called during the constructor
     //  by the time the constructor's done canvas is non-null
+
     var bitmap : Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444)
         get() {
             canvas?.drawColor(Color.TRANSPARENT)
