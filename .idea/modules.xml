@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://C:\Users\daniel.everett\AndroidStudioProjects\nudw\Nonuglydatausagewidget.iml" filepath="C:\Users\daniel.everett\AndroidStudioProjects\nudw\Nonuglydatausagewidget.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\daniel.everett\AndroidStudioProjects\nudw\app\app.iml" filepath="C:\Users\daniel.everett\AndroidStudioProjects\nudw\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/nudw.iml" filepath="$PROJECT_DIR$/nudw.iml" />
     </modules>
   </component>

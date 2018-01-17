@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:onClick="onButtonClick"
             android:text="Button" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

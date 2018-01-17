@@ -25,7 +25,7 @@
         <activity android:name=".PrePermissionRequestActivity" />
         <activity android:name=".PreferencesActivity" />
 
-        <receiver android:name="com.example.dever.non_uglydatausagewidget.NewAppWidget">
+        <receiver android:name=".NewAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
