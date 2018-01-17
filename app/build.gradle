@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.dever.non_uglydatausagewidget"
+        applicationId "com.example.dever.nonUglyDataUsageWidget"
         minSdkVersion 23
         targetSdkVersion 26
         versionCode 1
