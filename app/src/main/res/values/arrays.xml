@@ -37,6 +37,6 @@
         <item>From a set day every month</item>
     </string-array>
     <string-array name="prefs_entryvalues_intervaltype">
-        <item>INTERVALTYPE_DAY_N_OF_MONTH</item>
+        <item>DayNOfMonthNetworkStatsInterval</item>
     </string-array>
 </resources>

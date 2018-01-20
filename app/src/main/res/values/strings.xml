@@ -12,9 +12,8 @@
     <string name="prefs_title_duration">Duration</string>
     <string name="prefs_categorytitle_billingcycle">Billing cycle</string>
     <string name="prefs_dialogtitle_startdate">Select start day</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="prefs_key_billingcycle_startday">prefs_billingcycle_startday</string>
     <string name="prefs_key_billingcycle_startdate">prefs_billingcycle_startdate</string>
     <string name="prefs_key_billingcycle_duration">prefs_billingcycle_duration</string>
     <string name="prefs_itemtitle_intervaltype">Interval type</string>

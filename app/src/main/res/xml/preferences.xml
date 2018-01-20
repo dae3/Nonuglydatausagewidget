@@ -12,7 +12,7 @@
         <EditTextPreference
             android:title="@string/prefs_title_startdate"
             android:defaultValue="1"
-            android:key="@string/prefs_key_billingcycle_startdate"
+            android:key="@string/prefs_key_billingcycle_startday"
             />
 
 
