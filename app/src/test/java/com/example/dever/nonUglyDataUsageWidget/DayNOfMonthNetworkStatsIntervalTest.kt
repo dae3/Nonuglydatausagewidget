@@ -30,8 +30,8 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
     private val testDisplayName = "(today=${df.format(testToday.timeInMillis)}, Nth=$testDayN)"
 
     companion object GenerateParameters {
-        private val LEAPYEAR = 2020
-        private val NONLEAPYEAR = 2018
+        private val NONLEAPYEAR = 2018 // just because that's now
+        private val LEAPYEAR = 2020 // next leap year
         private val FIXEDDAY = 15
 
         @Parameters(name = "{0},{1}")
@@ -93,24 +93,62 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
 
     @Test
     fun endDayIsCorrect() {
-        // if Nth day is 1 then end day is last day of current month, otherwise N-1
+        // if Nth day is 1 then end day is last day of current month,
+        // if N > actualMaximum for month then end day is actualMaximum
+        // otherwise N-1
         assertThat("end day is wrong $testDisplayName", interval.endDate.get(Calendar.DAY_OF_MONTH), `is`(
-                if (testDayN == 1) {
-                    testToday.getActualMaximum(Calendar.DAY_OF_MONTH)
-                } else {
-                    testDayN - 1
-                })
+                if (testDayN == 1) testToday.getActualMaximum(Calendar.DAY_OF_MONTH)
+                else if (testDayN > testToday.getActualMaximum(Calendar.DAY_OF_MONTH)) testToday.getActualMaximum(Calendar.DAY_OF_MONTH)
+                else testDayN-1
+        ))
+    }
+
+    @Test
+    fun endYearIsCorrect() {
+        // end year is this year unless current month is December and today >= Nth and N <> 1
+        assertThat(
+                "end year wrong $testDisplayName",
+                interval.endDate.get(Calendar.YEAR),
+                `is`(
+                        if (testToday.get(Calendar.MONTH) == Calendar.DECEMBER
+                                && testToday.get(Calendar.DAY_OF_MONTH) >= testDayN
+                                && testDayN > 1) {
+                        testToday.add(Calendar.YEAR, 1)
+                        testToday.get(Calendar.YEAR)
+                        } else testToday.get(Calendar.YEAR)
+                )
         )
     }
 
-//    @Test
-//    fun endYearIsCorrect() {
-//        // end year is this year unless current month is December and Nth <> 1
-//        var expectedYear =
-//                if (testToday.get(Calendar.MONTH) == Calendar.DECEMBER && testDayN > testToday.getActualMinimum(Calendar.DAY_OF_MONTH)) {
-//                    testToday.add(Calendar.YEAR, 1)
-//                    testToday.get(Calendar.YEAR)
-//                } else testToday.get(Calendar.YEAR)
-//        assertThat("end year wrong $testDisplayName", expectedYear, `is`(interval.endDate.get(Calendar.YEAR)))
-//    }
+    @Test
+    fun startYearIsCorrect() {
+        // start year is this year unless current month is January and and Nth < today
+        assertThat(
+                "start year wrong $testDisplayName",
+                interval.startDate.get(Calendar.YEAR),
+                `is`(
+                        if (testToday.get(Calendar.MONTH) == Calendar.JANUARY
+                                && testDayN > testToday.get(Calendar.DAY_OF_MONTH)
+                                && testDayN < testToday.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+                            testToday.add(Calendar.YEAR, -1)
+                            testToday.get(Calendar.YEAR)
+                        } else testToday.get(Calendar.YEAR)
+
+                    )
+        )
+    }
+
+    @Test
+    fun startAndEndHaveMidnightTime() {
+        assertThat("times aren't midnight $testDisplayName",
+                interval.startDate.get(Calendar.HOUR) == 0 &&
+                        interval.startDate.get(Calendar.MINUTE) == 0 &&
+                        interval.startDate.get(Calendar.SECOND) == 0 &&
+                        interval.startDate.get(Calendar.MILLISECOND) == 0 &&
+                        interval.endDate.get(Calendar.HOUR) == 0 &&
+                        interval.endDate.get(Calendar.MINUTE) == 0 &&
+                        interval.endDate.get(Calendar.SECOND) == 0 &&
+                        interval.endDate.get(Calendar.MILLISECOND) == 0
+        )
+    }
 }

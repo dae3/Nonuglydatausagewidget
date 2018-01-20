@@ -43,13 +43,7 @@ class DayNOfMonthNetworkStatsInterval(today: Calendar, dayOfMonth: Int) : Networ
                     if (today.get(Calendar.MONTH) == Calendar.DECEMBER) Calendar.JANUARY else today.get(Calendar.MONTH)+1,
                     dayOfMonth-1
             )
-            /*mStartDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            mEndDate.add(Calendar.MONTH, 1)
-            mEndDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            mEndDate.add(Calendar.DAY_OF_MONTH, -1)*/
         }
-
-
     }
 
     override var startDate: Calendar = GregorianCalendar()
