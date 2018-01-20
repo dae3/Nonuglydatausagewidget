@@ -1,11 +1,10 @@
 package com.example.dever.nonUglyDataUsageWidget
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import java.text.NumberFormat
@@ -18,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private var nf = NumberFormat.getNumberInstance()
 //    private lateinit var stateInterval: NetworkStatsInterval
     private lateinit var prefs : SharedPreferences
+    private lateinit var stats : GetNetworkStats
 //    private var myResources = getResources()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         txtDataUsed = findViewById(R.id.txtDataUsed)
         txtInterval = findViewById(R.id.txtInterval)
-        prefs = getSharedPreferences(this.packageName, MODE_PRIVATE)
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        stats = GetNetworkStats(this)
     }
 
-    @SuppressLint("ResourceType")
     override fun onResume() {
         super.onResume()
 
@@ -36,17 +36,15 @@ class MainActivity : AppCompatActivity() {
         if (!(PermissionChecker.haveUsagePermission(this) || !PermissionChecker.havePhoneStatePermission(this)))
             startActivity(Intent(this, PrePermissionRequestActivity::class.java))
         else {
-            val dayOfMonth = prefs.getInt(
-                    resources.getString(R.string.prefs_key_billingcycle_startday), // TODO should these be R.string or R.id?
-                    1
-            )
-            Log.d(this.packageName, "dom is $dayOfMonth")
             var stateInterval = DayNOfMonthNetworkStatsInterval(
                     today = GregorianCalendar(),
-                    dayOfMonth = dayOfMonth
+                    dayOfMonth = prefs.getString(
+                            resources.getString(R.string.prefs_key_billingcycle_startday), // TODO should these be R.string or R.id?
+                            "1"
+                    ).toInt()
             )
 
-            txtDataUsed.text = "${nf.format(GetNetworkStats(stateInterval, this).getNetworkStats().toFloat() / 1024 / 1024)} MB"
+            txtDataUsed.text = "${nf.format(stats.getNetworkStats(stateInterval).toFloat() / 1024 / 1024)} MB"
             txtInterval.text = "$stateInterval"
         }
     }
