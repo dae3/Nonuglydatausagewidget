@@ -12,23 +12,20 @@ import android.support.v4.content.ContextCompat
 object PermissionChecker {
 //    private var havePhoneStatePermission = false
 
-     fun haveUsagePermission(context : Context): Boolean {
+    fun haveUsagePermission(context: Context): Boolean {
         // need to use AppOpsManager for this, checkSelfPermission always returns false
-        var result = false
         val aom = context.getSystemService(APP_OPS_SERVICE) as AppOpsManager
-        when (aom.checkOp(OPSTR_GET_USAGE_STATS, Process.myUid(), context.packageName)) {
-            MODE_DEFAULT -> {
-                // API doco suggests this *can* happen but I can't get test coverage
-                result = ContextCompat.checkSelfPermission(context, PACKAGE_USAGE_STATS) == PERMISSION_GRANTED
-            }
-            MODE_ALLOWED -> result = true
-            MODE_ERRORED -> result = false
-            MODE_IGNORED -> result = false
-        }
-        return result
-     }
 
-    fun havePhoneStatePermission(context : Context): Boolean {
+        return when (aom.checkOp(OPSTR_GET_USAGE_STATS, Process.myUid(), context.packageName)) {
+        // API doco suggests MODE_DEFAULT *can* happen but not clear how or when
+            MODE_DEFAULT -> ContextCompat.checkSelfPermission(context, PACKAGE_USAGE_STATS) == PERMISSION_GRANTED
+            MODE_ALLOWED -> true
+            MODE_ERRORED, MODE_IGNORED -> false
+            else -> false
+        }
+    }
+
+    fun havePhoneStatePermission(context: Context): Boolean {
         return context.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PERMISSION_GRANTED
     }
 }
