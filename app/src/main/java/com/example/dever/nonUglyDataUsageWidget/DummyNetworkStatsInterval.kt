@@ -1,6 +1,6 @@
 package com.example.dever.nonUglyDataUsageWidget
 
-import java.text.SimpleDateFormat
+import java.text.DateFormat.getDateInstance
 import java.util.*
 
 class DummyNetworkStatsInterval : NetworkStatsInterval {
@@ -27,7 +27,7 @@ class DummyNetworkStatsInterval : NetworkStatsInterval {
     }
 
     override fun toString(): String {
-        val df = SimpleDateFormat()
+        val df = getDateInstance()
         return "From ${df.format(startDate)} to ${df.format(endDate)}"
     }
 }

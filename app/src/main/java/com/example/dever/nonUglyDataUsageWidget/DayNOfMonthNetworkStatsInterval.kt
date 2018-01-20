@@ -4,6 +4,7 @@ Network statistics interval that restarts on the N-th day of every month
 
 package com.example.dever.nonUglyDataUsageWidget
 
+import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
@@ -52,6 +53,7 @@ class DayNOfMonthNetworkStatsInterval(today: Calendar, dayOfMonth: Int) : Networ
     override var endDate: Calendar = GregorianCalendar()
         get() = mEndDate
 
+    @SuppressLint("SimpleDateFormat") // specific format wanted for JUnit output, locale works for me
     override fun toString(): String {
         val df = SimpleDateFormat()
         return "${this.javaClass} from ${df.format(mStartDate.time)} to ${df.format(mEndDate.time)}"
