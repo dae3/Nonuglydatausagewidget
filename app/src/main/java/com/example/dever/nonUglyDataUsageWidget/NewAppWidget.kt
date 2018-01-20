@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Paint
 import android.widget.RemoteViews
 
@@ -44,7 +43,7 @@ class NewAppWidget : AppWidgetProvider() {
 
             // construct a bitmap
             var info : AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
-            var chart = PieWithTickChart(DummyNetworkStatsInterval(), info.minWidth, info.minHeight)
+            var chart = PieWithTickChart(info.minWidth, info.minHeight)
 
             views.setImageViewBitmap(R.id.imageView, chart.bitmap)
 //            views.setImageViewBitmap(R.id.imageView, Bitmap.createBitmap(info.minWidth, info.minHeight, Bitmap.Config.ARGB_4444))

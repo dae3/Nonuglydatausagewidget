@@ -37,6 +37,13 @@
             android:onClick="onButtonClick"
             android:text="Button" />
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            app:srcCompat="@android:drawable/spinner_background" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
