@@ -1,37 +1,47 @@
 /*
 Network statistics interval that restarts on the N-th day of every month
-Doesn't yet deal with degenerate cases of day 29, 30, 31
  */
 
 package com.example.dever.nonUglyDataUsageWidget
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.min
 
-class DayNOfMonthNetworkStatsInterval(private val today: Calendar, private val dayOfMonth: Int) : NetworkStatsInterval {
-    private var mStartDate : Calendar = GregorianCalendar()
-    private var mEndDate : Calendar
+class DayNOfMonthNetworkStatsInterval(today: Calendar, dayOfMonth: Int) : NetworkStatsInterval {
+    private var mStartDate : Calendar = today.clone() as Calendar
+    private var mEndDate : Calendar = mStartDate.clone() as Calendar
 
     init {
-        with(mStartDate) {
-            set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            set(Calendar.YEAR, today.get(Calendar.YEAR))
-            set(Calendar.MONTH, today.get(Calendar.MONTH))
-            set(Calendar.HOUR, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
+        // Calendar.DAY_OF_MONTH is 1-based
+        if (today.get(Calendar.DAY_OF_MONTH) < dayOfMonth) {
+            // interval is from dayOfMonth/today month-1/year roll if required -> dayOfMonth-1/today month/year roll if required
+            var m = today.clone() as Calendar; m.add(Calendar.MONTH, -1)
+            mStartDate = GregorianCalendar(
+                    m.get(Calendar.YEAR),
+                    m.get(Calendar.MONTH),
+                    min(dayOfMonth, m.getActualMaximum(Calendar.DAY_OF_MONTH))
+            )
 
-        mEndDate = mStartDate.clone() as Calendar
+            mEndDate = today.clone() as Calendar
+            if (dayOfMonth > mEndDate.getActualMaximum(Calendar.DAY_OF_MONTH))
+                mEndDate.set(Calendar.DAY_OF_MONTH, mEndDate.getActualMaximum(Calendar.DAY_OF_MONTH))
+            else {
+                mEndDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                mEndDate.add(Calendar.DAY_OF_MONTH, -1)
+            }
+        } else {
+            // interval is from dayOfMonth/today month/today year -> dayOfMonth-1/today month+1/year roll if required
+            mStartDate = GregorianCalendar(
+                    today.get(Calendar.YEAR),
+                    today.get(Calendar.MONTH),
+                    dayOfMonth
+            )
 
-        with(mEndDate) {
-            roll(Calendar.MONTH, 1)
-            set(Calendar.DAY_OF_MONTH,
-                    if (dayOfMonth == mEndDate.getGreatestMinimum(Calendar.DAY_OF_MONTH))
-                        mEndDate.getLeastMaximum(Calendar.DAY_OF_MONTH)
-                    else
-                        dayOfMonth - 1
+            mEndDate = GregorianCalendar(
+                    if (today.get(Calendar.MONTH) == Calendar.DECEMBER) today.get(Calendar.YEAR)+1 else today.get(Calendar.YEAR),
+                    if (today.get(Calendar.MONTH) == Calendar.DECEMBER) Calendar.JANUARY else today.get(Calendar.MONTH)+1,
+                    dayOfMonth-1
             )
         }
     }
