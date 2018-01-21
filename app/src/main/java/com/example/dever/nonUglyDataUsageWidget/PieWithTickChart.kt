@@ -1,31 +1,23 @@
 package com.example.dever.nonUglyDataUsageWidget
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 
-/**
- * Created by daniel.everett on 17/01/2018.
- */
 class PieWithTickChart(private val width: Int, private val height: Int) {
 
-    private var paintPieBg = Paint(Color.RED)
-    private var paintPieFg = Paint(Color.MAGENTA)
-    private var paintTick = Paint(Color.RED)
-    private var paintBg = Paint(Color.TRANSPARENT)
+    private var paintPieBg = Paint()
+    private var paintPieFg = Paint()
+    private var paintTick = Paint()
+    private var paintBg = Paint()
 
     init {
         if (width == 0 || height == 0) throw IllegalArgumentException("both width and height must be non-zero")
-        paintPieBg.color = Color.GREEN
+        paintPieBg.color = Color.LTGRAY
+        paintPieFg.color = Color.BLUE
+        paintTick.color = Color.RED
         paintTick.strokeWidth = 2F
     }
 
     var bitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444)
-        get() {
-            if (isDirty) drawChart(0, 0)
-            return field
-        }
     private var canvas: Canvas = Canvas(bitmap)
     private var isDirty = true
 
@@ -33,11 +25,35 @@ class PieWithTickChart(private val width: Int, private val height: Int) {
     private fun pieX() = width.toFloat().div(2)
     private fun pieY() = height.toFloat().div(2)
 
-    fun drawChart(actualData: Long, maxData: Long) {
-        canvas.drawColor(Color.RED)
+    fun drawChart(actualData: Double, maxData: Double) {
+        canvas.drawColor(Color.TRANSPARENT)
         canvas.drawCircle(pieX(), pieY(), pieRadius(), paintPieBg)
 //        canvas.drawLine(pieX(), pieY(), pieX()+pieRadius(), pieY(), paintTick)
-//        canvas.drawPaint(Paint(Color.RED))
+
+        var angle : Float = actualData.toFloat()/maxData.toFloat()*360
+//        var angle : Float = (actualData.toFloat()/maxData.toFloat()*360 * PI.toFloat()/180)
+//        var dx : Float = (pieRadius() * sin(angle))
+//        var dy : Float = (pieRadius() * cos(angle))
+
+        // useful reference for drawArc at https://robots.thoughtbot.com/android-canvas-drawarc-method-a-visual-guide
+        //  basically start angle is left edge (with origin at 3 o'clock and sweep is delta from that
+        canvas.drawArc(
+                RectF(
+                        pieX() - pieRadius(),
+                        pieY() - pieRadius(),
+                        pieX() + pieRadius(),
+                        pieY() + pieRadius()
+                ),
+                0F-90,
+                angle,
+                true,
+                paintPieFg
+        )
+
+        with (canvas) {
+//            drawLine(pieX(), pieY(), pieX(), pieY()-pieRadius(), paintPieFg)
+//            drawLine(pieX(), pieY(), pieX() + dx, pieY() + dy, paintPieFg)
+        }
 
         isDirty = false
     }
