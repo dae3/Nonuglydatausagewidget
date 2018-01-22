@@ -1,6 +1,10 @@
 package com.example.dever.nonUglyDataUsageWidget
 
 import android.graphics.*
+import java.util.*
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 class PieWithTickChart(private val width: Int, private val height: Int) {
 
@@ -25,16 +29,14 @@ class PieWithTickChart(private val width: Int, private val height: Int) {
     private fun pieX() = width.toFloat().div(2)
     private fun pieY() = height.toFloat().div(2)
 
-    fun drawChart(actualData: Double, maxData: Double) {
+    fun drawChart(actualData: Double, maxData: Double, interval : NetworkStatsInterval) {
+        // background
         canvas.drawColor(Color.TRANSPARENT)
+
+        // pie circle
         canvas.drawCircle(pieX(), pieY(), pieRadius(), paintPieBg)
-//        canvas.drawLine(pieX(), pieY(), pieX()+pieRadius(), pieY(), paintTick)
 
-        var angle : Float = actualData.toFloat()/maxData.toFloat()*360
-//        var angle : Float = (actualData.toFloat()/maxData.toFloat()*360 * PI.toFloat()/180)
-//        var dx : Float = (pieRadius() * sin(angle))
-//        var dy : Float = (pieRadius() * cos(angle))
-
+        // actual usage circle segment
         // useful reference for drawArc at https://robots.thoughtbot.com/android-canvas-drawarc-method-a-visual-guide
         //  basically start angle is left edge (with origin at 3 o'clock and sweep is delta from that
         canvas.drawArc(
@@ -45,15 +47,20 @@ class PieWithTickChart(private val width: Int, private val height: Int) {
                         pieY() + pieRadius()
                 ),
                 0F-90,
-                angle,
+                (actualData/maxData*360).toFloat(),
                 true,
                 paintPieFg
         )
 
-        with (canvas) {
-//            drawLine(pieX(), pieY(), pieX(), pieY()-pieRadius(), paintPieFg)
-//            drawLine(pieX(), pieY(), pieX() + dx, pieY() + dy, paintPieFg)
-        }
+        // today vs total period tick
+        var todayAngle = ((GregorianCalendar().timeInMillis - interval.startDate.timeInMillis).toFloat() / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360.0 * PI/180.0).toFloat()
+        canvas.drawLine(
+                pieX(),
+                pieY(),
+                pieX() + (pieRadius() * sin(todayAngle)).toFloat(),
+                pieY() + (pieRadius() * cos(todayAngle)).toFloat(),
+                paintTick
+        )
 
         isDirty = false
     }

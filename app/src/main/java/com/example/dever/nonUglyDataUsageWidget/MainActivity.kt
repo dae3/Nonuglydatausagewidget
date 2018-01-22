@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             txtDataUsed.text = "${nf.format(stats.getNetworkStats(stateInterval).toFloat() / 1024 / 1024)} MB"
             txtInterval.text = "$stateInterval"
 
-            chart.drawChart(60.0, 100.0)
+            chart.drawChart(60.0, 100.0, stateInterval)
             i.setImageBitmap(chart.bitmap)
         }
     }
