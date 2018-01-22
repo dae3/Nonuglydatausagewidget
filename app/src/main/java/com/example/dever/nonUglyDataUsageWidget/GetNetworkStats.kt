@@ -8,12 +8,13 @@ import android.app.usage.NetworkStatsManager
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager.TYPE_MOBILE
+import android.preference.PreferenceManager
 import android.telephony.TelephonyManager
 
-class GetNetworkStats(private var context: Context) {
+class GetNetworkStats(private val context: Context, private var interval: NetworkStatsInterval) {
 
-    private var nsm : NetworkStatsManager = context.getSystemService(NetworkStatsManager::class.java)
-    private var subscriberId : String
+    private var nsm: NetworkStatsManager = context.getSystemService(NetworkStatsManager::class.java)
+    private var subscriberId: String
 
     init {
         if (!PermissionChecker.havePhoneStatePermission(context)) context.startActivity(Intent(context, PrePermissionRequestActivity::class.java))
@@ -23,14 +24,21 @@ class GetNetworkStats(private var context: Context) {
         try {
             @SuppressLint("HardwareIds") // subscriberID is required to call querySummaryForDevice later
             subscriberId = tm.subscriberId
-        } catch (e : SecurityException) {
+        } catch (e: SecurityException) {
             // TODO do something with exception: back to PrePermissionRequestActivitity?
             subscriberId = ""
         }
     }
 
-    fun getNetworkStats(interval : NetworkStatsInterval) : Long {
-        val bucket = nsm.querySummaryForDevice(TYPE_MOBILE, subscriberId, interval.startDate.timeInMillis, interval.endDate.timeInMillis)
-        return bucket.rxBytes + bucket.txBytes
-    }
+    var actualData: Long = 0L
+        get() {
+            val bucket = nsm.querySummaryForDevice(TYPE_MOBILE, subscriberId, interval.startDate.timeInMillis, interval.endDate.timeInMillis)
+            return bucket.rxBytes + bucket.txBytes
+        }
+
+    var maxData: Long = 0L
+        get() = PreferenceManager.getDefaultSharedPreferences(context).getString(
+                context.resources.getString(R.string.prefs_key_maxdata),
+                "99"
+        ).toLong()
 }

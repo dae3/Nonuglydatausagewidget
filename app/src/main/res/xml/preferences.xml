@@ -15,6 +15,11 @@
             android:key="@string/prefs_key_billingcycle_startday"
             />
 
+        <EditTextPreference
+            android:title="Max data"
+            android:defaultValue="1024"
+            android:key="@string/prefs_key_maxdata" />
+
 
     </PreferenceCategory>
 </PreferenceScreen>

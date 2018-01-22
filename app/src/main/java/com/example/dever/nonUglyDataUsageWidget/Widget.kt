@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.widget.RemoteViews
-import java.util.*
 
 /**
  * Implementation of App Widget functionality.
@@ -15,30 +14,34 @@ import java.util.*
 class Widget : AppWidgetProvider() {
 
     private lateinit var prefs : SharedPreferences
+    private lateinit var interval : NetworkStatsInterval
+    private lateinit var stats : GetNetworkStats
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        interval = NetworkStatsIntervalFactory.getInterval(context)
+        stats = GetNetworkStats(context, interval)
 
-        for (appWidgetId in appWidgetIds) updateAppWidget(context, appWidgetManager, appWidgetId)
+        for (appWidgetId in appWidgetIds) updateAppWidget(context, appWidgetManager, appWidgetId, interval, stats)
     }
 
     companion object {
 
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
-                                     appWidgetId: Int) {
+                                     appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats) {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
 
-            // construct a bitmap
             var info : AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
             var chart = PieWithTickChart(info.minWidth, info.minHeight)
-            chart.drawChart(60.0,100.0, DayNOfMonthNetworkStatsInterval(GregorianCalendar(), 1))
-
+            chart.drawChart(
+                    stats.actualData.toDouble(),
+                    100.0,
+                    interval
+            )
             views.setImageViewBitmap(R.id.widgetChartImageView, chart.bitmap)
-//            views.setImageViewBitmap(R.id.widgetChartImageView, Bitmap.createBitmap(info.minWidth, info.minHeight, Bitmap.Config.ARGB_4444))
 
-            // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
         }

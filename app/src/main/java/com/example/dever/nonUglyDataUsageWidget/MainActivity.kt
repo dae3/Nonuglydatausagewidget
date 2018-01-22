@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         txtInterval = findViewById(R.id.txtInterval)
         i = findViewById(R.id.imageView2)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        stats = GetNetworkStats(this)
+//        stats = GetNetworkStats(this, )
         chart = PieWithTickChart(100,100)
     }
 
@@ -41,18 +41,19 @@ class MainActivity : AppCompatActivity() {
         if (!(PermissionChecker.haveUsagePermission(this) || !PermissionChecker.havePhoneStatePermission(this)))
             startActivity(Intent(this, PrePermissionRequestActivity::class.java))
         else {
-            var stateInterval = DayNOfMonthNetworkStatsInterval(
+            var statsInterval = DayNOfMonthNetworkStatsInterval(
                     today = GregorianCalendar(),
                     dayOfMonth = prefs.getString(
                             resources.getString(R.string.prefs_key_billingcycle_startday), // TODO should these be R.string or R.id?
                             "1"
                     ).toInt()
             )
+            stats = GetNetworkStats(this, statsInterval)
 
-            txtDataUsed.text = "${nf.format(stats.getNetworkStats(stateInterval).toFloat() / 1024 / 1024)} MB"
-            txtInterval.text = "$stateInterval"
+            txtDataUsed.text = "${nf.format(stats.actualData.toFloat() / 1024 / 1024)} MB of ${nf.format(stats.maxData.toFloat()/1024/1024)} MB"
+            txtInterval.text = "$statsInterval"
 
-            chart.drawChart(60.0, 100.0, stateInterval)
+            chart.drawChart(stats.actualData.toDouble(), stats.maxData.toDouble(), statsInterval)
             i.setImageBitmap(chart.bitmap)
         }
     }
