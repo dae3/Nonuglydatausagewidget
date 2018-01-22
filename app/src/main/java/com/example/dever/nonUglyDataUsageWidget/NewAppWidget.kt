@@ -4,17 +4,14 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
-import android.graphics.Paint
+import android.preference.PreferenceManager
 import android.widget.RemoteViews
+import java.util.*
 
 /**
  * Implementation of App Widget functionality.
  */
 class NewAppWidget : AppWidgetProvider() {
-
-    private var myWidth : Int = 0
-    private var myHeight : Int = 0
-    private var myPaint = Paint()
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         // There may be multiple widgets active, so update all of them
@@ -37,13 +34,17 @@ class NewAppWidget : AppWidgetProvider() {
                                      appWidgetId: Int) {
 
             val widgetText = context.getString(R.string.appwidget_text)
-            // Construct the RemoteViews object
             val views = RemoteViews(context.packageName, R.layout.new_app_widget)
             views.setTextViewText(R.id.appwidget_text, widgetText)
+
+            var prefs = PreferenceManager.getDefaultSharedPreferences(context)
+//            Log.d("aaa",
+//                    prefs.getString(resources.getString(R.string.prefs_key_billingcycle_startday), "999"))
 
             // construct a bitmap
             var info : AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
             var chart = PieWithTickChart(info.minWidth, info.minHeight)
+            chart.drawChart(60.0,100.0, DayNOfMonthNetworkStatsInterval(GregorianCalendar(), 1))
 
             views.setImageViewBitmap(R.id.imageView, chart.bitmap)
 //            views.setImageViewBitmap(R.id.imageView, Bitmap.createBitmap(info.minWidth, info.minHeight, Bitmap.Config.ARGB_4444))
