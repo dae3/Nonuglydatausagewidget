@@ -43,10 +43,7 @@ class MainActivity : AppCompatActivity() {
         else {
             var statsInterval = DayNOfMonthNetworkStatsInterval(
                     today = GregorianCalendar(),
-                    dayOfMonth = prefs.getString(
-                            resources.getString(R.string.prefs_key_billingcycle_startday), // TODO should these be R.string or R.id?
-                            "1"
-                    ).toInt()
+                    dayOfMonth = prefs.getInt(resources.getString(R.string.prefs_key_billingcycle_startday), 1)
             )
             stats = GetNetworkStats(this, statsInterval)
 

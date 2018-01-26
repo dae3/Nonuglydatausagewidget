@@ -23,7 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".PrePermissionRequestActivity" />
-        <activity android:name=".PreferencesActivity" />
+        <activity android:name=".PreferencesActivity"
+            android:exported="true"/>
+        <!-- TODO remove exported flag when  done building -->
 
         <receiver android:name=".Widget">
             <intent-filter>

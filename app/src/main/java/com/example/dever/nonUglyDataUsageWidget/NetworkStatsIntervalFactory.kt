@@ -13,10 +13,10 @@ object NetworkStatsIntervalFactory {
         // for now just the one
         return DayNOfMonthNetworkStatsInterval(
                 GregorianCalendar(),
-                PreferenceManager.getDefaultSharedPreferences(context).getString(
+                PreferenceManager.getDefaultSharedPreferences(context).getInt(
                         context.resources.getString(R.string.prefs_key_billingcycle_startday),
-                        "99"
-                ).toInt()
+                        0
+                )
         )
     }
 }

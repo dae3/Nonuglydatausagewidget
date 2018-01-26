@@ -37,8 +37,8 @@ class GetNetworkStats(private val context: Context, private var interval: Networ
         }
 
     var maxData: Long = 0L
-        get() = PreferenceManager.getDefaultSharedPreferences(context).getString(
+        get() = PreferenceManager.getDefaultSharedPreferences(context).getInt(
                 context.resources.getString(R.string.prefs_key_maxdata),
-                "99"
+                0
         ).toLong()
 }
