@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="WidgetStyle1" parent="Theme.AppCompat">
+        <!--<item name="colorBackground">#00000000</item>-->
+        <!--<item name="colorPieBackground">#FF000000</item>-->
+        <!--<item name="colorPieWedge">#FF0000FF</item>-->
+        <!--<item name="colorPieTick">#FF0000</item>-->
+    </style>
+</resources>

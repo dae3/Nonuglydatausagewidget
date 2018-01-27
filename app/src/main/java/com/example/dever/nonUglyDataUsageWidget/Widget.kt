@@ -34,7 +34,7 @@ class Widget : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.widget)
 
             var info : AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
-            var chart = PieWithTickChart(info.minWidth, info.minHeight)
+            var chart = PieWithTickChart(info.minWidth, info.minHeight, context)
             chart.drawChart(
                     stats.actualData.toDouble(),
                     stats.maxData.toDouble(),
