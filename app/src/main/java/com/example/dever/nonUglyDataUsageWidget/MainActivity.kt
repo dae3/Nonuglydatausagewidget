@@ -15,12 +15,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var txtDataUsed: TextView
     private lateinit var txtInterval: TextView
-    private lateinit var i : ImageView
+    private lateinit var i: ImageView
     private var nf = NumberFormat.getNumberInstance()
-//    private lateinit var stateInterval: NetworkStatsInterval
-    private lateinit var prefs : SharedPreferences
-    private lateinit var stats : GetNetworkStats
-    private lateinit var chart : PieWithTickChart
+    //    private lateinit var stateInterval: NetworkStatsInterval
+    private lateinit var prefs: SharedPreferences
+    private lateinit var stats: GetNetworkStats
+    private lateinit var chart: PieWithTickChart
 //    private var myResources = getResources()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         i = findViewById(R.id.imageView2)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 //        stats = GetNetworkStats(this, )
-        chart = PieWithTickChart(100,100)
+        chart = PieWithTickChart(100, 100)
     }
 
     override fun onResume() {
@@ -41,17 +41,21 @@ class MainActivity : AppCompatActivity() {
         if (!(PermissionChecker.haveUsagePermission(this) || !PermissionChecker.havePhoneStatePermission(this)))
             startActivity(Intent(this, PrePermissionRequestActivity::class.java))
         else {
-            var statsInterval = DayNOfMonthNetworkStatsInterval(
-                    today = GregorianCalendar(),
-                    dayOfMonth = prefs.getInt(resources.getString(R.string.prefs_key_billingcycle_startday), 1)
-            )
-            stats = GetNetworkStats(this, statsInterval)
+            try {
+                var statsInterval = DayNOfMonthNetworkStatsInterval(
+                        today = GregorianCalendar(),
+                        dayOfMonth = prefs.getInt(resources.getString(R.string.prefs_key_billingcycle_startday), 1)
+                )
+                stats = GetNetworkStats(this, statsInterval)
 
-            txtDataUsed.text = "${nf.format(stats.actualData.toFloat() / 1024 / 1024)} MB of ${nf.format(stats.maxData.toFloat())} MB"
-            txtInterval.text = "$statsInterval"
+                txtDataUsed.text = "${nf.format(stats.actualData.toFloat() / 1024 / 1024)} MB of ${nf.format(stats.maxData.toFloat())} MB"
+                txtInterval.text = "$statsInterval"
 
-            chart.drawChart(stats.actualData.toDouble(), stats.maxData.toDouble(), statsInterval)
-            i.setImageBitmap(chart.bitmap)
+                chart.drawChart(stats.actualData.toDouble(), stats.maxData.toDouble(), statsInterval)
+                i.setImageBitmap(chart.bitmap)
+            } catch (e: SecurityException) {
+                startActivity(Intent(this, PrePermissionRequestActivity::class.java))
+            }
         }
     }
 
