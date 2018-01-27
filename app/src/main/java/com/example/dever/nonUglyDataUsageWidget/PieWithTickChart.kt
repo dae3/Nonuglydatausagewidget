@@ -29,6 +29,7 @@ class PieWithTickChart(private val width: Int, private val height: Int) {
     private fun pieX() = width.toFloat().div(2)
     private fun pieY() = height.toFloat().div(2)
 
+    // actual and max in bytes
     fun drawChart(actualData: Double, maxData: Double, interval : NetworkStatsInterval) {
         // background
         canvas.drawColor(Color.TRANSPARENT)

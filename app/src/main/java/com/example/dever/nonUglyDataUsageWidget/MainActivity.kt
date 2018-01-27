@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             )
             stats = GetNetworkStats(this, statsInterval)
 
-            txtDataUsed.text = "${nf.format(stats.actualData.toFloat() / 1024 / 1024)} MB of ${nf.format(stats.maxData.toFloat()/1024/1024)} MB"
+            txtDataUsed.text = "${nf.format(stats.actualData.toFloat() / 1024 / 1024)} MB of ${nf.format(stats.maxData.toFloat())} MB"
             txtInterval.text = "$statsInterval"
 
             chart.drawChart(stats.actualData.toDouble(), stats.maxData.toDouble(), statsInterval)

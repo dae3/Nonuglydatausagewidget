@@ -5,7 +5,6 @@ import android.content.res.TypedArray
 import android.preference.DialogPreference
 import android.preference.PreferenceManager
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 
@@ -15,6 +14,9 @@ class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPrefere
     private val buttonListener = DialogListener()
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     private var keyname: String
+    private var minValue : Int = Int.MIN_VALUE
+    private var maxValue : Int = Int.MAX_VALUE
+    private var stepValue : Int = 1
 
     init {
         isPersistent = false
@@ -25,6 +27,10 @@ class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPrefere
             throw IllegalArgumentException("EditIntPreference requires an android:key attribute")
         else
             keyname = k
+
+        minValue = attrs?.getAttributeIntValue("http://dever.example.com", "minimum", minValue)
+        maxValue = attrs?.getAttributeIntValue("http://dever.example.com", "maximum", maxValue)
+        stepValue = attrs?.getAttributeIntValue("http://dever.example.com", "step", stepValue)
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
@@ -46,7 +52,6 @@ class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPrefere
         super.onBindDialogView(view)
 
         value = prefs.getInt(key, 0)
-        Log.i("AAA", value.toString())
 
         if (view != null) {
             mValueTextView = view.findViewById(R.id.txtIntPrefInt)
@@ -68,10 +73,14 @@ class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPrefere
     inner class DialogListener : View.OnClickListener {
         override fun onClick(v: View?) {
             value += when (v?.id) {
-                R.id.btnEditIntUp -> -1
-                R.id.btnEditIntDown -> 1
+                R.id.btnEditIntUp -> -stepValue
+                R.id.btnEditIntDown -> stepValue
                 else -> 0
             }
+
+            value = if (value < minValue) minValue else value
+            value = if (value > maxValue) maxValue else value
+
 
             mValueTextView.text = "$value"
         }
