@@ -48,18 +48,20 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
 //        rectWedge.right += 1
 //        rectWedge.bottom += 1
 
-        canvas.drawArc(rectWedge, startangle, angle+2, true, paintbox.pieWedgeOutline)
+        canvas.drawArc(rectWedge, startangle, angle + 2, true, paintbox.pieWedgeOutline)
 
         // wedge body
         canvas.drawArc(rectWedge, startangle, angle, true, paintbox.pieWedge)
 
         // today vs total period tick
         var todayAngle = ((GregorianCalendar().timeInMillis - interval.startDate.timeInMillis).toFloat() / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360.0 * PI / 180.0).toFloat()
+        val tickEndFudge = 1.1
+        val tickStartFudge = 0.8
         canvas.drawLine(
-                pieX(),
-                pieY(),
-                pieX() + (pieRadius() * sin(todayAngle)).toFloat(),
-                pieY() + (pieRadius() * cos(todayAngle)).toFloat(),
+                (pieX() + pieRadius() * sin(todayAngle) * tickStartFudge).toFloat(),
+                (pieY() + pieRadius() * cos(todayAngle) * tickStartFudge).toFloat(),
+                pieX() + (pieRadius() * tickEndFudge * sin(todayAngle)).toFloat(),
+                pieY() + (pieRadius() * tickEndFudge * cos(todayAngle)).toFloat(),
                 paintbox.pieTick
         )
 
