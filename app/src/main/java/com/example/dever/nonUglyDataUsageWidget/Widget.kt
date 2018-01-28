@@ -1,10 +1,13 @@
 package com.example.dever.nonUglyDataUsageWidget
 
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
+import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
 import android.appwidget.AppWidgetProvider
 import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Bundle
 import android.preference.PreferenceManager
 import android.widget.RemoteViews
 
@@ -13,17 +16,26 @@ import android.widget.RemoteViews
  */
 class Widget : AppWidgetProvider() {
 
-    private lateinit var prefs : SharedPreferences
-    private lateinit var interval : NetworkStatsInterval
-    private lateinit var stats : GetNetworkStats
+    private lateinit var prefs: SharedPreferences
+    private lateinit var interval: NetworkStatsInterval
+    private lateinit var stats: GetNetworkStats
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
 
+        setProps(context)
+
+        for (appWidgetId in appWidgetIds) updateAppWidget(context, appWidgetManager, appWidgetId, interval, stats)
+    }
+
+    private fun setProps(context: Context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context)
         interval = NetworkStatsIntervalFactory.getInterval(context)
         stats = GetNetworkStats(context, interval)
+    }
 
-        for (appWidgetId in appWidgetIds) updateAppWidget(context, appWidgetManager, appWidgetId, interval, stats)
+    override fun onAppWidgetOptionsChanged(context: Context?, appWidgetManager: AppWidgetManager?, appWidgetId: Int, newOptions: Bundle?) {
+        setProps(context!!)
+        updateAppWidget(context!!, appWidgetManager!!, appWidgetId, interval, stats)
     }
 
     companion object {
@@ -32,9 +44,14 @@ class Widget : AppWidgetProvider() {
                                      appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats) {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
+            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
 
-            var info : AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
-            var chart = PieWithTickChart(info.minWidth, info.minHeight)
+            var info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
+            var chart = PieWithTickChart(
+                    options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
+                    options.getInt(OPTION_APPWIDGET_MAX_HEIGHT),
+                    context
+            )
             chart.drawChart(
                     stats.actualData.toDouble(),
                     stats.maxData.toDouble(),
@@ -45,6 +62,8 @@ class Widget : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
         }
+
+
     }
 }
 

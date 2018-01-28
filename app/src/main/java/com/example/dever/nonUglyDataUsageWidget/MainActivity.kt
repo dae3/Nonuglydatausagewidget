@@ -1,17 +1,17 @@
 package com.example.dever.nonUglyDataUsageWidget
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import java.text.NumberFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     private lateinit var txtDataUsed: TextView
     private lateinit var txtInterval: TextView
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         i = findViewById(R.id.imageView2)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 //        stats = GetNetworkStats(this, )
-        chart = PieWithTickChart(100, 100)
+        chart = PieWithTickChart(100, 100, this)
     }
 
     override fun onResume() {
