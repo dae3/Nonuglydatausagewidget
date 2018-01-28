@@ -23,5 +23,6 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="widget_chart_content_description">Chart showing your current data usage</string>
     <string name="prefs_key_maxdata">prefs_maxdata</string>
+    <string name="menu_activity_title_settings">Settings</string>
 </resources>
 
