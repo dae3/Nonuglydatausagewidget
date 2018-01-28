@@ -15,7 +15,7 @@
             android:key="@string/prefs_key_billingcycle_startday"
             android:title="@string/prefs_title_startdate"
             custom:maximum="31"
-            custom:minimum="5" />
+            custom:minimum="1" />
 
         <com.example.dever.nonUglyDataUsageWidget.EditIntPreference
             android:defaultValue="1024"

@@ -33,18 +33,25 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
         // actual usage circle segment
         // useful reference for drawArc at https://robots.thoughtbot.com/android-canvas-drawarc-method-a-visual-guide
         //  basically start angle is left edge (with origin at 3 o'clock and sweep is delta from that
-        canvas.drawArc(
-                RectF(
-                        pieX() - pieRadius(),
-                        pieY() - pieRadius(),
-                        pieX() + pieRadius(),
-                        pieY() + pieRadius()
-                ),
-                0F - 90,
-                (actualData / maxData * 360).toFloat(),
-                true,
-                paintbox.pieWedge
+        val rectWedge = RectF(
+                pieX() - pieRadius(),
+                pieY() - pieRadius(),
+                pieX() + pieRadius(),
+                pieY() + pieRadius()
         )
+        val angle = (actualData / maxData * 360).toFloat()
+        val startangle = 0F - 90
+
+        // wedge outline
+        rectWedge.left += 1
+        rectWedge.top += 1
+//        rectWedge.right += 1
+//        rectWedge.bottom += 1
+
+        canvas.drawArc(rectWedge, startangle, angle+2, true, paintbox.pieWedgeOutline)
+
+        // wedge body
+        canvas.drawArc(rectWedge, startangle, angle, true, paintbox.pieWedge)
 
         // today vs total period tick
         var todayAngle = ((GregorianCalendar().timeInMillis - interval.startDate.timeInMillis).toFloat() / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360.0 * PI / 180.0).toFloat()
@@ -59,18 +66,20 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
         isDirty = false
     }
 
-    // can't apply style directly because this isn't a View
-    //  https://stackoverflow.com/questions/13719103/how-to-retrieve-style-attributes-programmatically-from-styles-xml
-    inner class PaintBox(val context: Context) {
+    private inner class PaintBox(context: Context) {
         val pieTick = Paint()
         val pieWedge = Paint()
+        val pieWedgeOutline = Paint()
         val pieBg = Paint()
 
         init {
             pieTick.color = context.resources.getColor(R.color.colorAccent)
-            pieTick.strokeWidth = 2F
+            pieTick.strokeWidth = 3F
             pieBg.color = context.resources.getColor(R.color.colorPrimary)
             pieWedge.color = context.resources.getColor(R.color.colorPrimaryDark)
+            pieWedgeOutline.color = Color.DKGRAY
+            pieWedgeOutline.style = Paint.Style.STROKE
+            pieWedgeOutline.strokeWidth = 3F
         }
     }
 }
