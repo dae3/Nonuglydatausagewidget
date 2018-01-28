@@ -1,15 +1,14 @@
 package com.example.dever.nonUglyDataUsageWidget
 
 import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
-import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH
+import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
+import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
 import android.appwidget.AppWidgetProvider
 import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.widget.RemoteViews
 
 /**
@@ -25,7 +24,7 @@ class Widget : AppWidgetProvider() {
 
         setProps(context)
 
-        for (appWidgetId in appWidgetIds) updateAppWidget(context, appWidgetManager, appWidgetId, interval, stats, null, null)
+        for (appWidgetId in appWidgetIds) updateAppWidget(context, appWidgetManager, appWidgetId, interval, stats)
     }
 
     private fun setProps(context: Context) {
@@ -35,22 +34,22 @@ class Widget : AppWidgetProvider() {
     }
 
     override fun onAppWidgetOptionsChanged(context: Context?, appWidgetManager: AppWidgetManager?, appWidgetId: Int, newOptions: Bundle?) {
-        Log.d("AAA", "resize")
         setProps(context!!)
-        updateAppWidget(context!!, appWidgetManager!!, appWidgetId, interval, stats, newOptions?.getInt(OPTION_APPWIDGET_MIN_WIDTH), newOptions?.getInt(OPTION_APPWIDGET_MIN_HEIGHT))
+        updateAppWidget(context!!, appWidgetManager!!, appWidgetId, interval, stats)
     }
 
     companion object {
 
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
-                                     appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats, newWidth: Int?, newHeight: Int?) {
+                                     appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats) {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
+            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
 
             var info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
             var chart = PieWithTickChart(
-                    newWidth?: info.minWidth,
-                    newHeight?: info.minHeight,
+                    options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
+                    options.getInt(OPTION_APPWIDGET_MAX_HEIGHT),
                     context
             )
             chart.drawChart(
