@@ -27,6 +27,13 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
         // background
         canvas.drawColor(Color.TRANSPARENT)
 
+        // clip donut centre
+        val donutSize = 0.75
+        val path = Path()
+        path.addCircle(pieX(), pieY(), (pieRadius() * donutSize).toFloat(), Path.Direction.CW)
+        @Suppress("DEPRECATION")
+        canvas.clipPath(path, Region.Op.DIFFERENCE)
+
         // pie circle
         canvas.drawCircle(pieX(), pieY(), pieRadius(), paintbox.pieBg)
 
@@ -39,24 +46,23 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
                 pieX() + pieRadius(),
                 pieY() + pieRadius()
         )
-        val angle = (actualData / maxData * 360).toFloat()
+        val sweepangle = (actualData / maxData * 360).toFloat()
         val startangle = 0F - 90
 
         // wedge outline
-        rectWedge.left += 1
+        /*rectWedge.left += 1
         rectWedge.top += 1
-//        rectWedge.right += 1
-//        rectWedge.bottom += 1
 
-        canvas.drawArc(rectWedge, startangle, angle + 2, true, paintbox.pieWedgeOutline)
-
+        val shadowSweepExtra = 2
+        canvas.drawArc(rectWedge, startangle, sweepangle + shadowSweepExtra, true, paintbox.pieWedgeOutline)
+*/
         // wedge body
-        canvas.drawArc(rectWedge, startangle, angle, true, paintbox.pieWedge)
+        canvas.drawArc(rectWedge, startangle, sweepangle, true, paintbox.pieWedge)
 
         // today vs total period tick
         var todayAngle = ((GregorianCalendar().timeInMillis - interval.startDate.timeInMillis).toFloat() / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360.0 * PI / 180.0).toFloat()
         val tickEndFudge = 1.1
-        val tickStartFudge = 0.8
+        val tickStartFudge = donutSize
         canvas.drawLine(
                 (pieX() + pieRadius() * sin(todayAngle) * tickStartFudge).toFloat(),
                 (pieY() + pieRadius() * cos(todayAngle) * tickStartFudge).toFloat(),
@@ -76,12 +82,19 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
 
         init {
             pieTick.color = context.resources.getColor(R.color.colorAccent)
-            pieTick.strokeWidth = 3F
+            pieTick.strokeWidth = 5F
+            pieTick.isAntiAlias = true
+
             pieBg.color = context.resources.getColor(R.color.colorPrimary)
+            pieBg.isAntiAlias = true
+
             pieWedge.color = context.resources.getColor(R.color.colorPrimaryDark)
+            pieWedge.isAntiAlias = true
+
             pieWedgeOutline.color = Color.DKGRAY
             pieWedgeOutline.style = Paint.Style.STROKE
             pieWedgeOutline.strokeWidth = 3F
+            pieWedgeOutline.isAntiAlias = true
         }
     }
 }
