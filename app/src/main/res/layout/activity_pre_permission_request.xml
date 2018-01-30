@@ -26,19 +26,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/why_permission_text" />
+            android:onClick="requestUsagePermission"
+            android:clickable="true"/>
 
         <TextView
             android:id="@+id/txtPhonePermission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/why_scary_phone_permission" />
+            android:onClick="requestPhoneStatePermission"
+            android:clickable="true"/>
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onContinueClick"
-            android:text="@string/btnContinueCaption" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
