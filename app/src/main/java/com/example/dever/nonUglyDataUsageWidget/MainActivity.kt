@@ -26,7 +26,14 @@ class MainActivity : AppCompatActivity() {
         return when (item?.itemId) {
             R.id.action_settings -> {
                 startActivity(Intent(this, PreferencesActivity::class.java))
-
+                true
+            }
+            R.id.action_refresh -> {
+                // toast ' not impl '
+                true
+            }
+            R.id.action_checkperms -> {
+                startActivity(Intent(this, PrePermissionRequestActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)

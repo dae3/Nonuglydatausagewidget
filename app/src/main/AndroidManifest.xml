@@ -22,7 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PrePermissionRequestActivity" />
+        <activity android:name=".PrePermissionRequestActivity"
+            android:parentActivityName=".MainActivity" />
+
         <!-- TODO remove exported flag when  done building -->
         <activity android:name=".PreferencesActivity"
             android:exported="true"
