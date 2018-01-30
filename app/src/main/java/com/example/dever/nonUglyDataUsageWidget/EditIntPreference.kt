@@ -8,15 +8,15 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 
-class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
+open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
     private lateinit var mValueTextView: TextView
-    private var value: Int = 0
+    protected var value: Int = 0
     private val buttonListener = DialogListener()
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    protected val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     private var keyname: String
-    private var minValue : Int = Int.MIN_VALUE
-    private var maxValue : Int = Int.MAX_VALUE
-    private var stepValue : Int = 1
+    protected var minValue : Int = Int.MIN_VALUE
+    protected var maxValue : Int = Int.MAX_VALUE
+    protected var stepValue : Int = 1
 
     init {
         isPersistent = false
@@ -51,7 +51,7 @@ class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPrefere
     override fun onBindDialogView(view: View?) {
         super.onBindDialogView(view)
 
-        value = prefs.getInt(key, 0)
+        value = getValueFromSharedPreferences()
 
         if (view != null) {
             mValueTextView = view.findViewById(R.id.txtIntPrefInt)
@@ -65,6 +65,8 @@ class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPrefere
 
         }
     }
+
+    protected open fun getValueFromSharedPreferences() = prefs.getInt(key, 0)
 
     override fun onGetDefaultValue(a: TypedArray?, index: Int): Any {
         return a?.getInt(index, 0)!!

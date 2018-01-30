@@ -17,12 +17,12 @@
             custom:maximum="31"
             custom:minimum="1" />
 
-        <com.example.dever.nonUglyDataUsageWidget.EditIntPreference
-            android:defaultValue="1024"
+        <com.example.dever.nonUglyDataUsageWidget.EditGigabytePreference
+            android:defaultValue="1"
             android:key="@string/prefs_key_maxdata"
             android:title="Max data"
             custom:minimum="0"
-            custom:step="1024" />
+            custom:step="1" />
 
     </PreferenceCategory>
 </PreferenceScreen>
