@@ -56,7 +56,7 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
         //  but this can happen if actualData >> maxData
         //  https://trello.com/c/1hc1hduO
         //  for now just ceiling at 360
-        val angle = min((actualData / maxData * 360).toFloat(), 360F)
+        val sweepangle = min((actualData / maxData * 360).toFloat(), 360F)
         val startangle = 0F - 90
 
         // wedge outline
@@ -69,7 +69,7 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
         canvas.drawArc(rectWedge, startangle, sweepangle + shadowSweepExtra, true, paintbox.pieWedgeOutline)
 
         // wedge body
-        canvas.drawArc(rectWedge, startangle, angle, true, paintbox.pieWedge)
+        canvas.drawArc(rectWedge, startangle, sweepangle, true, paintbox.pieWedge)
 
         // today vs total period tick
         var todayAngle = ((GregorianCalendar().timeInMillis - interval.startDate.timeInMillis).toFloat() / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360.0 * PI / 180.0).toFloat()
