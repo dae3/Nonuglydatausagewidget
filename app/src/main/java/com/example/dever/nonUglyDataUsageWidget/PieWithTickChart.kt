@@ -5,6 +5,7 @@ import android.graphics.*
 import java.util.*
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.min
 import kotlin.math.sin
 
 class PieWithTickChart(private val width: Int, private val height: Int, val context: Context) {
@@ -24,6 +25,10 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
 
     // actual and max in bytes
     fun drawChart(actualData: Double, maxData: Double, interval: NetworkStatsInterval) {
+        // maxData == 0 gives angle == Infinity which causes canvas.drawArc (and probably others) to
+        //  chew crazy memory until OS kills the process
+        if (maxData == 0.0) { throw IllegalArgumentException("maxData must be non-zero") }
+
         // background
         canvas.drawColor(Color.TRANSPARENT)
 
@@ -39,7 +44,12 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
                 pieX() + pieRadius(),
                 pieY() + pieRadius()
         )
-        val angle = (actualData / maxData * 360).toFloat()
+
+        // large angles make drawArc unhappy, really anything > 360 makes no sense anyway
+        //  but this can happen if actualData >> maxData
+        //  https://trello.com/c/1hc1hduO
+        //  for now just ceiling at 360
+        val angle = min((actualData / maxData * 360).toFloat(), 360F)
         val startangle = 0F - 90
 
         // wedge outline

@@ -39,6 +39,7 @@ class GetNetworkStats(private val context: Context, private var interval: Networ
     var maxData: Long = 0L
         get() = PreferenceManager.getDefaultSharedPreferences(context).getLong(
                 context.resources.getString(R.string.prefs_key_maxdata),
-                0
+                1
         )
+    // TODO: remove hard-coded default after https://trello.com/c/6BzECuM6 fixed
 }
