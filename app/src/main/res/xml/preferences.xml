@@ -18,7 +18,6 @@
             custom:minimum="1" />
 
         <com.example.dever.nonUglyDataUsageWidget.EditGigabytePreference
-            android:defaultValue="1"
             android:key="@string/prefs_key_maxdata"
             android:title="Max data"
             custom:minimum="0"

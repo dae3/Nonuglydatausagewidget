@@ -10,27 +10,24 @@ import android.util.AttributeSet
 //private const val GBTOBYTES : Int = 1024 * 1024 * 1024
 //private const val BYTESTOGB : Long = (1 / GBTOBYTES).toLong()
 
-class EditGigabytePreference(context: Context?, attrs : AttributeSet?) : EditIntPreference(context, attrs) {
-//    override fun persistInt(value: Int): Boolean {
-//        return super.persistInt(value * GBTOBYTES)
-//    }
+class EditGigabytePreference(context: Context?, attrs : AttributeSet?) : EditLongPreference(context, attrs) {
 
-//    override fun getPersistedInt(defaultReturnValue: Int): Int {
-//        return super.getPersistedInt(defaultReturnValue * BYTESTOGB)
-//    }
-
-    override fun getValueFromSharedPreferences() : Int {
+    override fun getValueFromSharedPreferences() : Long {
         return super.getValueFromSharedPreferences().asGb()
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
         if (positiveResult) {
             val editor = prefs.edit()
-            editor.putInt(key, value.asBytes())
+            editor.putLong(key, value.asBytes())
             editor.commit()
         }
     }
+
+    override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
+        super.onSetInitialValue(restorePersistedValue, defaultValue)
+    }
 }
 
-fun Int.asGb() : Int { return this / 1024 / 1024 / 1024 }
-fun Int.asBytes() : Int { return this * 1024 * 1024 * 1024 }
+fun Long.asGb() : Long { return this / 1024 / 1024 / 1024 }
+fun Long.asBytes() : Long { return this * 1024 * 1024 * 1024 }
