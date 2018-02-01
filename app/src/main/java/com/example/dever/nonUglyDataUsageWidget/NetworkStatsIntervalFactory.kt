@@ -12,7 +12,7 @@ object NetworkStatsIntervalFactory {
     fun getInterval(context : Context) : NetworkStatsInterval {
         // for now just the one
         return DayNOfMonthNetworkStatsInterval(
-                GregorianCalendar(),
+                GregorianCalendar(Locale.getDefault()),
                 PreferenceManager.getDefaultSharedPreferences(context).getInt(
                         context.resources.getString(R.string.prefs_key_billingcycle_startday),
                         0

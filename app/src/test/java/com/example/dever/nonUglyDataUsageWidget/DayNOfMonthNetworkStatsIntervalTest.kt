@@ -25,7 +25,7 @@ import kotlin.math.min
 @RunWith(Parameterized::class)
 class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, private val testDayN: Int) {
 
-    private lateinit var interval : NetworkStatsInterval
+    private lateinit var interval: NetworkStatsInterval
     private val df = SimpleDateFormat.getDateInstance()
     private val testDisplayName = "(today=${df.format(testToday.timeInMillis)}, Nth=$testDayN)"
 
@@ -35,13 +35,14 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
         private val FIXEDDAY = 15
 
         @Parameters(name = "{0},{1}")
-        @JvmStatic fun params(): ArrayList<Any> {
+        @JvmStatic
+        fun params(): ArrayList<Any> {
             var r = ArrayList<Any>()
 
             for (year in arrayOf(LEAPYEAR, NONLEAPYEAR))
                 for (month in 0..11)
                     for (day in 1..GregorianCalendar(year, month, 1).getActualMaximum(Calendar.DAY_OF_MONTH))
-                        r.add(arrayOf(GregorianCalendar(year,month, FIXEDDAY),day))
+                        r.add(arrayOf(GregorianCalendarDefaultLocale(year, month, FIXEDDAY), day))
 
             return r
         }
@@ -58,9 +59,10 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
         assertThat("start month wrong $testDisplayName", interval.startDate.get(Calendar.MONTH), `is`(
                 if (testToday.get(Calendar.DAY_OF_MONTH) >= testDayN)
                     testToday.get(Calendar.MONTH)
-                else
-                    { testToday.roll(Calendar.MONTH, -1); testToday.get(Calendar.MONTH) }
-            )
+                else {
+                    testToday.roll(Calendar.MONTH, -1); testToday.get(Calendar.MONTH)
+                }
+        )
         )
     }
 
@@ -80,7 +82,7 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
         assertThat(
                 "end month wrong $testDisplayName",
                 interval.endDate.get(Calendar.MONTH),
-                    `is`(
+                `is`(
                         if (testToday.get(Calendar.DAY_OF_MONTH) < testDayN || testDayN == 1) testToday.get(Calendar.MONTH)
                         else {
                             var m = testToday.clone() as Calendar
@@ -99,7 +101,7 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
         assertThat("end day is wrong $testDisplayName", interval.endDate.get(Calendar.DAY_OF_MONTH), `is`(
                 if (testDayN == 1) testToday.getActualMaximum(Calendar.DAY_OF_MONTH)
                 else if (testDayN > testToday.getActualMaximum(Calendar.DAY_OF_MONTH)) testToday.getActualMaximum(Calendar.DAY_OF_MONTH)
-                else testDayN-1
+                else testDayN - 1
         ))
     }
 
@@ -113,8 +115,8 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
                         if (testToday.get(Calendar.MONTH) == Calendar.DECEMBER
                                 && testToday.get(Calendar.DAY_OF_MONTH) >= testDayN
                                 && testDayN > 1) {
-                        testToday.add(Calendar.YEAR, 1)
-                        testToday.get(Calendar.YEAR)
+                            testToday.add(Calendar.YEAR, 1)
+                            testToday.get(Calendar.YEAR)
                         } else testToday.get(Calendar.YEAR)
                 )
         )
@@ -134,21 +136,29 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
                             testToday.get(Calendar.YEAR)
                         } else testToday.get(Calendar.YEAR)
 
-                    )
+                )
         )
     }
 
     @Test
-    fun startAndEndHaveMidnightTime() {
-        assertThat("times aren't midnight $testDisplayName",
-                interval.startDate.get(Calendar.HOUR) == 0 &&
-                        interval.startDate.get(Calendar.MINUTE) == 0 &&
-                        interval.startDate.get(Calendar.SECOND) == 0 &&
-                        interval.startDate.get(Calendar.MILLISECOND) == 0 &&
-                        interval.endDate.get(Calendar.HOUR) == 0 &&
-                        interval.endDate.get(Calendar.MINUTE) == 0 &&
-                        interval.endDate.get(Calendar.SECOND) == 0 &&
-                        interval.endDate.get(Calendar.MILLISECOND) == 0
+    fun startTimeIsMidnight() {
+        assertThat("start time isn't midnight $testDisplayName",
+                interval.startDate.get(Calendar.HOUR) == interval.startDate.getActualMinimum(Calendar.HOUR) &&
+                        interval.startDate.get(Calendar.MINUTE) == interval.startDate.getActualMinimum(Calendar.MINUTE) &&
+                        interval.startDate.get(Calendar.SECOND) == interval.startDate.getActualMinimum(Calendar.SECOND) &&
+                        interval.startDate.get(Calendar.MILLISECOND) == interval.startDate.getActualMinimum(Calendar.MILLISECOND) &&
+                        interval.startDate.get(Calendar.AM_PM) == Calendar.AM
+        )
+    }
+
+    @Test
+    fun endTimeIsOneSecondBeforeMidnight() {
+        assertThat("end time isn't 23:59:59 $testDisplayName",
+                interval.endDate.get(Calendar.HOUR) == interval.endDate.getActualMaximum(Calendar.HOUR) &&
+                        interval.endDate.get(Calendar.MINUTE) == interval.endDate.getActualMaximum(Calendar.MINUTE) &&
+                        interval.endDate.get(Calendar.SECOND) == interval.endDate.getActualMaximum(Calendar.SECOND) &&
+                        interval.endDate.get(Calendar.MILLISECOND) == interval.endDate.getActualMaximum(Calendar.MILLISECOND) &&
+                        interval.endDate.get(Calendar.AM_PM) == Calendar.PM
         )
     }
 }
