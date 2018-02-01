@@ -2,7 +2,6 @@ package com.example.dever.nonUglyDataUsageWidget
 
 import android.content.Context
 import android.graphics.*
-import java.util.*
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
@@ -72,7 +71,8 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
         canvas.drawArc(rectWedge, startangle, sweepangle, true, paintbox.pieWedge)
 
         // today vs total period tick
-        var todayAngle = ((GregorianCalendar().timeInMillis - interval.startDate.timeInMillis).toFloat() / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360.0 * PI / 180.0).toFloat()
+        var todayAngle = ((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat() /
+                (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360.0 * PI / 180.0).toFloat()
         val tickEndFudge = 1.1
         val tickStartFudge = 0.8
         canvas.drawLine(
