@@ -26,7 +26,9 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
     fun drawChart(actualData: Double, maxData: Double, interval: NetworkStatsInterval) {
         // maxData == 0 gives angle == Infinity which causes canvas.drawArc (and probably others) to
         //  chew crazy memory until OS kills the process
-        if (maxData == 0.0) { throw IllegalArgumentException("maxData must be non-zero") }
+        if (maxData == 0.0) {
+            throw IllegalArgumentException("maxData must be non-zero")
+        }
 
         // background
         canvas.drawColor(Color.TRANSPARENT)
@@ -71,15 +73,16 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
         canvas.drawArc(rectWedge, startangle, sweepangle, true, paintbox.pieWedge)
 
         // today vs total period tick
-        var todayAngle = ((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat() /
-                (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360.0 * PI / 180.0).toFloat()
-        val tickEndFudge = 1.1
-        val tickStartFudge = 0.8
+        var todayAngle: Float = ((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
+                / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 2F * PI.toFloat()) - (PI.toFloat() / 2F)
+
+        val tickEndFudge = 1F
+        val tickStartFudge = 0.8F
         canvas.drawLine(
-                (pieX() + pieRadius() * sin(todayAngle) * tickStartFudge).toFloat(),
-                (pieY() + pieRadius() * cos(todayAngle) * tickStartFudge).toFloat(),
-                pieX() + (pieRadius() * tickEndFudge * sin(todayAngle)).toFloat(),
-                pieY() + (pieRadius() * tickEndFudge * cos(todayAngle)).toFloat(),
+                pieX() + (pieRadius() * tickStartFudge * cos(todayAngle)),
+                pieY() + (pieRadius() * tickStartFudge * sin(todayAngle)),
+                pieX() + (pieRadius() * tickEndFudge * cos(todayAngle)),
+                pieY() + (pieRadius() * tickEndFudge * sin(todayAngle)),
                 paintbox.pieTick
         )
 

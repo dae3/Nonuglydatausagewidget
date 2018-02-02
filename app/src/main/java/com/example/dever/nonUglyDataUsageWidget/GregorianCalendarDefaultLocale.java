@@ -12,7 +12,7 @@ import java.util.TimeZone;
 public class GregorianCalendarDefaultLocale extends GregorianCalendar {
 
     public GregorianCalendarDefaultLocale() {
-        super(Locale.getDefault());
+        this(Locale.getDefault());
     }
 
     public GregorianCalendarDefaultLocale(Locale aLocale) {
