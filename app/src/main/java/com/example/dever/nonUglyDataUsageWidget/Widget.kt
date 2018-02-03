@@ -48,8 +48,8 @@ class Widget : AppWidgetProvider() {
 
             var info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
             var chart = PieWithTickChart(
-                    options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
-                    options.getInt(OPTION_APPWIDGET_MAX_HEIGHT),
+                    if (options.getInt(OPTION_APPWIDGET_MAX_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
+                    if (options.getInt(OPTION_APPWIDGET_MAX_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MAX_HEIGHT),
                     context
             )
             chart.drawChart(

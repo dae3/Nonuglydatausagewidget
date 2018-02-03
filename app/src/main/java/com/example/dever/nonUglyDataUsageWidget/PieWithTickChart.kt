@@ -10,7 +10,7 @@ import kotlin.math.sin
 class PieWithTickChart(private val width: Int, private val height: Int, val context: Context) {
 
     init {
-        if (width == 0 || height == 0) throw IllegalArgumentException("both width and height must be non-zero")
+//        if (width == 0 || height == 0) throw IllegalArgumentException("both width and height must be non-zero")
     }
 
     private val paintbox = PaintBox(context)
