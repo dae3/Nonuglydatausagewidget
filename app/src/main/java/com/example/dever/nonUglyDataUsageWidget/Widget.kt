@@ -1,11 +1,13 @@
 package com.example.dever.nonUglyDataUsageWidget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
 import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
 import android.appwidget.AppWidgetProvider
 import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -44,6 +46,13 @@ class Widget : AppWidgetProvider() {
                                      appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats) {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
+            views.setOnClickPendingIntent(R.id.widgetChartImageView,
+                    PendingIntent.getActivity(
+                            context,
+                            0,
+                            Intent(context, MainActivity::class.java),
+                            0
+                    ))
             val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
 
             var info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
