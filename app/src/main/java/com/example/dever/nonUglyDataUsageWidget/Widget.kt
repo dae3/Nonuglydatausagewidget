@@ -12,6 +12,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.widget.RemoteViews
+import java.text.NumberFormat
 
 /**
  * Implementation of App Widget functionality.
@@ -67,6 +68,8 @@ class Widget : AppWidgetProvider() {
                     interval
             )
             views.setImageViewBitmap(R.id.widgetChartImageView, chart.bitmap)
+
+            views.setTextViewText(R.id.txtWidgetActualData, NumberFormat.getInstance().format(stats.actualData/1024/1024/1024))
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
