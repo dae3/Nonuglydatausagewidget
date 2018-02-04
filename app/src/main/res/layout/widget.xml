@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
@@ -27,5 +28,21 @@
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Material.Body1"
         android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/txtWidgetNoPermMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textAlignment="center"
+        android:autoSizeMaxTextSize="@dimen/widget_error_text_size"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/widgetErrorBg"
+        android:text="@string/widget_no_perm_message"
+        android:textColor="@color/widgetErrorText"
+        android:textSize="@dimen/widget_error_text_size"
+        android:visibility="visible" />
 
 </RelativeLayout>

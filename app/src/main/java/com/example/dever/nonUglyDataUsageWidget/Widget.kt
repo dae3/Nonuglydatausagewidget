@@ -11,13 +11,19 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.widget.RemoteViews
 import java.text.NumberFormat
+
+
+//private const val WIDGET_DATA_KEY = "nudwidgetdatakey"
 
 /**
  * Implementation of App Widget functionality.
  */
 class Widget : AppWidgetProvider() {
+
 
     private lateinit var prefs: SharedPreferences
     private lateinit var interval: NetworkStatsInterval
@@ -41,42 +47,51 @@ class Widget : AppWidgetProvider() {
         updateAppWidget(context!!, appWidgetManager!!, appWidgetId, interval, stats)
     }
 
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.hasExtra(WIDGET_IDS_KEY))
+            this.onUpdate(context, AppWidgetManager.getInstance(context), intent.extras!!.getIntArray(WIDGET_IDS_KEY))
+        else
+            super.onReceive(context, intent)
+    }
+
     companion object {
+
+        const val WIDGET_IDS_KEY = "nudwidgetkey"
 
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
                                      appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats) {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
             val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
-            var clickIntent : PendingIntent
-
             var info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
+            var chart = PieWithTickChart(
+                    if (options.getInt(OPTION_APPWIDGET_MAX_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
+                    if (options.getInt(OPTION_APPWIDGET_MAX_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MAX_HEIGHT),
+                    context
+            )
 
             try {
-                val actualData = stats.actualData.toDouble()
-
-                var chart = PieWithTickChart(
-                        if (options.getInt(OPTION_APPWIDGET_MAX_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
-                        if (options.getInt(OPTION_APPWIDGET_MAX_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MAX_HEIGHT),
-                        context
-                )
                 chart.drawChart(
-                        actualData,
+                        stats.actualData.toDouble(),
                         stats.maxData.toDouble(),
                         interval
                 )
                 views.setImageViewBitmap(R.id.widgetChartImageView, chart.bitmap)
                 views.setTextViewText(R.id.txtWidgetActualData, NumberFormat.getInstance().format(stats.actualData / 1024 / 1024 / 1024))
-                clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
+                var clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
+                views.setOnClickPendingIntent(R.id.widgetChartImageView, clickIntent)
+                views.setOnClickPendingIntent(R.id.txtWidgetActualData, clickIntent)
+                views.setViewVisibility(R.id.widgetChartImageView, VISIBLE)
+                views.setViewVisibility(R.id.txtWidgetActualData, VISIBLE)
+                views.setViewVisibility(R.id.txtWidgetNoPermMessage, INVISIBLE)
             } catch (e: SecurityException) {
                 // don't have permissions, but it'd be rude for the widget to jump straight to the perms activity
-                views.setTextViewText(R.id.txtWidgetActualData, "999")
-                clickIntent = PendingIntent.getActivity(context, 0, Intent(context, PrePermissionRequestActivity::class.java), 0)
+                views.setTextViewText(R.id.txtWidgetNoPermMessage, context.getString(R.string.widget_no_perm_message))
+                views.setViewVisibility(R.id.widgetChartImageView, INVISIBLE)
+                views.setViewVisibility(R.id.txtWidgetActualData, INVISIBLE)
+                views.setViewVisibility(R.id.txtWidgetNoPermMessage, VISIBLE)
+                views.setOnClickPendingIntent(R.id.txtWidgetNoPermMessage, PendingIntent.getActivity(context, 0, Intent(context, PrePermissionRequestActivity::class.java), 0))
             }
-
-            views.setOnClickPendingIntent(R.id.widgetChartImageView, clickIntent)
-            views.setOnClickPendingIntent(R.id.txtWidgetActualData, clickIntent)
-
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }

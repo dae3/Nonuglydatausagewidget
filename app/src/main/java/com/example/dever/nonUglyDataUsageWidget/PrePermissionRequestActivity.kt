@@ -1,5 +1,7 @@
 package  com.example.dever.nonUglyDataUsageWidget
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -10,7 +12,7 @@ import android.widget.TextView
 class PrePermissionRequestActivity : AppCompatActivity() {
 
     private lateinit var mTextViewUsage: TextView
-    private lateinit var mTextViewPhone : TextView
+    private lateinit var mTextViewPhone: TextView
     private val MYPERMREQ_READ_PHONE_STATE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,4 +40,15 @@ class PrePermissionRequestActivity : AppCompatActivity() {
         if (!PermissionChecker.havePhoneStatePermission(this)) if (!PermissionChecker.havePhoneStatePermission(this)) this.requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), MYPERMREQ_READ_PHONE_STATE)
     }
 
+    override fun onStop() {
+        // let any widgets know perms may have changed
+        super.onStop()
+        val i = Intent()
+        i.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        i.putExtra(
+                Widget.WIDGET_IDS_KEY,
+                AppWidgetManager.getInstance(this).getAppWidgetIds(ComponentName(this, Widget::class.java))
+        )
+        this.sendBroadcast(i)
+    }
 }
