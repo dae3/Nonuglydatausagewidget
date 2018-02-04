@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:layout_centerVertical="true"
     android:background="@android:color/transparent"
     android:padding="@dimen/widget_margin">
 
@@ -15,19 +13,41 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/widget_chart_content_description"
-        app:srcCompat="@drawable/example_appwidget_preview" />
+        app:srcCompat="@drawable/appwidget_preview" />
 
-    <TextView
-        android:id="@+id/txtWidgetActualData"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:ems="10"
-        android:text="123"
-        android:textAlignment="center"
-        android:textAppearance="@android:style/TextAppearance.Material.Body1"
-        android:textSize="24sp" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtWidgetActualData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="XX Gb"
+            android:textAlignment="center"
+            android:textAppearance="@android:style/TextAppearance.Material.Body1"
+            android:textSize="@dimen/widget_text_data"
+            android:autoSizeMaxTextSize="@dimen/widget_text_data"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeTextType="uniform"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/txtWidgetDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="day N of M"
+            android:textAlignment="center"
+            android:textAppearance="@android:style/TextAppearance.Material.Body1"
+            android:textSize="@dimen/widget_text_days"
+            android:autoSizeMaxTextSize="@dimen/widget_text_days"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeTextType="uniform"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/txtWidgetNoPermMessage"

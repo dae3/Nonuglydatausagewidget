@@ -14,7 +14,7 @@ import android.preference.PreferenceManager
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.RemoteViews
-import java.text.NumberFormat
+import java.util.*
 
 
 //private const val WIDGET_DATA_KEY = "nudwidgetdatakey"
@@ -77,19 +77,37 @@ class Widget : AppWidgetProvider() {
                         interval
                 )
                 views.setImageViewBitmap(R.id.widgetChartImageView, chart.bitmap)
-                views.setTextViewText(R.id.txtWidgetActualData, NumberFormat.getInstance().format(stats.actualData / 1024 / 1024 / 1024))
+                views.setTextViewText(
+                        R.id.txtWidgetActualData,
+                        context.resources.getString(
+                                R.string.widget_data_template,
+                                (stats.actualData / 1024 / 1024 / 1024).toFloat()
+                        )
+                )
+                views.setTextViewText(
+                        R.id.txtWidgetDays,
+                        context.resources.getString(
+                                R.string.widget_days_template,
+                                GregorianCalendarDefaultLocale().get(Calendar.DAY_OF_MONTH) - interval.startDate.get(Calendar.DAY_OF_MONTH) + 1,
+                                interval.endDate.get(Calendar.DAY_OF_MONTH) - interval.startDate.get(Calendar.DAY_OF_MONTH) + 1
+                        )
+                )
+
                 var clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
                 views.setOnClickPendingIntent(R.id.widgetChartImageView, clickIntent)
                 views.setOnClickPendingIntent(R.id.txtWidgetActualData, clickIntent)
+
                 views.setViewVisibility(R.id.widgetChartImageView, VISIBLE)
                 views.setViewVisibility(R.id.txtWidgetActualData, VISIBLE)
                 views.setViewVisibility(R.id.txtWidgetNoPermMessage, INVISIBLE)
             } catch (e: SecurityException) {
                 // don't have permissions, but it'd be rude for the widget to jump straight to the perms activity
                 views.setTextViewText(R.id.txtWidgetNoPermMessage, context.getString(R.string.widget_no_perm_message))
+
                 views.setViewVisibility(R.id.widgetChartImageView, INVISIBLE)
                 views.setViewVisibility(R.id.txtWidgetActualData, INVISIBLE)
                 views.setViewVisibility(R.id.txtWidgetNoPermMessage, VISIBLE)
+
                 views.setOnClickPendingIntent(R.id.txtWidgetNoPermMessage, PendingIntent.getActivity(context, 0, Intent(context, PrePermissionRequestActivity::class.java), 0))
             }
             appWidgetManager.updateAppWidget(appWidgetId, views)
