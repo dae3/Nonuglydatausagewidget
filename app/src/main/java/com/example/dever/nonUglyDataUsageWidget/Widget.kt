@@ -47,35 +47,38 @@ class Widget : AppWidgetProvider() {
                                      appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats) {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
-            views.setOnClickPendingIntent(R.id.widgetChartImageView,
-                    PendingIntent.getActivity(
-                            context,
-                            0,
-                            Intent(context, MainActivity::class.java),
-                            0
-                    ))
             val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
+            var clickIntent : PendingIntent
 
             var info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
-            var chart = PieWithTickChart(
-                    if (options.getInt(OPTION_APPWIDGET_MAX_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
-                    if (options.getInt(OPTION_APPWIDGET_MAX_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MAX_HEIGHT),
-                    context
-            )
-            chart.drawChart(
-                    stats.actualData.toDouble(),
-                    stats.maxData.toDouble(),
-                    interval
-            )
-            views.setImageViewBitmap(R.id.widgetChartImageView, chart.bitmap)
 
-            views.setTextViewText(R.id.txtWidgetActualData, NumberFormat.getInstance().format(stats.actualData/1024/1024/1024))
+            try {
+                val actualData = stats.actualData.toDouble()
+
+                var chart = PieWithTickChart(
+                        if (options.getInt(OPTION_APPWIDGET_MAX_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
+                        if (options.getInt(OPTION_APPWIDGET_MAX_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MAX_HEIGHT),
+                        context
+                )
+                chart.drawChart(
+                        actualData,
+                        stats.maxData.toDouble(),
+                        interval
+                )
+                views.setImageViewBitmap(R.id.widgetChartImageView, chart.bitmap)
+                views.setTextViewText(R.id.txtWidgetActualData, NumberFormat.getInstance().format(stats.actualData / 1024 / 1024 / 1024))
+                clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
+            } catch (e: SecurityException) {
+                // don't have permissions, but it'd be rude for the widget to jump straight to the perms activity
+                views.setTextViewText(R.id.txtWidgetActualData, "999")
+                clickIntent = PendingIntent.getActivity(context, 0, Intent(context, PrePermissionRequestActivity::class.java), 0)
+            }
+
+            views.setOnClickPendingIntent(R.id.widgetChartImageView, clickIntent)
+            views.setOnClickPendingIntent(R.id.txtWidgetActualData, clickIntent)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
-
         }
-
-
     }
 }
 
