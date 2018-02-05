@@ -3,6 +3,7 @@
     <color name="colorPrimaryDark">#1A237E</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorAccent">#536DFE</color>
-    <color name="widgetErrorBg">#ff0000</color>
-    <color name="widgetErrorText">#000000</color>
+
+    <color name="colorErrorBg">#ff0000</color>
+    <color name="colorErrorText">#000000</color>
 </resources>

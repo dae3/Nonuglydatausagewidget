@@ -7,33 +7,31 @@
     tools:context="com.example.dever.nonUglyDataUsageWidget.PrePermissionRequestActivity"
     tools:layout_editor_absoluteY="81dp">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/prepermreqestactivity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/prepermreqestactivity_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <TextView
             android:id="@+id/txtUsagePermission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/why_permission_text"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            android:text="@string/why_permission_text" />
 
         <TextView
             android:id="@+id/txtPhonePermission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/why_scary_phone_permission"
-            android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            android:text="@string/why_scary_phone_permission" />
 
         <Button
             android:id="@+id/button"

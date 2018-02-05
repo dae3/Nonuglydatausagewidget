@@ -45,9 +45,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar = findViewById<android.support.v7.widget.Toolbar>(R.id.mainactivty_toolbar)
-        setSupportActionBar(toolbar)
-
         txtDataUsed = findViewById(R.id.txtDataUsed)
         txtInterval = findViewById(R.id.txtInterval)
 

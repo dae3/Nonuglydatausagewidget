@@ -2,7 +2,6 @@ package com.example.dever.nonUglyDataUsageWidget
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import com.lb.material_preferences_library.AppCompatPreferenceActivity
@@ -21,19 +20,7 @@ class PreferencesActivity : AppCompatPreferenceActivity() {
         super.onCreate(savedInstanceState)
 
         layoutInflater.inflate(R.layout.toolbar, findViewById(android.R.id.content))
-        setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar.setDisplayHomeAsUpEnabled(true)
-
-        listView.setPadding(
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, resources.displayMetrics).toInt(),
-                TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        (resources.getDimension(R.dimen.activity_vertical_margin).toInt() + 30).toFloat(),
-                        resources.displayMetrics
-                ).toInt(),
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, resources.displayMetrics).toInt(),
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, resources.displayMetrics).toInt()
-        )
 
         addPreferencesFromResource(R.xml.preferences)
     }

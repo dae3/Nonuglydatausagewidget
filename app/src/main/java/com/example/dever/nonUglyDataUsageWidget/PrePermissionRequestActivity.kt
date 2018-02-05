@@ -22,7 +22,6 @@ class PrePermissionRequestActivity : AppCompatActivity() {
         mTextViewUsage = findViewById(R.id.txtUsagePermission)
         mTextViewPhone = findViewById(R.id.txtPhonePermission)
 
-        setSupportActionBar(findViewById(R.id.prepermreqestactivity_toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
