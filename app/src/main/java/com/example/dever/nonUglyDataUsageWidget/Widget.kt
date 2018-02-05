@@ -76,6 +76,8 @@ class Widget : AppWidgetProvider() {
                         stats.maxData.toDouble(),
                         interval
                 )
+
+                // TODO adjust text size based on widget dimensions
                 views.setImageViewBitmap(R.id.widgetChartImageView, chart.bitmap)
                 views.setTextViewText(
                         R.id.txtWidgetActualData,

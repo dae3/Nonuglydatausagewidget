@@ -37,7 +37,7 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
         if (positiveResult) {
             var editor = prefs.edit()
             editor.putLong(key, value)
-            editor.commit()
+            editor.apply()
         }
     }
 

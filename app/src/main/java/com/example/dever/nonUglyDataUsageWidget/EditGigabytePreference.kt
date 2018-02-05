@@ -20,7 +20,7 @@ class EditGigabytePreference(context: Context?, attrs : AttributeSet?) : EditLon
         if (positiveResult) {
             val editor = prefs.edit()
             editor.putLong(key, value.asBytes())
-            editor.commit()
+            editor.apply()
         }
     }
 

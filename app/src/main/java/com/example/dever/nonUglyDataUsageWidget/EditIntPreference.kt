@@ -37,7 +37,7 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
         if (positiveResult) {
             var editor = prefs.edit()
             editor.putInt(key, value)
-            editor.commit()
+            editor.apply()
         }
     }
 
