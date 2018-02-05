@@ -95,18 +95,19 @@ class PieWithTickChart(private val width: Int, private val height: Int, val cont
         val pieWedgeOutline = Paint()
         val pieBg = Paint()
 
+        // TODO default colours if the resources aren't present in the theme
         init {
-            pieTick.color = context.resources.getColor(R.color.colorAccent)
+            pieTick.color = context.resources.getColor(R.color.colorPieTick, context.theme)
             pieTick.strokeWidth = 5F
             pieTick.isAntiAlias = true
 
-            pieBg.color = context.resources.getColor(R.color.colorPrimary)
+            pieBg.color = context.resources.getColor(R.color.colorPieBg, context.theme)
             pieBg.isAntiAlias = true
 
-            pieWedge.color = context.resources.getColor(R.color.colorPrimaryDark)
+            pieWedge.color = context.resources.getColor(R.color.colorPieWedge, context.theme)
             pieWedge.isAntiAlias = true
 
-            pieWedgeOutline.color = Color.DKGRAY
+            pieWedgeOutline.color = context.resources.getColor(R.color.colorPieWedgeOutline, context.theme)
             pieWedgeOutline.style = Paint.Style.STROKE
             pieWedgeOutline.strokeWidth = 3F
             pieWedgeOutline.isAntiAlias = true
