@@ -30,14 +30,14 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
     private val testDisplayName = "(today=${df.format(testToday.timeInMillis)}, Nth=$testDayN)"
 
     companion object GenerateParameters {
-        private val NONLEAPYEAR = 2018 // just because that's now
-        private val LEAPYEAR = 2020 // next leap year
-        private val FIXEDDAY = 15
+        private const val NONLEAPYEAR = 2018 // just because that's now
+        private const val LEAPYEAR = 2020 // next leap year
+        private const val FIXEDDAY = 15
 
         @Parameters(name = "{0},{1}")
         @JvmStatic
         fun params(): ArrayList<Any> {
-            var r = ArrayList<Any>()
+            val r = ArrayList<Any>()
 
             for (year in arrayOf(LEAPYEAR, NONLEAPYEAR))
                 for (month in 0..11)
@@ -85,7 +85,7 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
                 `is`(
                         if (testToday.get(Calendar.DAY_OF_MONTH) < testDayN || testDayN == 1) testToday.get(Calendar.MONTH)
                         else {
-                            var m = testToday.clone() as Calendar
+                            val m = testToday.clone() as Calendar
                             m.add(Calendar.MONTH, 1)
                             m.get(Calendar.MONTH)
                         }

@@ -44,7 +44,7 @@ class Widget : AppWidgetProvider() {
 
     override fun onAppWidgetOptionsChanged(context: Context?, appWidgetManager: AppWidgetManager?, appWidgetId: Int, newOptions: Bundle?) {
         setProps(context!!)
-        updateAppWidget(context!!, appWidgetManager!!, appWidgetId, interval, stats)
+        updateAppWidget(context, appWidgetManager!!, appWidgetId, interval, stats)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -63,8 +63,8 @@ class Widget : AppWidgetProvider() {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
             val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
-            var info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
-            var chart = PieWithTickChart(
+            val info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
+            val chart = PieWithTickChart(
                     if (options.getInt(OPTION_APPWIDGET_MAX_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
                     if (options.getInt(OPTION_APPWIDGET_MAX_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MAX_HEIGHT),
                     context
@@ -95,7 +95,7 @@ class Widget : AppWidgetProvider() {
                         )
                 )
 
-                var clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
+                val clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
                 views.setOnClickPendingIntent(R.id.widgetChartImageView, clickIntent)
                 views.setOnClickPendingIntent(R.id.txtWidgetActualData, clickIntent)
 

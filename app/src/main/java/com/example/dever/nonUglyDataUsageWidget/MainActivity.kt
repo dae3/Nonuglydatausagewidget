@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, PrePermissionRequestActivity::class.java))
         else {
             try {
-                var statsInterval = DayNOfMonthNetworkStatsInterval(
+                val statsInterval = DayNOfMonthNetworkStatsInterval(
                         today = GregorianCalendar(Locale.getDefault()),
                         dayOfMonth = prefs.getInt(resources.getString(R.string.prefs_key_billingcycle_startday), 1)
                 )

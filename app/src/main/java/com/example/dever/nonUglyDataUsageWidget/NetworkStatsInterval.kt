@@ -1,6 +1,3 @@
-/**
- * Created by dever on 5/01/2018.
- */
 
 package com.example.dever.nonUglyDataUsageWidget
 

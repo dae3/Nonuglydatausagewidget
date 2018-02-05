@@ -1,6 +1,3 @@
-/**
- * Created by dever on 3/01/2018.
- */
 package com.example.dever.nonUglyDataUsageWidget
 
 import android.annotation.SuppressLint
@@ -20,7 +17,7 @@ class GetNetworkStats(private val context: Context, private var interval: Networ
         if (!PermissionChecker.havePhoneStatePermission(context)) context.startActivity(Intent(context, PrePermissionRequestActivity::class.java))
 
         // courtesy of https://medium.com/@quiro91/build-a-data-usage-manager-in-android-e7991cfe7fe4
-        var tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         try {
             @SuppressLint("HardwareIds") // subscriberID is required to call querySummaryForDevice later
             subscriberId = tm.subscriberId

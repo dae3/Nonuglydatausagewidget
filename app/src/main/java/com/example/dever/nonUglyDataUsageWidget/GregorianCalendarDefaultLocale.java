@@ -5,9 +5,6 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-/**
- * Created by daniel.everett on 1/02/2018.
- */
 
 public class GregorianCalendarDefaultLocale extends GregorianCalendar {
 

@@ -13,7 +13,7 @@ class PrePermissionRequestActivity : AppCompatActivity() {
 
     private lateinit var mTextViewUsage: TextView
     private lateinit var mTextViewPhone: TextView
-    private val MYPERMREQ_READ_PHONE_STATE = 1
+    private val MYPERMREQREADPHONESTATE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class PrePermissionRequestActivity : AppCompatActivity() {
 
     fun onContinueClick(@Suppress("UNUSED_PARAMETER") v: View) {
         if (!PermissionChecker.haveUsagePermission(this)) startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-        if (!PermissionChecker.havePhoneStatePermission(this)) if (!PermissionChecker.havePhoneStatePermission(this)) this.requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), MYPERMREQ_READ_PHONE_STATE)
+        if (!PermissionChecker.havePhoneStatePermission(this)) if (!PermissionChecker.havePhoneStatePermission(this)) this.requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), MYPERMREQREADPHONESTATE)
     }
 
     override fun onStop() {

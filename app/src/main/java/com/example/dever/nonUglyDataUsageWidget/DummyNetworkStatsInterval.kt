@@ -8,7 +8,7 @@ class DummyNetworkStatsInterval : NetworkStatsInterval {
         get() = genFirstOfMonth()
 
     private fun genFirstOfMonth() : Calendar {
-        var startdate = GregorianCalendar()
+        val startdate = GregorianCalendar()
         with(startdate) {
             set(Calendar.DAY_OF_MONTH, 1)
             set(Calendar.HOUR, 0)

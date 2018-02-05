@@ -24,9 +24,6 @@ class EditGigabytePreference(context: Context?, attrs : AttributeSet?) : EditLon
         }
     }
 
-    override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
-        super.onSetInitialValue(restorePersistedValue, defaultValue)
-    }
 }
 
 fun Long.asGb() : Long { return this / 1024 / 1024 / 1024 }

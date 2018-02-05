@@ -1,6 +1,7 @@
 package com.example.dever.nonUglyDataUsageWidget
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.TypedArray
 import android.preference.DialogPreference
 import android.preference.PreferenceManager
@@ -12,7 +13,7 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
     private lateinit var mValueTextView: TextView
     protected var value: Int = 0
     private val buttonListener = DialogListener()
-    protected val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    private val prefs : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var keyname: String
     protected var minValue : Int = Int.MIN_VALUE
     protected var maxValue : Int = Int.MAX_VALUE
@@ -28,14 +29,14 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
         else
             keyname = k
 
-        minValue = attrs?.getAttributeIntValue("http://dever.example.com", "minimum", minValue)
-        maxValue = attrs?.getAttributeIntValue("http://dever.example.com", "maximum", maxValue)
-        stepValue = attrs?.getAttributeIntValue("http://dever.example.com", "step", stepValue)
+        minValue = attrs.getAttributeIntValue("http://dever.example.com", "minimum", minValue)
+        maxValue = attrs.getAttributeIntValue("http://dever.example.com", "maximum", maxValue)
+        stepValue = attrs.getAttributeIntValue("http://dever.example.com", "step", stepValue)
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
         if (positiveResult) {
-            var editor = prefs.edit()
+            val editor = prefs.edit()
             editor.putInt(key, value)
             editor.apply()
         }
@@ -57,10 +58,10 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
             mValueTextView = view.findViewById(R.id.txtIntPrefInt)
             mValueTextView.text = value.toString()
 
-            var mBtnDown = view.findViewById(R.id.btnEditIntDown) as TextView
+            val mBtnDown = view.findViewById(R.id.btnEditIntDown) as TextView
             mBtnDown.setOnClickListener(buttonListener)
 
-            var mBtnUp = view.findViewById(R.id.btnEditIntUp) as TextView
+            val mBtnUp = view.findViewById(R.id.btnEditIntUp) as TextView
             mBtnUp.setOnClickListener(buttonListener)
 
         }

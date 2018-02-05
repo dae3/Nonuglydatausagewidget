@@ -36,7 +36,7 @@ class DayNOfMonthNetworkStatsInterval(today: Calendar, dayOfMonth: Int) : Networ
         // Calendar.DAY_OF_MONTH is 1-based
         if (today.get(Calendar.DAY_OF_MONTH) < dayOfMonth) {
             // interval is from dayOfMonth/today month-1/year roll if required -> dayOfMonth-1/today month/year roll if required
-            var m = today.clone() as Calendar; m.add(Calendar.MONTH, -1)
+            val m = today.clone() as Calendar; m.add(Calendar.MONTH, -1)
             mStartDate = GregorianCalendarDefaultLocale(
                     m.get(Calendar.YEAR),
                     m.get(Calendar.MONTH),
