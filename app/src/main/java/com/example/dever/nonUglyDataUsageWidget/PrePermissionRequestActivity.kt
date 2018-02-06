@@ -7,20 +7,20 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.TextView
+import android.widget.ImageView
 
 class PrePermissionRequestActivity : AppCompatActivity() {
 
-    private lateinit var mTextViewUsage: TextView
-    private lateinit var mTextViewPhone: TextView
+    private lateinit var imagePhonePermTick: ImageView
+    private lateinit var imageUsagePermTick: ImageView
     private val MYPERMREQREADPHONESTATE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_pre_permission_request)
-        mTextViewUsage = findViewById(R.id.txtUsagePermission)
-        mTextViewPhone = findViewById(R.id.txtPhonePermission)
+        imagePhonePermTick = findViewById(R.id.image_phone_permission_tick)
+        imageUsagePermTick = findViewById(R.id.image_usage_permission_tick)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -28,15 +28,13 @@ class PrePermissionRequestActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        mTextViewUsage.text = resources.getString(
-                if (PermissionChecker.haveUsagePermission(this)) R.string.have_permissions_text else R.string.havent_permission_text
-        )
-        mTextViewPhone.text = if (PermissionChecker.havePhoneStatePermission(this)) "good" else "bad"
+        imageUsagePermTick.visibility = if (PermissionChecker.haveUsagePermission(this)) View.VISIBLE else View.INVISIBLE
+        imagePhonePermTick.visibility = if (PermissionChecker.havePhoneStatePermission(this)) View.VISIBLE else View.INVISIBLE
     }
 
     fun requestPhoneStatePermission(view: View) {
         if (!PermissionChecker.havePhoneStatePermission(this))
-            this.requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), MYPERMREQ_READ_PHONE_STATE)
+            this.requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), MYPERMREQREADPHONESTATE)
     }
 
     fun requestUsagePermission(view: View) {

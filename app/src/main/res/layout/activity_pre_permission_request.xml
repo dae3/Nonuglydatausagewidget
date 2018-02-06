@@ -15,9 +15,10 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
 
@@ -25,18 +26,64 @@
             android:id="@+id/txtUsagePermission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/why_permission_text" />
-            android:onClick="requestUsagePermission"
-            android:clickable="true"/>
+            android:layout_alignParentTop="true"
+            android:text="@string/why_usage_permission_text"
+            android:textAlignment="center" />
+
+        <ImageView
+            android:id="@+id/imageUsagePerm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtUsagePermission"
+            android:layout_centerHorizontal="true"
+            android:scaleType="center"
+            android:src="@drawable/usage_perm_screen"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="requestUsagePermission"/>
+
+        <ImageView
+            android:id="@+id/image_usage_permission_tick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/imageUsagePerm"
+            android:layout_below="@+id/txtUsagePermission"
+            android:layout_marginLeft="50px"
+            android:src="@drawable/ic_done_black_24dp"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/txtPhonePermission"
+            android:layout_marginTop="50dp"
+            android:layout_below="@+id/imageUsagePerm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/why_scary_phone_permission" />
-            android:onClick="requestPhoneStatePermission"
-            android:clickable="true"/>
+            android:text="@string/why_scary_phone_permission"
+            android:textAlignment="center" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/imagePhonePermission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtPhonePermission"
+            android:layout_centerHorizontal="true"
+            android:scaleType="center"
+            android:src="@drawable/phonecall_perm_screen"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="requestPhoneStatePermission"/>
+
+        <ImageView
+            android:id="@+id/image_phone_permission_tick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/imagePhonePermission"
+            android:layout_below="@+id/txtPhonePermission"
+            android:layout_marginLeft="50px"
+            android:src="@drawable/ic_done_black_24dp"
+            android:visibility="invisible"/>
+
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
