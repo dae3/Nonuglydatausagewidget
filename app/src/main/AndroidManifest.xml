@@ -27,6 +27,7 @@
 
         <!-- TODO remove exported flag when  done building -->
         <activity android:name=".PreferencesActivity"
+            android:exported="true"
             android:parentActivityName=".MainActivity"/>
 
         <receiver android:name=".Widget">

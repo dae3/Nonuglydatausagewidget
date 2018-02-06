@@ -7,6 +7,7 @@ import android.preference.DialogPreference
 import android.preference.PreferenceManager
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 
 open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
@@ -58,10 +59,10 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
             mValueTextView = view.findViewById(R.id.txtIntPrefInt)
             mValueTextView.text = value.toString()
 
-            val mBtnDown = view.findViewById(R.id.btnEditIntDown) as TextView
+            val mBtnDown = view.findViewById<ImageButton>(R.id.btnEditIntDown)
             mBtnDown.setOnClickListener(buttonListener)
 
-            val mBtnUp = view.findViewById(R.id.btnEditIntUp) as TextView
+            val mBtnUp = view.findViewById<ImageButton>(R.id.btnEditIntUp)
             mBtnUp.setOnClickListener(buttonListener)
 
         }
@@ -76,8 +77,8 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
     inner class DialogListener : View.OnClickListener {
         override fun onClick(v: View?) {
             value += when (v?.id) {
-                R.id.btnEditIntUp -> -stepValue
-                R.id.btnEditIntDown -> stepValue
+                R.id.btnEditIntUp -> stepValue
+                R.id.btnEditIntDown -> -stepValue
                 else -> 0
             }
 
