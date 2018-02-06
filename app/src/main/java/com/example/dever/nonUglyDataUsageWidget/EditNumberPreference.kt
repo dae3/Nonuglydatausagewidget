@@ -7,17 +7,18 @@ import android.preference.DialogPreference
 import android.preference.PreferenceManager
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 
-open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
+open class EditNumberPreference<out T>(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
     private lateinit var mValueTextView: TextView
-    protected var value: Long = 0
+    protected var value: Int = 0
     private val buttonListener = DialogListener()
-    protected val prefs : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val prefs : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var keyname: String
-    protected var minValue : Long = Long.MIN_VALUE
-    protected var maxValue : Long = Long.MAX_VALUE
-    protected var stepValue : Long = 1L
+//    protected var minValue : T = T.MIN_VALUE
+//    protected var maxValue : T = 0
+//    protected var stepValue : T = 1
 
     init {
         isPersistent = false
@@ -29,24 +30,34 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
         else
             keyname = k
 
-        minValue = attrs.getAttributeIntValue("http://dever.example.com", "minimum", Int.MIN_VALUE).toLong()
-        maxValue = attrs.getAttributeIntValue("http://dever.example.com", "maximum", Int.MAX_VALUE).toLong()
-        stepValue = attrs.getAttributeIntValue("http://dever.example.com", "step", Int.MIN_VALUE).toLong()
+        minValue = attrs.getAttributeIntValue("http://dever.example.com", "minimum", minValue)
+        maxValue = attrs.getAttributeIntValue("http://dever.example.com", "maximum", maxValue)
+        stepValue = attrs.getAttributeIntValue("http://dever.example.com", "step", stepValue)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    protected inline fun <reified T> minValue() : T {
+        return when (T::class) {
+            Int::class -> Int.MIN_VALUE
+            Long::class -> Long.MIN_VALUE
+            Float::class -> Float.MIN_VALUE
+            else -> Any
+        } as T
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
         if (positiveResult) {
             val editor = prefs.edit()
-            editor.putLong(key, value)
+            editor.putInt(key, value)
             editor.apply()
         }
     }
 
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
         value = if (restorePersistedValue)
-            getPersistedLong(0)
+            getPersistedInt(0)
         else
-            defaultValue as Long
+            defaultValue as Int
     }
 
     override fun onBindDialogView(view: View?) {
@@ -58,16 +69,16 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
             mValueTextView = view.findViewById(R.id.txtIntPrefInt)
             mValueTextView.text = value.toString()
 
-            val mBtnDown = view.findViewById(R.id.btnEditIntDown) as TextView
+            val mBtnDown = view.findViewById<ImageButton>(R.id.btnEditIntDown)
             mBtnDown.setOnClickListener(buttonListener)
 
-            val mBtnUp = view.findViewById(R.id.btnEditIntUp) as TextView
+            val mBtnUp = view.findViewById<ImageButton>(R.id.btnEditIntUp)
             mBtnUp.setOnClickListener(buttonListener)
 
         }
     }
 
-    protected open fun getValueFromSharedPreferences() = prefs.getLong(key, 0)
+    protected open fun getValueFromSharedPreferences() = prefs.getInt(key, 0)
 
     override fun onGetDefaultValue(a: TypedArray?, index: Int): Any {
         return a?.getInt(index, 0)!!
@@ -76,8 +87,8 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
     inner class DialogListener : View.OnClickListener {
         override fun onClick(v: View?) {
             value += when (v?.id) {
-                R.id.btnEditIntUp -> -stepValue
-                R.id.btnEditIntDown -> stepValue
+                R.id.btnEditIntUp -> stepValue
+                R.id.btnEditIntDown -> -stepValue
                 else -> 0
             }
 
