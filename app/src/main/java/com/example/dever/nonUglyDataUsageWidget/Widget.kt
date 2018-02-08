@@ -83,7 +83,7 @@ class Widget : AppWidgetProvider() {
                         R.id.txtWidgetActualData,
                         context.resources.getString(
                                 R.string.widget_data_template,
-                                (stats.actualData / 1024 / 1024 / 1024).toFloat()
+                                stats.actualData.toFloat() / 1024F / 1024F / 1024F
                         )
                 )
                 views.setTextViewText(
