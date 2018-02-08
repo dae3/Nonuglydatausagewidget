@@ -12,6 +12,7 @@ import android.widget.TextView
 
 open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
     private lateinit var mValueTextView: TextView
+    private lateinit var mUnitTextView : TextView
     protected var value: Int = 0
     private val buttonListener = DialogListener()
     private val prefs : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -19,6 +20,7 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
     protected var minValue : Int = Int.MIN_VALUE
     protected var maxValue : Int = Int.MAX_VALUE
     protected var stepValue : Int = 1
+    private lateinit var unitCaptionText : String
 
     init {
         isPersistent = false
@@ -33,6 +35,7 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
         minValue = attrs.getAttributeIntValue("http://dever.example.com", "minimum", minValue)
         maxValue = attrs.getAttributeIntValue("http://dever.example.com", "maximum", maxValue)
         stepValue = attrs.getAttributeIntValue("http://dever.example.com", "step", stepValue)
+        unitCaptionText = attrs.getAttributeValue("http://dever.example.com", "unitcaption")
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
@@ -58,6 +61,9 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
         if (view != null) {
             mValueTextView = view.findViewById(R.id.txtIntPrefInt)
             mValueTextView.text = value.toString()
+
+            mUnitTextView = view.findViewById(R.id.txtIntPrefUnitCaption)
+            mUnitTextView.text = unitCaptionText
 
             val mBtnDown = view.findViewById<ImageButton>(R.id.btnEditIntDown)
             mBtnDown.setOnClickListener(buttonListener)

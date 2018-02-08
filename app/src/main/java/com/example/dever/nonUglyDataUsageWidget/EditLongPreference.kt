@@ -7,10 +7,12 @@ import android.preference.DialogPreference
 import android.preference.PreferenceManager
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 
 open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
     private lateinit var mValueTextView: TextView
+    private lateinit var mUnitTextView : TextView
     protected var value: Long = 0
     private val buttonListener = DialogListener()
     protected val prefs : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -18,6 +20,7 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
     protected var minValue : Long = Long.MIN_VALUE
     protected var maxValue : Long = Long.MAX_VALUE
     protected var stepValue : Long = 1L
+    private lateinit var unitCaptionText : String
 
     init {
         isPersistent = false
@@ -32,6 +35,7 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
         minValue = attrs.getAttributeIntValue("http://dever.example.com", "minimum", Int.MIN_VALUE).toLong()
         maxValue = attrs.getAttributeIntValue("http://dever.example.com", "maximum", Int.MAX_VALUE).toLong()
         stepValue = attrs.getAttributeIntValue("http://dever.example.com", "step", Int.MIN_VALUE).toLong()
+        unitCaptionText = attrs.getAttributeValue("http://dever.example.com", "unitcaption")
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
@@ -58,10 +62,13 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
             mValueTextView = view.findViewById(R.id.txtIntPrefInt)
             mValueTextView.text = value.toString()
 
-            val mBtnDown = view.findViewById(R.id.btnEditIntDown) as TextView
+            mUnitTextView = view.findViewById(R.id.txtIntPrefUnitCaption)
+            mUnitTextView.text = unitCaptionText
+
+            val mBtnDown = view.findViewById<ImageButton>(R.id.btnEditIntDown)
             mBtnDown.setOnClickListener(buttonListener)
 
-            val mBtnUp = view.findViewById(R.id.btnEditIntUp) as TextView
+            val mBtnUp = view.findViewById<ImageButton>(R.id.btnEditIntUp)
             mBtnUp.setOnClickListener(buttonListener)
 
         }
@@ -76,8 +83,8 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
     inner class DialogListener : View.OnClickListener {
         override fun onClick(v: View?) {
             value += when (v?.id) {
-                R.id.btnEditIntUp -> -stepValue
-                R.id.btnEditIntDown -> stepValue
+                R.id.btnEditIntUp -> stepValue
+                R.id.btnEditIntDown -> -stepValue
                 else -> 0
             }
 

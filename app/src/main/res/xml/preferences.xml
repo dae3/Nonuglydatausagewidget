@@ -19,13 +19,15 @@
             android:key="@string/prefs_key_billingcycle_startday"
             android:title="@string/prefs_title_startdate"
             custom:maximum="31"
-            custom:minimum="1" />
+            custom:minimum="1"
+            custom:unitcaption=""/>
 
         <com.example.dever.nonUglyDataUsageWidget.EditGigabytePreference
             android:key="@string/prefs_key_maxdata"
             android:title="Max data"
             custom:minimum="0"
-            custom:step="1" />
+            custom:step="1"
+            custom:unitcaption="Gb"/>
 
     </PreferenceCategory>
 </PreferenceScreen>
