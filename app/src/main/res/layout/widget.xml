@@ -26,28 +26,22 @@
 
         <TextView
             android:id="@+id/txtWidgetActualData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoSizeMaxTextSize="@dimen/widget_text_data"
-            android:autoSizeMinTextSize="10sp"
-            android:autoSizeTextType="uniform"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/widget_text_data_default"
             android:text="XX Gb"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
-            android:textSize="@dimen/widget_text_data"
+            android:textSize="@dimen/widget_text_data_default"
             tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/txtWidgetDays"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoSizeMaxTextSize="@dimen/widget_text_days"
-            android:autoSizeMinTextSize="10sp"
-            android:autoSizeTextType="uniform"
             android:text="day N of M"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
-            android:textSize="@dimen/widget_text_days"
+            android:textSize="@dimen/widget_text_days_default"
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
