@@ -16,37 +16,40 @@
         app:srcCompat="@drawable/appwidget_preview" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@id/widgetChartImageView"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/txtWidgetActualData"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:autoSizeMaxTextSize="@dimen/widget_text_data"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeTextType="uniform"
             android:text="XX Gb"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
             android:textSize="@dimen/widget_text_data"
-            android:autoSizeMaxTextSize="@dimen/widget_text_data"
-            android:autoSizeMinTextSize="10sp"
-            android:autoSizeTextType="uniform"
             tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/txtWidgetDays"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:autoSizeMaxTextSize="@dimen/widget_text_days"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeTextType="uniform"
             android:text="day N of M"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
             android:textSize="@dimen/widget_text_days"
-            android:autoSizeMaxTextSize="@dimen/widget_text_days"
-            android:autoSizeMinTextSize="10sp"
-            android:autoSizeTextType="uniform"
             tools:ignore="HardcodedText" />
+
     </LinearLayout>
 
     <TextView
@@ -55,12 +58,12 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:textAlignment="center"
         android:autoSizeMaxTextSize="@dimen/widget_error_text_size"
         android:autoSizeMinTextSize="10sp"
         android:autoSizeTextType="uniform"
         android:background="@color/colorErrorBg"
         android:text="@string/widget_no_perm_message"
+        android:textAlignment="center"
         android:textColor="@color/colorErrorText"
         android:textSize="@dimen/widget_error_text_size"
         android:visibility="visible" />
