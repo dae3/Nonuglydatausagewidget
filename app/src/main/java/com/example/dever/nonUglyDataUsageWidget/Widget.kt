@@ -11,12 +11,14 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.util.TypedValue
 import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.RemoteViews
 import java.util.*
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -156,10 +158,17 @@ class Widget : AppWidgetProvider() {
                 views.setViewVisibility(R.id.txtWidgetNoPermMessage, INVISIBLE)
             } catch (e: SecurityException) {
                 // don't have permissions, but it'd be rude for the widget to jump straight to the perms activity
-                views.setTextViewText(R.id.txtWidgetNoPermMessage, context.getString(R.string.widget_no_perm_message))
+                views.setTextViewText(R.id.txtWidgetNoPermMessage,
+                        context.resources.getString(
+                                if (min(widgetSize.first, widgetSize.second) < context.resources.getDimension(R.dimen.widget_short_message_threshold_size))
+                                    R.string.widget_no_perm_message_short
+                                else R.string.widget_no_perm_message
+                        )
+                )
 
                 views.setViewVisibility(R.id.widgetChartImageView, INVISIBLE)
                 views.setViewVisibility(R.id.txtWidgetActualData, INVISIBLE)
+                views.setViewVisibility(R.id.txtWidgetDays, INVISIBLE)
                 views.setViewVisibility(R.id.txtWidgetNoPermMessage, VISIBLE)
 
                 views.setOnClickPendingIntent(R.id.txtWidgetNoPermMessage, PendingIntent.getActivity(context, 0, Intent(context, PrePermissionRequestActivity::class.java), 0))

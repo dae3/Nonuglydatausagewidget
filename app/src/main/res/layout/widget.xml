@@ -49,13 +49,13 @@
 
     <TextView
         android:id="@+id/txtWidgetNoPermMessage"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textAlignment="center"
         android:text="@string/widget_no_perm_message"
-        android:textAppearance="@android:style/TextAppearance.Material.Display2"
+        android:textAppearance="@android:style/TextAppearance.Material.Headline"
         android:background="@color/colorErrorBg"
         android:textColor="@color/colorErrorText"
         android:visibility="invisible" />

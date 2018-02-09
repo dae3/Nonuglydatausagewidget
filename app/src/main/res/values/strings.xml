@@ -13,7 +13,8 @@
     <string name="menu_activity_title_settings">Settings</string>
     <string name="action_title_refresh">Refresh</string>
     <string name="action_title_check_permissions">Check permissions</string>
-    <string name="widget_no_perm_message">Don\'t have permission to read data usage. Click to fix.</string>
+    <string name="widget_no_perm_message">Don\'t have permission to read data usage. Click to fix</string>
+    <string name="widget_no_perm_message_short">Click to fix permissions</string>
     <string name="widget_data_template">%1$.1f Gb</string>
     <string name="widget_days_template">day %1$d of %2$d</string>
 </resources>
