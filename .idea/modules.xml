@@ -3,10 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Nonuglydatausagewidget.iml" filepath="$PROJECT_DIR$/Nonuglydatausagewidget.iml" />
-      <module fileurl="file://C:\Users\daniel.everett\AndroidStudioProjects\nudw\Nonuglydatausagewidget.iml" filepath="C:\Users\daniel.everett\AndroidStudioProjects\nudw\Nonuglydatausagewidget.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\daniel.everett\StudioProjects\Nonuglydatausagewidget\nudw.iml" filepath="C:\Users\daniel.everett\StudioProjects\Nonuglydatausagewidget\nudw.iml" />
-      <module fileurl="file://C:\Users\dever\AndroidStudioProjects\Nonuglydatausagewidget\nudw.iml" filepath="C:\Users\dever\AndroidStudioProjects\Nonuglydatausagewidget\nudw.iml" />
     </modules>
   </component>
 </project>

@@ -27,7 +27,6 @@ import kotlin.math.min
  */
 class Widget : AppWidgetProvider() {
 
-
     private lateinit var prefs: SharedPreferences
     private lateinit var interval: NetworkStatsInterval
     private lateinit var stats: GetNetworkStats
@@ -37,7 +36,7 @@ class Widget : AppWidgetProvider() {
         setProps(context)
 
         for (appWidgetId in appWidgetIds)
-            updateAppWidget(context, appWidgetManager, appWidgetId, interval, stats, textSizes(context, widgetSize(appWidgetManager,appWidgetId)), widgetSize(appWidgetManager, appWidgetId))
+            updateAppWidget(context, appWidgetManager, appWidgetId, interval, stats, textSizes(widgetSize(appWidgetManager, appWidgetId)), widgetSize(appWidgetManager, appWidgetId))
     }
 
     private fun setProps(context: Context) {
@@ -46,21 +45,36 @@ class Widget : AppWidgetProvider() {
         stats = GetNetworkStats(context, interval)
     }
 
-    private fun textSizes(context: Context, widgetSize: Pair<Int, Int>): Pair<Float, Float> {
-        var dataTextSize : Float = context.resources.getDimension(R.dimen.widget_text_data_default)
-        var daysTextSize : Float = context.resources.getDimension(R.dimen.widget_text_days_default)
+    /**
+     * Return text size in dp of the two TextViews, calculated from the widget size
+     * Uses a simple algorithm:
+     *  Avail space = 0.8 * min(width, height)
+     *  Data text = 0.6 * Avail space
+     *  Days text = (1-Data text) * Avail space
+     *
+     *  have to do text scaling ourselves because TextViewCompat (which does autosizing) doesn't work inside a RemoteViews, see
+     * @link(https://stackoverflow.com/questions/45412380/autosize-text-in-homescreen-widget-with-support-library) and
+     * @link(https://issuetracker.google.com/issues/37071559)
+     * and TextView doesn't do autosizing until API 26
+     *
+     *  @param context to obtain dimension resources and algorithm constants
+     *  @param widgetSize the widget size as Pair<width, height>
+     *  @return Pain<Data TextView font size in dp : Float, Days TextView font size in dp : Float>
+     */
+    private fun textSizes(widgetSize: Pair<Int, Int>): Pair<Float, Float> {
 
-        // widgetSize(width, height) in dp
-        //  simple algorithm for text size
-        //   2/3 of avail space for data
-        //   1/3 for days
-        //   avail space = 0.8 * min(width, height)
-
-        val avail : Float = min(widgetSize.first, widgetSize.second) * .8F
+        val avail: Float = min(widgetSize.first, widgetSize.second) * 0.7F
         return Pair(avail * .6F, avail * .3F)
     }
 
-    private fun widgetSize(appWidgetManager: AppWidgetManager, appWidgetId : Int) : Pair<Int,Int> {
+    /**
+     * Returns the widget dimensions, calculated from appWidgetManager.getAppWidgetOptions if non-zero
+     * or from appWidgetManager.getAppWidgetInfo otherwise
+     * @param appWidgetManager the AppWidgetManager instance that owns this widget
+     * @param appWidgetId the unique ID of this widget within the AppWidgetManager instance
+     * @return widget width and height (in that order) as a Pair<Int, Int>
+     */
+    private fun widgetSize(appWidgetManager: AppWidgetManager, appWidgetId: Int): Pair<Int, Int> {
         val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
         val info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
 
@@ -73,22 +87,23 @@ class Widget : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context?, appWidgetManager: AppWidgetManager?, appWidgetId: Int, newOptions: Bundle?) {
         setProps(context!!)
 
-        // have to do text scaling ourselves because TextViewCompat (which does autosizing) doesn't work inside a RemoteViews, see
-        // https://stackoverflow.com/questions/45412380/autosize-text-in-homescreen-widget-with-support-library and
-        // https://issuetracker.google.com/issues/37071559
-        // and TextView doesn't do autosizing until API 26
         updateAppWidget(
                 context,
                 appWidgetManager!!,
                 appWidgetId,
                 interval,
                 stats,
-                textSizes(context, widgetSize(appWidgetManager, appWidgetId)),
+                textSizes(widgetSize(appWidgetManager, appWidgetId)),
                 widgetSize(appWidgetManager, appWidgetId)
         )
 
     }
 
+    /**
+     * Trigger a widget update outside the normal widget host update frequency
+     * Used by PrePermissionRequestActivity to toggle widget between normal and permission warning
+     * when permissions are changed
+     */
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.hasExtra(WIDGET_IDS_KEY))
             this.onUpdate(context, AppWidgetManager.getInstance(context), intent.extras!!.getIntArray(WIDGET_IDS_KEY))
@@ -101,7 +116,7 @@ class Widget : AppWidgetProvider() {
         const val WIDGET_IDS_KEY = "nudwidgetkey"
 
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
-                                     appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats, textSizes: Pair<Float, Float>, widgetSize : Pair<Int, Int>) {
+                                     appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats, textSizes: Pair<Float, Float>, widgetSize: Pair<Int, Int>) {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
             val chart = PieWithTickChart(widgetSize.first, widgetSize.second, context)
@@ -113,7 +128,6 @@ class Widget : AppWidgetProvider() {
                         interval
                 )
 
-                // TODO adjust text size based on widget dimensions
                 views.setImageViewBitmap(R.id.widgetChartImageView, chart.bitmap)
                 views.setTextViewText(
                         R.id.txtWidgetActualData,
