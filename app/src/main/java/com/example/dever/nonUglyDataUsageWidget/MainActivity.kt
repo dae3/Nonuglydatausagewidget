@@ -1,61 +1,32 @@
 package com.example.dever.nonUglyDataUsageWidget
 
 import android.annotation.SuppressLint
+import android.app.Fragment
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import android.widget.TextView
-import java.text.NumberFormat
+import android.widget.LinearLayout
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var txtDataUsed: TextView
-    private lateinit var txtInterval: TextView
-    private lateinit var i: ImageView
-    private var nf = NumberFormat.getNumberInstance()
     private lateinit var prefs: SharedPreferences
     private lateinit var stats: GetNetworkStats
-    private lateinit var chart: PieWithTickChart
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
-            R.id.action_settings -> {
-                startActivity(Intent(this, PreferencesActivity::class.java))
-                true
-            }
-            R.id.action_refresh -> {
-                // toast ' not impl '
-                true
-            }
-            R.id.action_checkperms -> {
-                startActivity(Intent(this, PrePermissionRequestActivity::class.java))
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+    private lateinit var interval : NetworkStatsInterval
+    private var fragment : Fragment? = PieChartFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        txtDataUsed = findViewById(R.id.txtDataUsed)
-        txtInterval = findViewById(R.id.txtInterval)
+        findViewById<BottomNavigationView>(R.id.bottom_navbar).setOnNavigationItemSelectedListener(this)
 
-        i = findViewById(R.id.imageView2)
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        chart = PieWithTickChart(100, 100, this)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.actionbar, menu)
-        return super.onPrepareOptionsMenu(menu)
     }
 
     @SuppressLint("SetTextI18n")
@@ -67,20 +38,34 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, PrePermissionRequestActivity::class.java))
         else {
             try {
-                val statsInterval = DayNOfMonthNetworkStatsInterval(
+                interval = DayNOfMonthNetworkStatsInterval(
                         today = GregorianCalendar(Locale.getDefault()),
                         dayOfMonth = prefs.getInt(resources.getString(R.string.prefs_key_billingcycle_startday), 1)
                 )
-                stats = GetNetworkStats(this, statsInterval)
+                stats = GetNetworkStats(this, interval)
 
-                txtDataUsed.text = "${nf.format(stats.actualData.toFloat() / 1024 / 1024)} MB of ${nf.format(stats.maxData.toFloat()/1024/1024)} MB"
-                txtInterval.text = "$statsInterval"
-
-                chart.drawChart(stats.actualData.toDouble(), stats.maxData.toDouble(), statsInterval)
-                i.setImageBitmap(chart.bitmap)
             } catch (e: SecurityException) {
                 startActivity(Intent(this, PrePermissionRequestActivity::class.java))
             }
+        }
+
+        fragmentManager.beginTransaction().replace(R.id.main_linear_body, fragment, null).commit()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+        fragment = when(item.itemId) {
+            R.id.bottomnav_home -> PieChartFragment()
+            R.id.bottomnav_settings -> SettingsFragment()
+            R.id.bottomnav_about -> AboutFragment()
+            else -> null
+        }
+
+        return if (fragment == null)
+            false
+        else {
+            fragmentManager.beginTransaction().replace(R.id.main_linear_body, fragment, null).commit()
+            true
         }
     }
 }
