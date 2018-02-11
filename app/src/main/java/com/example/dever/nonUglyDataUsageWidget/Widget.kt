@@ -13,8 +13,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.TypedValue
 import android.util.TypedValue.COMPLEX_UNIT_PX
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.widget.RemoteViews
 import java.util.*
 import kotlin.math.min
@@ -111,6 +110,7 @@ class Widget : AppWidgetProvider() {
                                      appWidgetId: Int, pie: PieWithTickChart) {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
+            views.setViewVisibility(R.id.progressBar, GONE)
             val ws = widgetSize(appWidgetManager, appWidgetId)
 
             try {

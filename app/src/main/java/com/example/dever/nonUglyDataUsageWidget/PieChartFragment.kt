@@ -8,11 +8,11 @@ import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import java.util.*
 import kotlin.math.roundToInt
@@ -64,7 +64,10 @@ class PieChartFragment : Fragment(), View.OnClickListener, ViewTreeObserver.OnGl
     override fun onGlobalLayout() {
 
         rootView?.viewTreeObserver.removeOnGlobalLayoutListener(this)
-        layoutDone = true
+        if (!layoutDone) {
+            layoutDone = true
+            rootView.findViewById<ProgressBar>(R.id.progressBar).visibility = GONE
+        }
 
         val density = resources.displayMetrics.density
         pie = PieWithTickChart(context, rootView.width/density.roundToInt(), rootView.height/density.roundToInt(), statsInterval, networkStats)

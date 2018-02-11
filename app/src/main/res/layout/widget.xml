@@ -13,7 +13,14 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/widget_chart_content_description"
-        app:srcCompat="@drawable/appwidget_preview" />
+        android:visibility="invisible" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -29,21 +36,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/widget_margin"
-            android:text="XX Gb"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
-            android:textSize="@dimen/widget_text_data_default"
-            tools:ignore="HardcodedText" />
+            android:textSize="@dimen/widget_text_data_default" />
 
         <TextView
             android:id="@+id/txtWidgetDays"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="day N of M"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
-            android:textSize="@dimen/widget_text_days_default"
-            tools:ignore="HardcodedText" />
+            android:textSize="@dimen/widget_text_days_default" />
 
     </LinearLayout>
 
@@ -53,10 +56,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:textAlignment="center"
-        android:text="@string/widget_no_perm_message"
-        android:textAppearance="@android:style/TextAppearance.Material.Headline"
         android:background="@color/colorErrorBg"
+        android:text="@string/widget_no_perm_message"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Headline"
         android:textColor="@color/colorErrorText"
         android:visibility="invisible" />
 
