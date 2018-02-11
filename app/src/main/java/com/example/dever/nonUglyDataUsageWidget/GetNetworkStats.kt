@@ -12,15 +12,17 @@ import android.telephony.TelephonyManager
 class GetNetworkStats(private val context: Context, private var interval: NetworkStatsInterval) {
 
     private var nsm = context.getSystemService(NetworkStatsManager::class.java)
+    private val tsm  =context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
     // get subscriber id code courtesy of https://medium.com/@quiro91/build-a-data-usage-manager-in-android-e7991cfe7fe4
-    private val subscriberId: String by lazy {
-        (context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).subscriberId
-    }
-
     var actualData: Long = 0L
         get() {
-            val bucket = nsm.querySummaryForDevice(TYPE_MOBILE, subscriberId, interval.startDate.timeInMillis, interval.endDate.timeInMillis)
+            val bucket = nsm.querySummaryForDevice(
+                    TYPE_MOBILE,
+                    tsm.subscriberId,
+                    interval.startDate.timeInMillis,
+                    interval.endDate.timeInMillis
+            )
             return bucket.rxBytes + bucket.txBytes
         }
 

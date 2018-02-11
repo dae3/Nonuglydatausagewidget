@@ -11,14 +11,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.util.TypedValue
 import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.RemoteViews
 import java.util.*
-import kotlin.math.max
 import kotlin.math.min
 
 
@@ -37,10 +35,16 @@ class Widget : AppWidgetProvider() {
 
         setProps(context)
 
-        for (appWidgetId in appWidgetIds)
-            updateAppWidget(context, appWidgetManager, appWidgetId, interval, stats, textSizes(widgetSize(appWidgetManager, appWidgetId)), widgetSize(appWidgetManager, appWidgetId))
+        for (appWidgetId in appWidgetIds) {
+            val ws = widgetSize(appWidgetManager, appWidgetId)
+            updateAppWidget(context, appWidgetManager, appWidgetId, PieWithTickChart(context, ws.first, ws.second, interval, stats))
+        }
     }
 
+    /**
+     * Set various properties that require a Context and therefore can't be initialized in the constructor
+     * @param context  Context from the enclosing widget
+     */
     private fun setProps(context: Context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context)
         interval = NetworkStatsIntervalFactory.getInterval(context)
@@ -48,57 +52,20 @@ class Widget : AppWidgetProvider() {
     }
 
     /**
-     * Return text size in dp of the two TextViews, calculated from the widget size
-     * Uses a simple algorithm:
-     *  Avail space = 0.8 * min(width, height)
-     *  Data text = 0.6 * Avail space
-     *  Days text = (1-Data text) * Avail space
-     *
-     *  have to do text scaling ourselves because TextViewCompat (which does autosizing) doesn't work inside a RemoteViews, see
-     * @link(https://stackoverflow.com/questions/45412380/autosize-text-in-homescreen-widget-with-support-library) and
-     * @link(https://issuetracker.google.com/issues/37071559)
-     * and TextView doesn't do autosizing until API 26
-     *
-     *  @param context to obtain dimension resources and algorithm constants
-     *  @param widgetSize the widget size as Pair<width, height>
-     *  @return Pain<Data TextView font size in dp : Float, Days TextView font size in dp : Float>
+     * Redraw the AppWidget after a resize
      */
-    private fun textSizes(widgetSize: Pair<Int, Int>): Pair<Float, Float> {
-
-        val avail: Float = min(widgetSize.first, widgetSize.second) * 0.7F
-        return Pair(avail * .6F, avail * .3F)
-    }
-
-    /**
-     * Returns the widget dimensions, calculated from appWidgetManager.getAppWidgetOptions if non-zero
-     * or from appWidgetManager.getAppWidgetInfo otherwise
-     * @param appWidgetManager the AppWidgetManager instance that owns this widget
-     * @param appWidgetId the unique ID of this widget within the AppWidgetManager instance
-     * @return widget width and height (in that order) as a Pair<Int, Int>
-     */
-    private fun widgetSize(appWidgetManager: AppWidgetManager, appWidgetId: Int): Pair<Int, Int> {
-        val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
-        val info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
-
-        return Pair(
-                if (options.getInt(OPTION_APPWIDGET_MAX_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
-                if (options.getInt(OPTION_APPWIDGET_MAX_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
-        )
-    }
-
     override fun onAppWidgetOptionsChanged(context: Context?, appWidgetManager: AppWidgetManager?, appWidgetId: Int, newOptions: Bundle?) {
-        setProps(context!!)
+        if (context != null && appWidgetManager != null && newOptions != null) {
 
-        updateAppWidget(
-                context,
-                appWidgetManager!!,
-                appWidgetId,
-                interval,
-                stats,
-                textSizes(widgetSize(appWidgetManager, appWidgetId)),
-                widgetSize(appWidgetManager, appWidgetId)
-        )
+            setProps(context)
 
+            updateAppWidget(
+                    context,
+                    appWidgetManager,
+                    appWidgetId,
+                    PieWithTickChart(context, newOptions.getInt(OPTION_APPWIDGET_MAX_WIDTH), newOptions.getInt(OPTION_APPWIDGET_MAX_HEIGHT), interval, stats)
+            )
+        }
     }
 
     /**
@@ -113,54 +80,60 @@ class Widget : AppWidgetProvider() {
             super.onReceive(context, intent)
     }
 
+    /**
+     * static methods
+     *
+     * updateAppWidget as required by Android
+     * widgetSize so it can be called by updateAppWidget
+     */
     companion object {
+
+        /**
+         * Returns the widget dimensions, calculated from appWidgetManager.getAppWidgetOptions if non-zero
+         * or from appWidgetManager.getAppWidgetInfo otherwise
+         * @param appWidgetManager the AppWidgetManager instance that owns this widget
+         * @param appWidgetId the unique ID of this widget within the AppWidgetManager instance
+         * @return widget width and height (in that order) as a Pair<Int, Int>
+         */
+        private fun widgetSize(appWidgetManager: AppWidgetManager, appWidgetId: Int): Pair<Int, Int> {
+            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
+            val info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
+
+            return Pair(
+                    if (options.getInt(OPTION_APPWIDGET_MAX_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
+                    if (options.getInt(OPTION_APPWIDGET_MAX_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
+            )
+        }
 
         const val WIDGET_IDS_KEY = "nudwidgetkey"
 
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
-                                     appWidgetId: Int, interval: NetworkStatsInterval, stats: GetNetworkStats, textSizes: Pair<Float, Float>, widgetSize: Pair<Int, Int>) {
+                                     appWidgetId: Int, pie: PieWithTickChart) {
 
             val views = RemoteViews(context.packageName, R.layout.widget)
-            val chart = PieWithTickChart(widgetSize.first, widgetSize.second, context)
+            val ws = widgetSize(appWidgetManager, appWidgetId)
 
             try {
-                chart.drawChart(
-                        stats.actualData.toDouble(),
-                        stats.maxData.toDouble(),
-                        interval
-                )
-
-                views.setImageViewBitmap(R.id.widgetChartImageView, chart.bitmap)
-                views.setTextViewText(
-                        R.id.txtWidgetActualData,
-                        context.resources.getString(
-                                R.string.widget_data_template,
-                                stats.actualData.toFloat() / 1024F / 1024F / 1024F
-                        )
-                )
-                views.setTextViewTextSize(R.id.txtWidgetActualData, COMPLEX_UNIT_PX, textSizes.first)
-                views.setTextViewText(
-                        R.id.txtWidgetDays,
-                        context.resources.getString(
-                                R.string.widget_days_template,
-                                GregorianCalendarDefaultLocale().get(Calendar.DAY_OF_MONTH) - interval.startDate.get(Calendar.DAY_OF_MONTH) + 1,
-                                interval.endDate.get(Calendar.DAY_OF_MONTH) - interval.startDate.get(Calendar.DAY_OF_MONTH) + 1
-                        )
-                )
-                views.setTextViewTextSize(R.id.txtWidgetDays, TypedValue.COMPLEX_UNIT_PX, textSizes.second)
+                views.setImageViewBitmap(R.id.widgetChartImageView, pie.bitmap)
+                views.setTextViewText(R.id.txtWidgetActualData, pie.actualDataText)
+                views.setTextViewTextSize(R.id.txtWidgetActualData, COMPLEX_UNIT_PX, pie.actualDataTextSize)
+                views.setTextViewText(R.id.txtWidgetDays, pie.daysText)
+                views.setTextViewTextSize(R.id.txtWidgetDays, TypedValue.COMPLEX_UNIT_PX, pie.daysTextSize)
 
                 val clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
                 views.setOnClickPendingIntent(R.id.widgetChartImageView, clickIntent)
                 views.setOnClickPendingIntent(R.id.txtWidgetActualData, clickIntent)
+                views.setOnClickPendingIntent(R.id.txtWidgetDays, clickIntent)
 
                 views.setViewVisibility(R.id.widgetChartImageView, VISIBLE)
                 views.setViewVisibility(R.id.txtWidgetActualData, VISIBLE)
+                views.setViewVisibility(R.id.txtWidgetDays, VISIBLE)
                 views.setViewVisibility(R.id.txtWidgetNoPermMessage, INVISIBLE)
             } catch (e: SecurityException) {
                 // don't have permissions, but it'd be rude for the widget to jump straight to the perms activity
                 views.setTextViewText(R.id.txtWidgetNoPermMessage,
                         context.resources.getString(
-                                if (min(widgetSize.first, widgetSize.second) < context.resources.getDimension(R.dimen.widget_short_message_threshold_size))
+                                if (min(ws.first, ws.second) < context.resources.getDimension(R.dimen.widget_short_message_threshold_size))
                                     R.string.widget_no_perm_message_short
                                 else R.string.widget_no_perm_message
                         )
