@@ -4,86 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.dever.nonUglyDataUsageWidget.PrePermissionRequestActivity"
-    tools:layout_editor_absoluteY="81dp">
+    android:theme="@style/AppTheme.PrePermissionRequestActivity"
+    tools:context="com.example.dever.nonUglyDataUsageWidget.PrePermissionRequestActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/prepermreqestactivity_toolbar"
+    <TextView
+        android:id="@+id/txtPermIntro"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:layout_height="wrap_content"
+        android:text="@string/permission_why_intro"
+        android:textAlignment="textStart"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+    <ImageView
+        android:id="@+id/imgPrePermLeftArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/prepermission_fragment_previous_arrow_description"
+        android:src="@drawable/ic_navigate_before_black_48dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPermIntro" />
 
+    <!-- https://stackoverflow.com/a/40881429 -->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/perm_view_pager"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintHeight_default="wrap"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/txtPermIntro"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/imgPrePermLeftArrow"
+        app:layout_constraintRight_toLeftOf="@+id/imgPrePermRightArrow"
+        >
 
-        <TextView
-            android:id="@+id/txtUsagePermission"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="@string/why_usage_permission_text"
-            android:textAlignment="center" />
-
-        <ImageView
-            android:id="@+id/imageUsagePerm"
+        <android.support.v4.view.PagerTabStrip
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtUsagePermission"
-            android:layout_centerHorizontal="true"
-            android:scaleType="center"
-            android:src="@drawable/usage_perm_screen"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="requestUsagePermission"/>
+            android:foregroundGravity="bottom"
+            />
 
-        <ImageView
-            android:id="@+id/image_usage_permission_tick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/imageUsagePerm"
-            android:layout_below="@+id/txtUsagePermission"
-            android:layout_marginLeft="50px"
-            android:src="@drawable/ic_done_black_24dp"
-            android:visibility="invisible"/>
+    </android.support.v4.view.ViewPager>
 
-        <TextView
-            android:id="@+id/txtPhonePermission"
-            android:layout_marginTop="50dp"
-            android:layout_below="@+id/imageUsagePerm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/why_scary_phone_permission"
-            android:textAlignment="center" />
-
-        <ImageView
-            android:id="@+id/imagePhonePermission"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txtPhonePermission"
-            android:layout_centerHorizontal="true"
-            android:scaleType="center"
-            android:src="@drawable/phonecall_perm_screen"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="requestPhoneStatePermission"/>
-
-        <ImageView
-            android:id="@+id/image_phone_permission_tick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/imagePhonePermission"
-            android:layout_below="@+id/txtPhonePermission"
-            android:layout_marginLeft="50px"
-            android:src="@drawable/ic_done_black_24dp"
-            android:visibility="invisible"/>
-
-
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/imgPrePermRightArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/prepermission_fragment_next_arrow_description"
+        android:src="@drawable/ic_navigate_next_black_48dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPermIntro" />
 
 </android.support.constraint.ConstraintLayout>
