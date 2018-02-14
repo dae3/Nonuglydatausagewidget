@@ -9,8 +9,6 @@ import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.LinearLayout
 import java.util.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -19,6 +17,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private lateinit var stats: GetNetworkStats
     private lateinit var interval : NetworkStatsInterval
     private var fragment : Fragment? = PieChartFragment()
+    private val perm = PermissionManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onResume()
 
         // test permissions first - can't do much without these
-        if (!(PermissionChecker.haveUsagePermission(this) || !PermissionChecker.havePhoneStatePermission(this)))
+        if (!(perm.haveUsagePermission || !perm.havePhoneStatePermission))
             startActivity(Intent(this, PrePermissionRequestActivity::class.java))
         else {
             try {

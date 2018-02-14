@@ -9,7 +9,6 @@ import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.content.DialogInterface.BUTTON_POSITIVE
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -22,9 +21,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 
 class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.OnClickListener {
-
-    private val MYPERMREQREADPHONESTATE = 1
     private lateinit var vp: ViewPager
+    private val perm = PermissionManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,20 +38,11 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun requestPhoneStatePermission() {
-        if (!PermissionChecker.havePhoneStatePermission(this))
-            this.requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), MYPERMREQREADPHONESTATE)
-    }
-
-    private fun requestUsagePermission() {
-        if (!PermissionChecker.haveUsagePermission(this)) startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-    }
-
     /**
      * Warn if closing without actually granting permissions, which renders the whole app kinda useless
      */
     override fun onBackPressed() {
-        if (PermissionChecker.havePhoneStatePermission(this) && PermissionChecker.haveUsagePermission(this))
+        if (perm.havePhoneStatePermission && perm.haveUsagePermission)
             super.onBackPressed()
         else
             ClosingWithoutPermissionGrantedDialog.show(this)
@@ -82,8 +71,8 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
         when (v?.id) {
             R.id.prepermission_fragment_image -> when (vp.currentItem) {
                 0 -> Unit
-                1 -> requestPhoneStatePermission()
-                2 -> requestUsagePermission()
+                1 -> perm.requestPhoneStatePermission()
+                2 -> perm.requestUsagePermission()
                 else -> throw IllegalStateException("PrePermissionRequestActivity ViewPager unexpected currentItem ${vp.currentItem}")
             }
             R.id.imgPrePermRightArrow -> vp.currentItem += if (vp.canScrollHorizontally(1)) 1 else 0
@@ -132,7 +121,7 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
     /**
      * Simple Fragment to display swipeable pages for each step within PrePermissionRequestActivity
      */
-    class PrePermissionRequestFragment() : android.support.v4.app.Fragment() {
+    class PrePermissionRequestFragment : android.support.v4.app.Fragment() {
         private var layout: Int? = null
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
