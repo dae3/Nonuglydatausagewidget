@@ -3,14 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
 
     <TextView
         android:id="@+id/prepermission_fragment_toptext"
+        style="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Happy Happy Joy Joy 2"
+        android:text="@string/why_scary_phone_permission"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/prepermission_fragment_image"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
@@ -21,19 +24,11 @@
         android:layout_height="wrap_content"
         android:src="@drawable/phonecall_perm_screen"
         app:layout_constraintTop_toBottomOf="@+id/prepermission_fragment_toptext"
-        app:layout_constraintBottom_toTopOf="@+id/prepermission_fragment_bottomtext"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
-
-    <TextView
-        android:id="@+id/prepermission_fragment_bottomtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="botto bojoij"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:ignore="HardcodedText" />
+        android:clickable="true"
+        android:focusable="true"
+        />
 
 </android.support.constraint.ConstraintLayout>

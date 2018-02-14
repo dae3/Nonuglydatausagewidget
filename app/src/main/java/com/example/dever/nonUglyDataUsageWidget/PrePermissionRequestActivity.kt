@@ -10,19 +10,22 @@ import android.content.DialogInterface.BUTTON_POSITIVE
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 
-class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.OnClickListener {
+class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.OnClickListener, ViewPager.OnPageChangeListener {
     private lateinit var vp: ViewPager
     private val perm = PermissionManager(this)
+    private lateinit var rightarrow: ImageView
+    private lateinit var leftarrow: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +34,13 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
 
         vp = findViewById(R.id.perm_view_pager)
         vp.adapter = PrePermissionRequestActivity.PrePermissionRequestPagerAdapter(supportFragmentManager)
+        vp.addOnPageChangeListener(this)
 
-        findViewById<ImageView>(R.id.imgPrePermRightArrow).setOnClickListener(this)
-        findViewById<ImageView>(R.id.imgPrePermLeftArrow).setOnClickListener(this)
+        rightarrow = findViewById<ImageView>(R.id.imgPrePermRightArrow)
+        rightarrow.setOnClickListener(this)
+        leftarrow = findViewById<ImageView>(R.id.imgPrePermLeftArrow)
+        leftarrow.setOnClickListener(this)
+        leftarrow.visibility = INVISIBLE
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -91,6 +98,25 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
     }
 
     /**
+     * ViewPager.OnPageChangeListener implementation
+     */
+    override fun onPageScrollStateChanged(state: Int) = Unit // don't care
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit // don't care
+
+    /**
+     * Enable left and right navigation arrows depending on current page
+     */
+    override fun onPageSelected(position: Int) {
+        // position is 0 based
+        when (position) {
+            vp.adapter?.count?.minus(1) -> { leftarrow.visibility = VISIBLE; rightarrow.visibility = INVISIBLE } // last page
+            0 -> { leftarrow.visibility = INVISIBLE; rightarrow.visibility = VISIBLE } // first page
+            else -> { leftarrow.visibility = VISIBLE; rightarrow.visibility = VISIBLE }
+        }
+    }
+
+    /**
      * Simple PagerAdapter to display Fragments as swipeable pages within this Activity
      */
     private class PrePermissionRequestPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
@@ -102,20 +128,10 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
                 PrePermissionRequestActivity.PrePermissionRequestFragment.CreatePrePermissionRequestFragment(R.layout.prepermissionrequest_page3_fragment_layout)
         )
 
-//    override fun getPageTitle(position: Int): CharSequence? {
-//        return when(position) {
-//            1->"one"
-//            2->"two"
-//            3->"three"
-//            else->"bad $position"
-//        }
-//    }
 
         override fun getCount(): Int = NUMPAGES
 
-        override fun getItem(position: Int): Fragment {
-            return pages[position]
-        }
+        override fun getItem(position: Int) = pages[position]
     }
 
     /**
@@ -128,7 +144,7 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
             if (layout == null)
                 throw IllegalArgumentException("PrePermissionRequestFragment must have layout passed as an argument")
             else {
-                val v = inflater!!.inflate(layout!!, container, false)
+                val v = inflater.inflate(layout!!, container, false)
                 v.findViewById<ImageView>(R.id.prepermission_fragment_image)?.setOnClickListener(activity as PrePermissionRequestActivity)
 
                 return v

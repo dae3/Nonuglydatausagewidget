@@ -7,16 +7,6 @@
     android:theme="@style/AppTheme.PrePermissionRequestActivity"
     tools:context="com.example.dever.nonUglyDataUsageWidget.PrePermissionRequestActivity">
 
-    <TextView
-        android:id="@+id/txtPermIntro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/permission_why_intro"
-        android:textAlignment="textStart"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/imgPrePermLeftArrow"
         android:layout_width="wrap_content"
@@ -27,7 +17,7 @@
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPermIntro" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- https://stackoverflow.com/a/40881429 -->
     <android.support.v4.view.ViewPager
@@ -36,17 +26,17 @@
         app:layout_constraintWidth_default="wrap"
         app:layout_constraintHeight_default="wrap"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/txtPermIntro"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/imgPrePermLeftArrow"
         app:layout_constraintRight_toLeftOf="@+id/imgPrePermRightArrow"
         >
 
-        <android.support.v4.view.PagerTabStrip
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foregroundGravity="bottom"
-            />
+        <!--<android.support.v4.view.PagerTabStrip-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:foregroundGravity="bottom"-->
+            <!--/>-->
 
     </android.support.v4.view.ViewPager>
 
@@ -60,6 +50,8 @@
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPermIntro" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 
 </android.support.constraint.ConstraintLayout>

@@ -12,7 +12,11 @@
     </style>
 
     <style name="AppTheme.PrePermissionRequestActivity">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textViewStyle">@style/LargeTextview</item>
+    </style>
+
+    <style name="LargeTextview"  parent="android:Widget.TextView">
+        <item name="android:textSize">30sp</item>
 
     </style>
 
