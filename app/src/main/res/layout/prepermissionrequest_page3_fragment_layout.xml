@@ -27,4 +27,15 @@
         app:layout_constraintTop_toBottomOf="@+id/prepermission_fragment_toptext"
         tools:ignore="HardcodedText" />
 
+    <Button
+        android:id="@+id/prepermission_fragment_lastpagebutton"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/prepermission_fragment_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/prepermission_last_page_button_caption"
+        />
+
 </android.support.constraint.ConstraintLayout>

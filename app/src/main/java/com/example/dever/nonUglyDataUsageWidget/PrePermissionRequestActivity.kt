@@ -19,6 +19,7 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 
 class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.OnClickListener, ViewPager.OnPageChangeListener {
@@ -82,6 +83,12 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
                 2 -> perm.requestUsagePermission()
                 else -> throw IllegalStateException("PrePermissionRequestActivity ViewPager unexpected currentItem ${vp.currentItem}")
             }
+            R.id.prepermission_fragment_lastpagebutton -> {
+                if (perm.havePhoneStatePermission && perm.haveUsagePermission)
+                    finish()
+                else
+                    ClosingWithoutPermissionGrantedDialog.show(this)
+            }
             R.id.imgPrePermRightArrow -> vp.currentItem += if (vp.canScrollHorizontally(1)) 1 else 0
             R.id.imgPrePermLeftArrow -> vp.currentItem -= if (vp.canScrollHorizontally(-1)) 1 else 0
             else -> throw IllegalStateException("PrePermissionRequestActivity unexpected click event on id $v?.id")
@@ -110,9 +117,15 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
     override fun onPageSelected(position: Int) {
         // position is 0 based
         when (position) {
-            vp.adapter?.count?.minus(1) -> { leftarrow.visibility = VISIBLE; rightarrow.visibility = INVISIBLE } // last page
-            0 -> { leftarrow.visibility = INVISIBLE; rightarrow.visibility = VISIBLE } // first page
-            else -> { leftarrow.visibility = VISIBLE; rightarrow.visibility = VISIBLE }
+            vp.adapter?.count?.minus(1) -> {
+                leftarrow.visibility = VISIBLE; rightarrow.visibility = INVISIBLE
+            } // last page
+            0 -> {
+                leftarrow.visibility = INVISIBLE; rightarrow.visibility = VISIBLE
+            } // first page
+            else -> {
+                leftarrow.visibility = VISIBLE; rightarrow.visibility = VISIBLE
+            }
         }
     }
 
@@ -145,7 +158,9 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
                 throw IllegalArgumentException("PrePermissionRequestFragment must have layout passed as an argument")
             else {
                 val v = inflater.inflate(layout!!, container, false)
-                v.findViewById<ImageView>(R.id.prepermission_fragment_image)?.setOnClickListener(activity as PrePermissionRequestActivity)
+                val ppractivity = activity as PrePermissionRequestActivity
+                v.findViewById<ImageView>(R.id.prepermission_fragment_image)?.setOnClickListener(ppractivity)
+                v.findViewById<Button>(R.id.prepermission_fragment_lastpagebutton)?.setOnClickListener(ppractivity)
 
                 return v
             }
@@ -171,7 +186,7 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
         }
     }
 
-    class ClosingWithoutPermissionGrantedDialog() : DialogFragment() {
+    class ClosingWithoutPermissionGrantedDialog : DialogFragment() {
 
         lateinit var parent: PrePermissionRequestActivity
         var response: Int = BUTTON_NEGATIVE

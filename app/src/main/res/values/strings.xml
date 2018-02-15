@@ -35,5 +35,8 @@
     <string name="prepermission_alert_dialog_message">If you continue without granting permissions the app won\'t be able to display your mobile data usage.</string>
     <string name="prepermission_alert_dialog_positive_button_caption">Continue</string>
     <string name="prepermission_alert_dialog_negative_button_caption">Cancel</string>
+    <string name="prepermission_last_page_button_caption">continue</string>
+    <string name="snackbar_noperm_action">Fix</string>
+    <string name="main_snackbar_nopermission">Don\'t have permission to read data usage</string>
 </resources>
 
