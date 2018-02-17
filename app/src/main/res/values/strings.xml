@@ -5,7 +5,7 @@
     <string name="usage_permission_text_3">Finally, keep clicking back until you return to this screen.</string>
     <string name="why_scary_phone_permission">Permission to \"make and manage phone calls\" is required to see your mobile data usage.\n\nThis app will never actually make phone calls.</string>
     <string name="prefs_title_startdate">Start day</string>
-    <string name="prefs_categorytitle_billingcycle">Billing cycle</string>
+    <string name="prefs_categorytitle_billingcycle">Mobile plan</string>
     <string name="prefs_key_billingcycle_startday">prefs_billingcycle_startday</string>
     <string name="prefs_itemtitle_intervaltype">Interval type</string>
     <string name="prefs_itemkey_intervaltype">prefs_itemkey_intervaltype</string>

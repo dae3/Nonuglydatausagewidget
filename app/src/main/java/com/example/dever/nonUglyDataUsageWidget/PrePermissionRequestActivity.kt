@@ -23,7 +23,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 
 class PrePermissionRequestActivity :
@@ -221,13 +220,11 @@ class PrePermissionRequestActivity :
                             if (activity.perm.havePhonePermission) INVISIBLE else VISIBLE
                     v.findViewById<TextView>(R.id.prepermission_granted_text).visibility =
                             if (activity.perm.havePhonePermission) VISIBLE else INVISIBLE
-                    v.findViewById<ImageView>(R.id.prepermission_tick_image).visibility =
-                            v.findViewById<TextView>(R.id.prepermission_granted_text).visibility
                 }
                 R.layout.prepermissionrequest_page3_fragment_layout -> {
                     v.findViewById<Button>(R.id.usage_grant_permission_button).visibility =
                             if (activity.perm.haveUsagePermission) INVISIBLE else VISIBLE
-                    v.findViewById<LinearLayout>(R.id.usage_permission_granted_sublayout).visibility =
+                    v.findViewById<TextView>(R.id.prepermission_granted_text).visibility =
                             if (activity.perm.haveUsagePermission) VISIBLE else INVISIBLE
                 }
                 else -> Unit

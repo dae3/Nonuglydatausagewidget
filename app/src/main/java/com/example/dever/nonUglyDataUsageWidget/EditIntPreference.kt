@@ -24,7 +24,7 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
 
     init {
         isPersistent = false
-        dialogLayoutResource = R.layout.editint_preferences_dialog
+        dialogLayoutResource = R.layout.editnum_preferences_dialog
 
         val k: String? = attrs?.getAttributeValue("http://schemas.android.com/apk/res/android", "key")
         if (k == null)

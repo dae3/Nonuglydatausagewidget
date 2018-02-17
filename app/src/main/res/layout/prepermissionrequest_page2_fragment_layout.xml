@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/prepermission_page_margins"
+    android:paddingEnd="@dimen/prepermission_page_margins">
 
     <TextView
         android:id="@+id/prepermission_fragment_toptext"
@@ -27,18 +29,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/prepermission_tick_image"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:drawableEnd="@drawable/ic_done_black_48dp"
+        android:drawableTint="@android:color/holo_green_light"
         />
-
-    <ImageView
-        android:id="@+id/prepermission_tick_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/prepermission_fragment_toptext"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/prepermission_granted_text"
-        app:layout_constraintRight_toRightOf="parent"
-        android:src="@drawable/ic_done_black_48dp"
-        android:tint="@color/green"/>
 
     <Button
         android:id="@+id/prepermission_phone_button"
@@ -53,4 +46,4 @@
         android:visibility="invisible"
         />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
