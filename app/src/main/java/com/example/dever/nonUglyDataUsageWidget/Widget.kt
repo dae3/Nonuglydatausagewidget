@@ -107,7 +107,7 @@ class Widget : AppWidgetProvider() {
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
                                      appWidgetId: Int, pie: PieWithTickChart) {
 
-            val views = RemoteViews(context.packageName, R.layout.widget)
+            val views = RemoteViews(context.packageName, R.layout.pie_chart)
             views.setViewVisibility(R.id.progressBar, GONE)
             val ws = widgetSize(appWidgetManager, appWidgetId)
 

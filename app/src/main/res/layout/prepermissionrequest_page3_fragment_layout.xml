@@ -38,6 +38,7 @@
         android:id="@+id/usage_grant_permission_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:text="@string/prepermission_button_grant_caption"/>
 
     <LinearLayout

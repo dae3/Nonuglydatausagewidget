@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">NUD</string>
-    <string name="usage_permission_text_1">Usage access is required to see your actual mobile data usage. First, click the "Grant permission" button to open the system Usage access screen. You\'ll see NUD listed, and maybe some other apps like Google Play Services.</string>
+    <string name="usage_permission_text_1">Usage access is required to see your actual mobile data usage.\n\nFirst, click the "Grant permission" button to open the system Usage access screen.</string>
     <string name="usage_permission_text_2">Next, click on NUD to open the screen shown below, and click the switch to enable usage access.</string>
     <string name="usage_permission_text_3">Finally, keep clicking back until you return to this screen.</string>
-    <string name="why_scary_phone_permission">Permission to \"make and manage phone calls\" is required to see your mobile data usage. This app will never actually make phone calls.</string>
+    <string name="why_scary_phone_permission">Permission to \"make and manage phone calls\" is required to see your mobile data usage.\n\nThis app will never actually make phone calls.</string>
     <string name="prefs_title_startdate">Start day</string>
     <string name="prefs_categorytitle_billingcycle">Billing cycle</string>
     <string name="prefs_key_billingcycle_startday">prefs_billingcycle_startday</string>
@@ -19,7 +19,7 @@
     <string name="bottomnav_title_about">About</string>
     <string name="prepermission_fragment_previous_arrow_description">Previous screen</string>
     <string name="prepermission_fragment_next_arrow_description">Next screen</string>
-    <string name="prepermission_page_1_old">The next two screens will step you through granting permission to read your mobile usage data.\n\nTap the right arrow to begin.</string>
+    <string name="prepermission_page_1_old">Two permissions are required to read your mobile data usage.\n\nThe next two screens will step you through granting those permissions.\n\nTap the right arrow to begin.</string>
     <string name="prepermission_alert_dialog_title">Continue without granting permission?</string>
     <string name="prepermission_alert_dialog_message">If you continue without granting permission the app won\'t be able to display your mobile data usage.</string>
     <string name="prepermission_alert_dialog_positive_button_caption">Continue</string>

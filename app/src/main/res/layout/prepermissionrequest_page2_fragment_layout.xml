@@ -44,6 +44,7 @@
         android:id="@+id/prepermission_phone_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:text="@string/prepermission_button_grant_caption"
         app:layout_constraintTop_toBottomOf="@id/prepermission_fragment_toptext"
         app:layout_constraintBottom_toBottomOf="parent"

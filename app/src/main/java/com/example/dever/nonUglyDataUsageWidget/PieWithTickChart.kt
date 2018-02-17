@@ -14,7 +14,7 @@ import kotlin.math.sin
  * Implemented as a class exposing Bitmap and String values rather than a View
  * so it can be used within an AppWidget as well as a fragment
  *
- * Intended for use with R.layout.widget
+ * Intended for use with R.layout.pie_chart
  *
  * @param context Context from containing activity, view, etc.
  * @param width width in dp of the outermost ImageView
@@ -63,7 +63,7 @@ class PieWithTickChart(
         get() = availsize * 0.6F
 
     /**
-     * Text size in dp for the days TextView, calculated from the widget size
+     * Text size in dp for the days TextView, calculated from the pie_chart size
      * @see actualDataTextSize
      *  @return font size in dp
      */

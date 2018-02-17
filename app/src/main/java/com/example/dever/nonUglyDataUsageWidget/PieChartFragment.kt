@@ -26,7 +26,7 @@ class PieChartFragment : Fragment(), ViewTreeObserver.OnGlobalLayoutListener {
     private var layoutDone = false
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        rootView = inflater?.inflate(R.layout.widget, container, false)!!
+        rootView = inflater?.inflate(R.layout.pie_chart, container, false)!!
         img = rootView.findViewById(R.id.widgetChartImageView)
         txtData = rootView.findViewById(R.id.txtWidgetActualData)
         txtDays = rootView.findViewById(R.id.txtWidgetDays)
