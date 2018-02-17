@@ -32,5 +32,6 @@
     <string name="permission_granted">Permission granted</string>
     <string name="image_description_up_arrow">Up arrow</string>
     <string name="image_description_down_arrow">Down arrow</string>
+    <string name="prefs_itemtitle_maxdata">Max data</string>
 </resources>
 

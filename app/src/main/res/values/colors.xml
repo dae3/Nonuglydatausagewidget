@@ -11,5 +11,4 @@
     <color name="colorPieTick">@color/colorAccent</color>
 
     <!-- random other colors -->
-    <color name="green">#11cc11</color>
 </resources>

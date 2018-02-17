@@ -109,7 +109,6 @@ class Widget : AppWidgetProvider() {
 
             val views = RemoteViews(context.packageName, R.layout.pie_chart)
             views.setViewVisibility(R.id.progressBar, GONE)
-            val ws = widgetSize(appWidgetManager, appWidgetId)
 
             try {
                 views.setImageViewBitmap(R.id.widgetChartImageView, pie.bitmap)

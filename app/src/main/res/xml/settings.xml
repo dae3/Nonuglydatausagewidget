@@ -24,7 +24,7 @@
 
         <com.example.dever.nonUglyDataUsageWidget.EditGigabytePreference
             android:key="@string/prefs_key_maxdata"
-            android:title="Max data"
+            android:title="@string/prefs_itemtitle_maxdata"
             custom:minimum="0"
             custom:step="1"
             custom:unitcaption="Gb"/>
