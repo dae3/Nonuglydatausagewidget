@@ -13,22 +13,44 @@
         android:layout_height="wrap_content"
         android:text="@string/why_scary_phone_permission"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/prepermission_fragment_image"
+        app:layout_constraintBottom_toTopOf="@+id/prepermission_granted_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
 
-    <ImageView
-        android:id="@+id/prepermission_fragment_image"
+    <TextView
+        android:id="@+id/prepermission_granted_text"
+        android:text="@string/permission_granted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/phonecall_perm_screen"
+        style="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintTop_toBottomOf="@id/prepermission_fragment_toptext"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/prepermission_tick_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/prepermission_tick_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/prepermission_fragment_toptext"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/prepermission_granted_text"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/ic_done_black_48dp"
+        android:tint="@color/green"/>
+
+    <Button
+        android:id="@+id/prepermission_phone_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/prepermission_button_grant_caption"
+        app:layout_constraintTop_toBottomOf="@id/prepermission_fragment_toptext"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:clickable="true"
-        android:focusable="true"
+        android:visibility="invisible"
         />
 
 </android.support.constraint.ConstraintLayout>

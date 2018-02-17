@@ -14,4 +14,7 @@
     <color name="colorPieWedge">@color/colorPrimaryDark</color>
     <color name="colorPieWedgeOutline">@android:color/background_dark</color>
     <color name="colorPieTick">@color/colorAccent</color>
+
+    <!-- random other colors -->
+    <color name="green">#11cc11</color>
 </resources>

@@ -15,8 +15,6 @@ import android.util.TypedValue
 import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.View.*
 import android.widget.RemoteViews
-import java.util.*
-import kotlin.math.min
 
 
 //private const val WIDGET_DATA_KEY = "nudwidgetdatakey"
@@ -128,23 +126,15 @@ class Widget : AppWidgetProvider() {
                 views.setViewVisibility(R.id.widgetChartImageView, VISIBLE)
                 views.setViewVisibility(R.id.txtWidgetActualData, VISIBLE)
                 views.setViewVisibility(R.id.txtWidgetDays, VISIBLE)
-                views.setViewVisibility(R.id.txtWidgetNoPermMessage, INVISIBLE)
+                views.setViewVisibility(R.id.widgetErrorImageView, INVISIBLE)
             } catch (e: SecurityException) {
                 // don't have permissions, but it'd be rude for the widget to jump straight to the perms activity
-                views.setTextViewText(R.id.txtWidgetNoPermMessage,
-                        context.resources.getString(
-                                if (min(ws.first, ws.second) < context.resources.getDimension(R.dimen.widget_short_message_threshold_size))
-                                    R.string.widget_no_perm_message_short
-                                else R.string.widget_no_perm_message
-                        )
-                )
-
                 views.setViewVisibility(R.id.widgetChartImageView, INVISIBLE)
                 views.setViewVisibility(R.id.txtWidgetActualData, INVISIBLE)
                 views.setViewVisibility(R.id.txtWidgetDays, INVISIBLE)
-                views.setViewVisibility(R.id.txtWidgetNoPermMessage, VISIBLE)
+                views.setViewVisibility(R.id.widgetErrorImageView, VISIBLE)
 
-                views.setOnClickPendingIntent(R.id.txtWidgetNoPermMessage, PendingIntent.getActivity(context, 0, Intent(context, PrePermissionRequestActivity::class.java), 0))
+                views.setOnClickPendingIntent(R.id.widgetErrorImageView, PendingIntent.getActivity(context, 0, Intent(context, PrePermissionRequestActivity::class.java), 0))
             }
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }

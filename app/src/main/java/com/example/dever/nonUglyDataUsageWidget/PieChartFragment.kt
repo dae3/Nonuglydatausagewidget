@@ -1,11 +1,8 @@
 package com.example.dever.nonUglyDataUsageWidget
 
 import android.app.Fragment
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue.COMPLEX_UNIT_PX
-import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
@@ -14,10 +11,9 @@ import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import java.util.*
 import kotlin.math.roundToInt
 
-class PieChartFragment : Fragment(), View.OnClickListener, ViewTreeObserver.OnGlobalLayoutListener {
+class PieChartFragment : Fragment(), ViewTreeObserver.OnGlobalLayoutListener {
 
     private lateinit var statsInterval: NetworkStatsInterval
     private lateinit var networkStats: GetNetworkStats
@@ -25,7 +21,7 @@ class PieChartFragment : Fragment(), View.OnClickListener, ViewTreeObserver.OnGl
     private lateinit var img: ImageView
     private lateinit var txtData: TextView
     private lateinit var txtDays: TextView
-    private lateinit var txtError: TextView
+    private lateinit var imgError : ImageView
     private lateinit var rootView: View
     private var layoutDone = false
 
@@ -34,12 +30,10 @@ class PieChartFragment : Fragment(), View.OnClickListener, ViewTreeObserver.OnGl
         img = rootView.findViewById(R.id.widgetChartImageView)
         txtData = rootView.findViewById(R.id.txtWidgetActualData)
         txtDays = rootView.findViewById(R.id.txtWidgetDays)
-        txtError = rootView.findViewById(R.id.txtWidgetNoPermMessage)
+        imgError = rootView.findViewById(R.id.widgetErrorImageView)
 
         statsInterval = NetworkStatsIntervalFactory.getInterval(activity)
         networkStats = GetNetworkStats(activity, statsInterval)
-
-        txtError.setOnClickListener(this)
 
         // defer drawing until the view has been laid out and sizes calculated
         rootView.viewTreeObserver.addOnGlobalLayoutListener(this)
@@ -50,15 +44,6 @@ class PieChartFragment : Fragment(), View.OnClickListener, ViewTreeObserver.OnGl
     override fun onResume() {
         super.onResume()
         if (layoutDone) onGlobalLayout()
-    }
-
-    /**
-     * Listener for view clicks. Used only to launch PrePermissionRequestActivity if the
-     * no permissions error TextView is visible and clicked upon
-     */
-    override fun onClick(v: View?) {
-        if (v?.id == R.id.txtWidgetNoPermMessage && v?.visibility == VISIBLE)
-            startActivity(Intent(context, PrePermissionRequestActivity::class.java), null)
     }
 
     override fun onGlobalLayout() {
@@ -84,12 +69,12 @@ class PieChartFragment : Fragment(), View.OnClickListener, ViewTreeObserver.OnGl
             img.visibility = VISIBLE
             txtData.visibility = VISIBLE
             txtDays.visibility = VISIBLE
-            txtError.visibility = INVISIBLE
+            imgError.visibility = INVISIBLE
         } catch (e: SecurityException) {
             img.visibility = INVISIBLE
             txtData.visibility = INVISIBLE
             txtDays.visibility = INVISIBLE
-            txtError.visibility = VISIBLE
+            imgError.visibility = VISIBLE
         }
     }
 }

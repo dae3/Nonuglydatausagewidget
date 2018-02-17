@@ -1,17 +1,19 @@
 package  com.example.dever.nonUglyDataUsageWidget
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.content.DialogInterface.BUTTON_POSITIVE
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import android.provider.Settings
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -21,12 +23,20 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 
-class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, DialogInterface.OnClickListener, ViewPager.OnPageChangeListener {
+class PrePermissionRequestActivity :
+        AppCompatActivity(),
+        View.OnClickListener,
+        ViewPager.OnPageChangeListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
     private lateinit var vp: ViewPager
-    private val perm = PermissionManager(this)
+    protected lateinit var perm: PermissionManager
     private lateinit var rightarrow: ImageView
     private lateinit var leftarrow: ImageView
+
+    private val MYPERMREQREADPHONESTATE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,17 +54,26 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
         leftarrow.visibility = INVISIBLE
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        perm = PermissionManager(this)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        // let PermissionManager update its permission state tracking
+        if (requestCode == MYPERMREQREADPHONESTATE) perm.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     /**
      * Warn if closing without actually granting permissions, which renders the whole app kinda useless
      */
     override fun onBackPressed() {
-        if (perm.havePhoneStatePermission && perm.haveUsagePermission)
+        if (perm.havePhonePermission && perm.haveUsagePermission)
             super.onBackPressed()
         else
-            ClosingWithoutPermissionGrantedDialog.show(this)
+            showClosingWithoutPermissionDialog()
     }
+
+    protected fun superOnBackPressed() = super.onBackPressed()
 
     /**
      * Sends an Intent to any AppWidgets so they can refresh after a permission change
@@ -73,35 +92,49 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
     /**
      * View.OnClickListener implementation
      * Navigate to previous or next screen using ViewPager
+     * Also handles events from Fragments
      */
     override fun onClick(v: View?) {
 
         when (v?.id) {
-            R.id.prepermission_fragment_image -> when (vp.currentItem) {
-                0 -> Unit
-                1 -> perm.requestPhoneStatePermission()
-                2 -> perm.requestUsagePermission()
-                else -> throw IllegalStateException("PrePermissionRequestActivity ViewPager unexpected currentItem ${vp.currentItem}")
+        // "Grant permission" button on phone perms page
+            R.id.prepermission_phone_button -> when (perm.phonePermissionState) {
+                PermissionManager.PhonePermissionState.NeverRequested, PermissionManager.PhonePermissionState.Denied ->
+                    requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), MYPERMREQREADPHONESTATE)
+                PermissionManager.PhonePermissionState.Granted ->
+                    throw IllegalStateException("PrePermissionRequestActivity phone permission button visible but permission already granted")
+                PermissionManager.PhonePermissionState.DeniedNeverAskAgain -> {
+                    // alert that you're now forced to display the App Info activity to grant permission
+                    AlertDialog.Builder(this)
+                            .setTitle(R.string.permission_denied_dialog_title)
+                            .setMessage(R.string.permission_denied_dialog_message)
+                            .setPositiveButton(
+                                    R.string.prepermission_button_grant_caption,
+                                    { _, which ->
+                                        if (which == BUTTON_POSITIVE) {
+                                            val i = Intent()
+                                            i.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                            i.data = Uri.fromParts("package", this.packageName, null)
+                                            startActivity(i)
+                                        }
+                                    })
+                            .show()
+                }
             }
-            R.id.prepermission_fragment_lastpagebutton -> {
-                if (perm.havePhoneStatePermission && perm.haveUsagePermission)
-                    finish()
-                else
-                    ClosingWithoutPermissionGrantedDialog.show(this)
+
+        // "Grant permission" button on usage permission page
+            R.id.usage_grant_permission_button -> ContextCompat.startActivity(this, Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), null)
+
+        // page navigation arrows
+            R.id.imgPrePermRightArrow -> when (vp.currentItem) {
+                1 -> if (perm.havePhonePermission) vp.currentItem++ else showClosingWithoutPermissionDialog()
+                2 -> if (perm.haveUsagePermission) finish() else showClosingWithoutPermissionDialog()
+                else -> vp.currentItem += if (vp.canScrollHorizontally(1)) 1 else 0
             }
-            R.id.imgPrePermRightArrow -> vp.currentItem += if (vp.canScrollHorizontally(1)) 1 else 0
             R.id.imgPrePermLeftArrow -> vp.currentItem -= if (vp.canScrollHorizontally(-1)) 1 else 0
+
             else -> throw IllegalStateException("PrePermissionRequestActivity unexpected click event on id $v?.id")
         }
-    }
-
-    /**
-     * DialogInterface.OnClickListener implementation
-     * Called via onBackPressed(); continue or stop closing of activity depending on dialog response
-     */
-    override fun onClick(dialog: DialogInterface?, which: Int) {
-        if (which == BUTTON_POSITIVE)
-            super.onBackPressed()
     }
 
     /**
@@ -116,17 +149,29 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
      */
     override fun onPageSelected(position: Int) {
         // position is 0 based
-        when (position) {
-            vp.adapter?.count?.minus(1) -> {
-                leftarrow.visibility = VISIBLE; rightarrow.visibility = INVISIBLE
-            } // last page
-            0 -> {
-                leftarrow.visibility = INVISIBLE; rightarrow.visibility = VISIBLE
-            } // first page
-            else -> {
-                leftarrow.visibility = VISIBLE; rightarrow.visibility = VISIBLE
+        if (position == 0) {
+            leftarrow.visibility = INVISIBLE; rightarrow.visibility = VISIBLE
+        } else {
+            leftarrow.visibility = VISIBLE; rightarrow.visibility = VISIBLE
+        }
+    }
+
+    private fun showClosingWithoutPermissionDialog() {
+        val dialogListener = DialogInterface.OnClickListener { _, which ->
+            when (which) {
+                BUTTON_POSITIVE -> this@PrePermissionRequestActivity.superOnBackPressed()
+                BUTTON_NEGATIVE -> Unit // just close the dialog returning to the Activity
+                else -> throw IllegalStateException("PrePermissionRequestActivity continue without closing dialog unexpected button $which")
             }
         }
+
+        AlertDialog.Builder(this)
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .setTitle(getString(R.string.prepermission_alert_dialog_title))
+                .setMessage(R.string.prepermission_alert_dialog_message)
+                .setPositiveButton(getString(R.string.prepermission_alert_dialog_positive_button_caption), dialogListener)
+                .setNegativeButton(getString(R.string.prepermission_alert_dialog_negative_button_caption), dialogListener)
+                .show()
     }
 
     /**
@@ -152,18 +197,47 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
      */
     class PrePermissionRequestFragment : android.support.v4.app.Fragment() {
         private var layout: Int? = null
+        private lateinit var activity: PrePermissionRequestActivity
+        private lateinit var v: View
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             if (layout == null)
                 throw IllegalArgumentException("PrePermissionRequestFragment must have layout passed as an argument")
             else {
-                val v = inflater.inflate(layout!!, container, false)
-                val ppractivity = activity as PrePermissionRequestActivity
-                v.findViewById<ImageView>(R.id.prepermission_fragment_image)?.setOnClickListener(ppractivity)
-                v.findViewById<Button>(R.id.prepermission_fragment_lastpagebutton)?.setOnClickListener(ppractivity)
+                activity = getActivity() as PrePermissionRequestActivity
+                v = inflater.inflate(layout!!, container, false)
+                v.findViewById<Button>(R.id.prepermission_phone_button)?.setOnClickListener(activity)
+                v.findViewById<Button>(R.id.usage_grant_permission_button)?.setOnClickListener(activity)
+
+                updateLayoutForPermission()
 
                 return v
             }
+        }
+
+        private fun updateLayoutForPermission() {
+            when (layout) {
+                R.layout.prepermissionrequest_page2_fragment_layout -> {
+                    v.findViewById<Button>(R.id.prepermission_phone_button).visibility =
+                            if (activity.perm.havePhonePermission) INVISIBLE else VISIBLE
+                    v.findViewById<TextView>(R.id.prepermission_granted_text).visibility =
+                            if (activity.perm.havePhonePermission) VISIBLE else INVISIBLE
+                    v.findViewById<ImageView>(R.id.prepermission_tick_image).visibility =
+                            v.findViewById<TextView>(R.id.prepermission_granted_text).visibility
+                }
+                R.layout.prepermissionrequest_page3_fragment_layout -> {
+                    v.findViewById<Button>(R.id.usage_grant_permission_button).visibility =
+                            if (activity.perm.haveUsagePermission) INVISIBLE else VISIBLE
+                    v.findViewById<LinearLayout>(R.id.usage_permission_granted_sublayout).visibility =
+                            if (activity.perm.haveUsagePermission) VISIBLE else INVISIBLE
+                }
+                else -> Unit
+            }
+        }
+
+        override fun onResume() {
+            super.onResume()
+            updateLayoutForPermission()
         }
 
         override fun setArguments(args: Bundle?) {
@@ -186,32 +260,4 @@ class PrePermissionRequestActivity : AppCompatActivity(), View.OnClickListener, 
         }
     }
 
-    class ClosingWithoutPermissionGrantedDialog : DialogFragment() {
-
-        lateinit var parent: PrePermissionRequestActivity
-        var response: Int = BUTTON_NEGATIVE
-
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val d = AlertDialog.Builder(activity)
-
-            d.setIcon(R.drawable.ic_warning_black_24dp)
-            d.setTitle(getString(R.string.prepermission_alert_dialog_title))
-            d.setMessage(R.string.prepermission_alert_dialog_message)
-            d.setPositiveButton(getString(R.string.prepermission_alert_dialog_positive_button_caption), parent)
-            d.setNegativeButton(getString(R.string.prepermission_alert_dialog_negative_button_caption), parent)
-
-            return d.create()
-        }
-
-        companion object {
-
-            private val DIALOG_TAG = "CWPGD"
-
-            fun show(parent: PrePermissionRequestActivity) {
-                val dlg = ClosingWithoutPermissionGrantedDialog()
-                dlg.parent = parent
-                dlg.show(parent.supportFragmentManager, DIALOG_TAG)
-            }
-        }
-    }
 }
