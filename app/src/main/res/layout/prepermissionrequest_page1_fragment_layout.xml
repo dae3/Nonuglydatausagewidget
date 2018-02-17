@@ -6,7 +6,7 @@
 
     <TextView
         style="@style/TextAppearance.AppCompat.Large"
-        android:paddingLeft="@dimen/widget_margin"
+        android:paddingStart="@dimen/widget_margin"
         android:id="@+id/prepermission_fragment_toptext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

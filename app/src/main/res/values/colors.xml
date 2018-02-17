@@ -4,11 +4,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorAccent">#536DFE</color>
 
-    <!--Not sfragment_aboutbout these ones-->
-    <color name="colorMidDark">@android:color/darker_gray</color>
-    <color name="colorErrorBg">#ff0000</color>
-    <color name="colorErrorText">#000000</color>
-
     <!--Define pie chart elements in terms of base theme elements?..-->
     <color name="colorPieBg">@color/colorPrimary</color>
     <color name="colorPieWedge">@color/colorPrimaryDark</color>

@@ -93,6 +93,7 @@ class DayNOfMonthNetworkStatsIntervalTest(private val testToday: Calendar, priva
         )
     }
 
+    @Suppress("CascadeIf")  // more readable as an if
     @Test
     fun endDayIsCorrect() {
         // if Nth day is 1 then end day is last day of current month,

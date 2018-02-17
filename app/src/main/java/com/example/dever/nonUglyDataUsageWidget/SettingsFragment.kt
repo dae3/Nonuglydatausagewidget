@@ -1,6 +1,5 @@
 package com.example.dever.nonUglyDataUsageWidget
 
-import android.app.Fragment
 import android.os.Bundle
 import android.preference.PreferenceFragment
 

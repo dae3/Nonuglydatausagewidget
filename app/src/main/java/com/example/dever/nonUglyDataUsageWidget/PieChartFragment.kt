@@ -48,7 +48,7 @@ class PieChartFragment : Fragment(), ViewTreeObserver.OnGlobalLayoutListener {
 
     override fun onGlobalLayout() {
 
-        rootView?.viewTreeObserver.removeOnGlobalLayoutListener(this)
+        rootView.viewTreeObserver.removeOnGlobalLayoutListener(this)
         if (!layoutDone) {
             layoutDone = true
             rootView.findViewById<ProgressBar>(R.id.progressBar).visibility = GONE

@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">NUD</string>
-    <string name="permission_why_intro">This screen steps you through granting the permissions needed by this app.</string>
     <string name="usage_permission_text_1">Usage access is required to see your actual mobile data usage. First, click the "Grant permission" button to open the system Usage access screen. You\'ll see NUD listed, and maybe some other apps like Google Play Services.</string>
     <string name="usage_permission_text_2">Next, click on NUD to open the screen shown below, and click the switch to enable usage access.</string>
     <string name="usage_permission_text_3">Finally, keep clicking back until you return to this screen.</string>
-    <string name="have_permissions_text">Have all permissions</string>
     <string name="why_scary_phone_permission">Permission to \"make and manage phone calls\" is required to see your mobile data usage. This app will never actually make phone calls.</string>
     <string name="prefs_title_startdate">Start day</string>
     <string name="prefs_categorytitle_billingcycle">Billing cycle</string>
@@ -15,10 +13,6 @@
     <string name="widget_chart_content_description">Chart showing your current data usage</string>
     <string name="prefs_key_maxdata">prefs_maxdata</string>
     <string name="menu_activity_title_settings">Settings</string>
-    <string name="action_title_refresh">Refresh</string>
-    <string name="action_title_check_permissions">Check permissions</string>
-    <string name="widget_no_perm_message">Don\'t have permission to read data usage. Click to fix</string>
-    <string name="widget_no_perm_message_short">Click to fix permissions</string>
     <string name="widget_data_template">%1$.1f Gb</string>
     <string name="widget_days_template">day %1$d of %2$d</string>
     <string name="bottomnav_title_home">Home</string>
@@ -26,19 +20,17 @@
     <string name="prepermission_fragment_previous_arrow_description">Previous screen</string>
     <string name="prepermission_fragment_next_arrow_description">Next screen</string>
     <string name="prepermission_page_1_old">The next two screens will step you through granting permission to read your mobile usage data.\n\nTap the right arrow to begin.</string>
-    <string name="prepermission_page_1">This app requires permissions to work properly. The next two screens will step you through granting the required permissions.\n\nThe first permission is \"make and manage phone calls\". The app doesn\'t actually make phone calls, but this permission is required to identify mobile data usage separately from wifi usage.\n\nThe second permission is \"Usage access\". This permission is needed to actually read the mobile data usage counter. </string>
     <string name="prepermission_alert_dialog_title">Continue without granting permission?</string>
     <string name="prepermission_alert_dialog_message">If you continue without granting permission the app won\'t be able to display your mobile data usage.</string>
     <string name="prepermission_alert_dialog_positive_button_caption">Continue</string>
     <string name="prepermission_alert_dialog_negative_button_caption">Cancel</string>
-    <string name="prepermission_last_page_button_caption">Continue</string>
     <string name="snackbar_noperm_action">Fix</string>
     <string name="main_snackbar_nopermission">Don\'t have permission to read data usage</string>
-    <string name="main_snackbar_nonopermission">You\'ve denied permission to read data usage</string>
     <string name="permission_denied_dialog_title">Grant permission</string>
     <string name="permission_denied_dialog_message">You\'ve denied \"Make and Manage phone calls\" permission and ticked \"Don\'t ask again\". You must now use the app info screen to grant permissions.</string>
-    <string name="permission_denied_dialog_button_caption">Continue</string>
     <string name="prepermission_button_grant_caption">Grant permission</string>
     <string name="permission_granted">Permission granted</string>
+    <string name="image_description_up_arrow">Up arrow</string>
+    <string name="image_description_down_arrow">Down arrow</string>
 </resources>
 

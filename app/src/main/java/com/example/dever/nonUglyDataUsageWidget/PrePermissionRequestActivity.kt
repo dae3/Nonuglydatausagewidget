@@ -32,11 +32,11 @@ class PrePermissionRequestActivity :
         ViewPager.OnPageChangeListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
     private lateinit var vp: ViewPager
-    protected lateinit var perm: PermissionManager
+    private lateinit var perm: PermissionManager
     private lateinit var rightarrow: ImageView
     private lateinit var leftarrow: ImageView
 
-    private val MYPERMREQREADPHONESTATE = 1
+    private val permReqReadState = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +47,9 @@ class PrePermissionRequestActivity :
         vp.adapter = PrePermissionRequestActivity.PrePermissionRequestPagerAdapter(supportFragmentManager)
         vp.addOnPageChangeListener(this)
 
-        rightarrow = findViewById<ImageView>(R.id.imgPrePermRightArrow)
+        rightarrow = findViewById(R.id.imgPrePermRightArrow)
         rightarrow.setOnClickListener(this)
-        leftarrow = findViewById<ImageView>(R.id.imgPrePermLeftArrow)
+        leftarrow = findViewById(R.id.imgPrePermLeftArrow)
         leftarrow.setOnClickListener(this)
         leftarrow.visibility = INVISIBLE
 
@@ -60,7 +60,7 @@ class PrePermissionRequestActivity :
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         // let PermissionManager update its permission state tracking
-        if (requestCode == MYPERMREQREADPHONESTATE) perm.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == permReqReadState) perm.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     /**
@@ -73,7 +73,7 @@ class PrePermissionRequestActivity :
             showClosingWithoutPermissionDialog()
     }
 
-    protected fun superOnBackPressed() = super.onBackPressed()
+    private fun superOnBackPressed() = super.onBackPressed()
 
     /**
      * Sends an Intent to any AppWidgets so they can refresh after a permission change
@@ -100,7 +100,7 @@ class PrePermissionRequestActivity :
         // "Grant permission" button on phone perms page
             R.id.prepermission_phone_button -> when (perm.phonePermissionState) {
                 PermissionManager.PhonePermissionState.NeverRequested, PermissionManager.PhonePermissionState.Denied ->
-                    requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), MYPERMREQREADPHONESTATE)
+                    requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), permReqReadState)
                 PermissionManager.PhonePermissionState.Granted ->
                     throw IllegalStateException("PrePermissionRequestActivity phone permission button visible but permission already granted")
                 PermissionManager.PhonePermissionState.DeniedNeverAskAgain -> {
@@ -179,15 +179,14 @@ class PrePermissionRequestActivity :
      */
     private class PrePermissionRequestPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        private val NUMPAGES: Int = 3
         private val pages = arrayOf(
-                PrePermissionRequestActivity.PrePermissionRequestFragment.CreatePrePermissionRequestFragment(R.layout.prepermissionrequest_page1_fragment_layout),
-                PrePermissionRequestActivity.PrePermissionRequestFragment.CreatePrePermissionRequestFragment(R.layout.prepermissionrequest_page2_fragment_layout),
-                PrePermissionRequestActivity.PrePermissionRequestFragment.CreatePrePermissionRequestFragment(R.layout.prepermissionrequest_page3_fragment_layout)
+                PrePermissionRequestActivity.PrePermissionRequestFragment.createPrePermissionRequestFragment(R.layout.prepermissionrequest_page1_fragment_layout),
+                PrePermissionRequestActivity.PrePermissionRequestFragment.createPrePermissionRequestFragment(R.layout.prepermissionrequest_page2_fragment_layout),
+                PrePermissionRequestActivity.PrePermissionRequestFragment.createPrePermissionRequestFragment(R.layout.prepermissionrequest_page3_fragment_layout)
         )
 
 
-        override fun getCount(): Int = NUMPAGES
+        override fun getCount(): Int = pages.size
 
         override fun getItem(position: Int) = pages[position]
     }
@@ -249,7 +248,7 @@ class PrePermissionRequestActivity :
          * Convenience factory method to fake a constructor with arguments
          */
         companion object {
-            public fun CreatePrePermissionRequestFragment(layout: Int): PrePermissionRequestFragment {
+            fun createPrePermissionRequestFragment(layout: Int): PrePermissionRequestFragment {
                 val f = PrePermissionRequestFragment()
                 val b = Bundle()
                 b.putInt("layout", layout)

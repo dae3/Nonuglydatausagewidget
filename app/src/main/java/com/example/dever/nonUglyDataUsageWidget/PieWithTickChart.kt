@@ -88,7 +88,7 @@ class PieWithTickChart(
     val bitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444)
         get() {
             val maxData = stats.maxData.toDouble()
-            var canvas = Canvas(field)
+            val canvas = Canvas(field)
             if (maxData == 0.0) {
                 throw IllegalArgumentException("maxData must be non-zero")
             }
