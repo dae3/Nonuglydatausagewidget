@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import java.util.*
 
+
 class MainActivity : AppCompatActivity()
         , BottomNavigationView.OnNavigationItemSelectedListener
         , View.OnClickListener {
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         findViewById<BottomNavigationView>(R.id.bottom_navbar)
@@ -67,7 +69,9 @@ class MainActivity : AppCompatActivity()
                 )
                 stats = GetNetworkStats(this, interval)
 
-            } catch (e: SecurityException) { // belt and braces for missing permission
+            } catch (e: SecurityException) {
+                // belt and braces; permission *could* be revoked between checking
+                //  and actually using
                 sb.show()
             }
         }
@@ -75,8 +79,7 @@ class MainActivity : AppCompatActivity()
     }
 
     /**
-     * onClick handler for snackbar "Fix" button - launches PrePermissionCheckActivity, or,
-     *  if denied with Don't Ask Again, a complaining dialog
+     * onClick handler for snackbar "Fix" button, launches PrePermissionCheckActivity
      */
     override fun onClick(v: View?) {
         startActivity(Intent(this, PrePermissionRequestActivity::class.java))

@@ -33,5 +33,8 @@
     <string name="image_description_up_arrow">Up arrow</string>
     <string name="image_description_down_arrow">Down arrow</string>
     <string name="prefs_itemtitle_maxdata">Max data</string>
+    <string name="about_headline_version">Version</string>
+    <string name="about_headline_author">Author</string>
+    <string name="app_author">Daniel Everett</string>
 </resources>
 

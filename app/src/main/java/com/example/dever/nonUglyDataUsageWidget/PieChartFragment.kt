@@ -13,6 +13,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import kotlin.math.roundToInt
 
+/**
+ * Subclass of fragment to display network ussage stats in main activity (and any other non-
+ * widget uses in the future
+ */
 class PieChartFragment : Fragment(), ViewTreeObserver.OnGlobalLayoutListener {
 
     private lateinit var statsInterval: NetworkStatsInterval

@@ -10,6 +10,12 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 
+/**
+ * Subclass DialogPreference to edit a number with
+ * - optional unit caption
+ * - Up and down buttons to roll the number
+ * - Upper and lower limits
+ */
 open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
     private lateinit var mValueTextView: TextView
     private lateinit var mUnitTextView : TextView
@@ -20,17 +26,14 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
     protected var minValue : Long = Long.MIN_VALUE
     protected var maxValue : Long = Long.MAX_VALUE
     protected var stepValue : Long = 1L
-    private lateinit var unitCaptionText : String
+    private var unitCaptionText : String
 
     init {
-        isPersistent = false
+        isPersistent = false  // we handle our own persistence
         dialogLayoutResource = R.layout.editnum_preferences_dialog
 
-        val k: String? = attrs?.getAttributeValue("http://schemas.android.com/apk/res/android", "key")
-        if (k == null)
+        keyname = attrs?.getAttributeValue("http://schemas.android.com/apk/res/android", "key") ?:
             throw IllegalArgumentException("EditIntPreference requires an android:key attribute")
-        else
-            keyname = k
 
         minValue = attrs.getAttributeIntValue("http://dever.example.com", "minimum", Int.MIN_VALUE).toLong()
         maxValue = attrs.getAttributeIntValue("http://dever.example.com", "maximum", Int.MAX_VALUE).toLong()

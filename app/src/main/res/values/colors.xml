@@ -11,4 +11,5 @@
     <color name="colorPieTick">@color/colorAccent</color>
 
     <!-- random other colors -->
+    <color name="permissionGrantedTickTint">@android:color/holo_green_light</color>
 </resources>

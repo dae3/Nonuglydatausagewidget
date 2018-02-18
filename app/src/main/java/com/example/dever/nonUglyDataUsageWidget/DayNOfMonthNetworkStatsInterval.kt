@@ -1,7 +1,3 @@
-/*
-Network statistics interval that restarts on the N-th day of every month
- */
-
 package com.example.dever.nonUglyDataUsageWidget
 
 import android.annotation.SuppressLint
@@ -9,25 +5,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
 
-private fun Calendar.setMidnight() {
-    this.set(Calendar.HOUR, 0)
-    this.set(Calendar.MINUTE, 0)
-    this.set(Calendar.SECOND, 0)
-    this.set(Calendar.MILLISECOND, 0)
-    this.set(Calendar.AM_PM, Calendar.AM)
-}
-
-private fun Calendar.setFieldToMax(field : Int) = this.set(field, this.getActualMaximum(field))
-
-private fun Calendar.setOneSecBeforeMidnight() {
-    this.setFieldToMax(Calendar.HOUR)
-    this.setFieldToMax(Calendar.MINUTE)
-    this.setFieldToMax(Calendar.SECOND)
-    this.setFieldToMax(Calendar.MILLISECOND)
-    this.set(Calendar.AM_PM, Calendar.PM)
-}
-
-
+/**
+ * Implementation of NetworkStatsInterval that runs from the Nth day of the month to the
+ * N-1th day of the following month, with these special cases:
+ * - If N == 1, the end date is the calendar end date of the month ie 28, 29, 30, or 31st
+ * - If N > end date of the month (eg 30 and current month == February, N = the last day of the month
+ */
 class DayNOfMonthNetworkStatsInterval(today: Calendar, dayOfMonth: Int) : NetworkStatsInterval {
     private var mStartDate: Calendar = today.clone() as Calendar
     private var mEndDate: Calendar = mStartDate.clone() as Calendar
@@ -79,3 +62,23 @@ class DayNOfMonthNetworkStatsInterval(today: Calendar, dayOfMonth: Int) : Networ
     }
 }
 
+/**
+* Extensions to java.util.Calendar to encapsulate some common setups
+ */
+private fun Calendar.setMidnight() {
+    this.set(Calendar.HOUR, 0)
+    this.set(Calendar.MINUTE, 0)
+    this.set(Calendar.SECOND, 0)
+    this.set(Calendar.MILLISECOND, 0)
+    this.set(Calendar.AM_PM, Calendar.AM)
+}
+
+private fun Calendar.setFieldToMax(field : Int) = this.set(field, this.getActualMaximum(field))
+
+private fun Calendar.setOneSecBeforeMidnight() {
+    this.setFieldToMax(Calendar.HOUR)
+    this.setFieldToMax(Calendar.MINUTE)
+    this.setFieldToMax(Calendar.SECOND)
+    this.setFieldToMax(Calendar.MILLISECOND)
+    this.set(Calendar.AM_PM, Calendar.PM)
+}

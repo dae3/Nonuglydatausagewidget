@@ -89,9 +89,7 @@ class PieWithTickChart(
         get() {
             val maxData = stats.maxData.toDouble()
             val canvas = Canvas(field)
-            if (maxData == 0.0) {
-                throw IllegalArgumentException("maxData must be non-zero")
-            }
+            if (maxData == 0.0) throw IllegalArgumentException("PieWithTickChart: maxData must be non-zero")
             canvas.drawColor(Color.TRANSPARENT)
             val donutSize = 0.75
             val path = Path()
@@ -109,8 +107,6 @@ class PieWithTickChart(
             val startangle = 0F - 90
             rectWedge.left += 1
             rectWedge.top += 1
-            val shadowSweepExtra = 2
-            canvas.drawArc(rectWedge, startangle, sweepangle + shadowSweepExtra, true, paintbox.pieWedgeOutline)
             canvas.drawArc(rectWedge, startangle, sweepangle, true, paintbox.pieWedge)
             val todayAngle: Float = ((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
                     / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 2F * PI.toFloat()) - (PI.toFloat() / 2F)

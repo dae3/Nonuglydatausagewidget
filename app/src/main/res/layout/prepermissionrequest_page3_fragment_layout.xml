@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableEnd="@drawable/ic_done_black_48dp"
-        android:drawableTint="@android:color/holo_green_light"
+        android:drawableTint="@color/permissionGrantedTickTint"
         android:text="@string/permission_granted" />
 
 </LinearLayout>

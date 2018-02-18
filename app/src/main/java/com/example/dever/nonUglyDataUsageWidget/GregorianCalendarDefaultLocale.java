@@ -5,7 +5,9 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-
+/**
+ * A subclass of GregorianCalendar that defaults to the current Locale
+ */
 public class GregorianCalendarDefaultLocale extends GregorianCalendar {
 
     public GregorianCalendarDefaultLocale() {

@@ -7,4 +7,5 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="prepermission_page_margins">7dp</dimen>
     <dimen name="widget_text_data_default">40sp</dimen>
     <dimen name="widget_text_days_default">15sp</dimen>
+    <dimen name="about_layout_padding">7dp</dimen>
 </resources>

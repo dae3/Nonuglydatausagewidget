@@ -69,7 +69,7 @@ class PrePermissionRequestActivity :
         if (perm.havePhonePermission && perm.haveUsagePermission)
             super.onBackPressed()
         else
-            showClosingWithoutPermissionDialog()
+            showContinueWithoutPermissionDialog()
     }
 
     private fun superOnBackPressed() = super.onBackPressed()
@@ -96,7 +96,12 @@ class PrePermissionRequestActivity :
     override fun onClick(v: View?) {
 
         when (v?.id) {
-        // "Grant permission" button on phone perms page
+            /*
+            Grant permission button on phone permission page
+             - request permission if we don't have it
+             - show explanatory dialog then launch App Info activity if denied don't ask again
+             - throw exception if somehow clicked when we already have permission
+             */
             R.id.prepermission_phone_button -> when (perm.phonePermissionState) {
                 PermissionManager.PhonePermissionState.NeverRequested, PermissionManager.PhonePermissionState.Denied ->
                     requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), permReqReadState)
@@ -126,8 +131,8 @@ class PrePermissionRequestActivity :
 
         // page navigation arrows
             R.id.imgPrePermRightArrow -> when (vp.currentItem) {
-                1 -> if (perm.havePhonePermission) vp.currentItem++ else showClosingWithoutPermissionDialog()
-                2 -> if (perm.haveUsagePermission) finish() else showClosingWithoutPermissionDialog()
+                1 -> if (perm.havePhonePermission) vp.currentItem++ else showContinueWithoutPermissionDialog()
+                2 -> if (perm.haveUsagePermission) finish() else showContinueWithoutPermissionDialog()
                 else -> vp.currentItem += if (vp.canScrollHorizontally(1)) 1 else 0
             }
             R.id.imgPrePermLeftArrow -> vp.currentItem -= if (vp.canScrollHorizontally(-1)) 1 else 0
@@ -155,7 +160,10 @@ class PrePermissionRequestActivity :
         }
     }
 
-    private fun showClosingWithoutPermissionDialog() {
+    /**
+     * Convenience wrapper to show warning dialog from various places
+     */
+    private fun showContinueWithoutPermissionDialog() {
         val dialogListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
                 BUTTON_POSITIVE -> this@PrePermissionRequestActivity.superOnBackPressed()
@@ -184,9 +192,7 @@ class PrePermissionRequestActivity :
                 PrePermissionRequestActivity.PrePermissionRequestFragment.createPrePermissionRequestFragment(R.layout.prepermissionrequest_page3_fragment_layout)
         )
 
-
         override fun getCount(): Int = pages.size
-
         override fun getItem(position: Int) = pages[position]
     }
 
@@ -213,6 +219,9 @@ class PrePermissionRequestActivity :
             }
         }
 
+        /**
+         * Toggle various Views' visibility depending on permission state
+         */
         private fun updateLayoutForPermission() {
             when (layout) {
                 R.layout.prepermissionrequest_page2_fragment_layout -> {

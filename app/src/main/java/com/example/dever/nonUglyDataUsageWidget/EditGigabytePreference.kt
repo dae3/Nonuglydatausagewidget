@@ -6,10 +6,6 @@ import android.util.AttributeSet
 /**
  * EditIntPreference that displays and steps in Gb but persists a value in bytes
  */
-
-//private const val GBTOBYTES : Int = 1024 * 1024 * 1024
-//private const val BYTESTOGB : Long = (1 / GBTOBYTES).toLong()
-
 class EditGigabytePreference(context: Context?, attrs : AttributeSet?) : EditLongPreference(context, attrs) {
 
     override fun getValueFromSharedPreferences() : Long {
@@ -26,5 +22,8 @@ class EditGigabytePreference(context: Context?, attrs : AttributeSet?) : EditLon
 
 }
 
+/**
+ * Extensions to Long to convert between gigabytes and bytes
+ */
 fun Long.asGb() : Long { return this / 1024 / 1024 / 1024 }
 fun Long.asBytes() : Long { return this * 1024 * 1024 * 1024 }
