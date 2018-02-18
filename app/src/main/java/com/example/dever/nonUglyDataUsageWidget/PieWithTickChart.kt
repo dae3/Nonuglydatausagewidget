@@ -76,10 +76,10 @@ class PieWithTickChart(
      */
     val daysText: String
         get() = context.resources.getString(
-                    R.string.widget_days_template,
-                    GregorianCalendarDefaultLocale().get(Calendar.DAY_OF_MONTH) - interval.startDate.get(Calendar.DAY_OF_MONTH) + 1,
-                    interval.endDate.get(Calendar.DAY_OF_MONTH) - interval.startDate.get(Calendar.DAY_OF_MONTH) + 1
-            )
+                R.string.widget_days_template,
+                GregorianCalendarDefaultLocale().get(Calendar.DAY_OF_MONTH) - interval.startDate.get(Calendar.DAY_OF_MONTH) + 1,
+                interval.endDate.get(Calendar.DAY_OF_MONTH) - interval.startDate.get(Calendar.DAY_OF_MONTH) + 1
+        )
 
     /**
      * Bitmap representation of data used, as a 'pie' chart
@@ -88,30 +88,58 @@ class PieWithTickChart(
     val bitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444)
         get() {
             val maxData = stats.maxData.toDouble()
-            val canvas = Canvas(field)
             if (maxData == 0.0) throw IllegalArgumentException("PieWithTickChart: maxData must be non-zero")
-            canvas.drawColor(Color.TRANSPARENT)
-            val donutSize = 0.75
-            val path = Path()
-            path.addCircle(pieX(), pieY(), (pieRadius() * donutSize).toFloat(), Path.Direction.CW)
-            @Suppress("DEPRECATION")
-            canvas.clipPath(path, Region.Op.DIFFERENCE)
-            canvas.drawCircle(pieX(), pieY(), pieRadius(), paintbox.pieBg)
+
+            // parameters
+            val canvas = Canvas(field)
+            val donutSize = 0.75F
             val rectWedge = RectF(
                     pieX() - pieRadius(),
                     pieY() - pieRadius(),
                     pieX() + pieRadius(),
                     pieY() + pieRadius()
             )
-            val sweepangle = min((stats.actualData.toDouble() / maxData * 360).toFloat(), 360F)
+            var sweepangle = min((stats.actualData.toDouble() / maxData * 360).toFloat(), 360F)
             val startangle = 0F - 90
-            rectWedge.left += 1
-            rectWedge.top += 1
-            canvas.drawArc(rectWedge, startangle, sweepangle, true, paintbox.pieWedge)
             val todayAngle: Float = ((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
                     / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 2F * PI.toFloat()) - (PI.toFloat() / 2F)
             val tickEndFudge = 1F
             val tickStartFudge = 0.8F
+
+            // background
+            canvas.drawColor(Color.TRANSPARENT)
+
+            // Draw the donut and the actual usage wedge as the difference of two paths.
+            // Intuitively clipping the canvas with the middle hole then drawing a circle
+            // and a wedge makes more sense, but this results in aliasing on the inside edge
+
+            // the donut hole that will clip the circle and the wedge
+            val hole = Path()
+            hole.addCircle(pieX(), pieY(), pieRadius() * donutSize, Path.Direction.CW)
+
+            // the full circle
+            val circle = Path()
+            circle.addCircle(pieX(), pieY(), pieRadius(), Path.Direction.CW)
+
+            // clip the centre of the circle and draw
+            val donut = Path()
+            donut.op(circle, hole, Path.Op.DIFFERENCE)
+            canvas.drawPath(donut, paintbox.pieBg)
+
+            // the full wedge, sadly no Path equivalent to canvas.drawArc with auto path close
+            //  so draw the whole thing (centre, line to top, arc around, line to centre)
+            val wedge = Path()
+            wedge.moveTo(pieX(), pieY())
+            wedge.lineTo(pieX(), pieRadius())
+            wedge.arcTo(rectWedge, startangle, sweepangle)
+            wedge.lineTo(pieX(), pieY())
+
+            // clip out the centre and draw
+            val segment = Path()
+            segment.op(wedge, hole, Path.Op.DIFFERENCE)
+            canvas.drawPath(segment, paintbox.pieWedge)
+
+            // today marker
             canvas.drawLine(
                     pieX() + (pieRadius() * tickStartFudge * cos(todayAngle)),
                     pieY() + (pieRadius() * tickStartFudge * sin(todayAngle)),
@@ -141,9 +169,11 @@ class PieWithTickChart(
 
             pieBg.color = context.resources.getColor(R.color.colorPieBg, context.theme)
             pieBg.isAntiAlias = true
+            pieBg.isDither = true
 
             pieWedge.color = context.resources.getColor(R.color.colorPieWedge, context.theme)
             pieWedge.isAntiAlias = true
+            pieWedge.strokeWidth = 5F
 
             pieWedgeOutline.color = context.resources.getColor(R.color.colorPieWedgeOutline, context.theme)
             pieWedgeOutline.style = Paint.Style.STROKE

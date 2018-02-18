@@ -11,7 +11,8 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/widget_chart_content_description"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        />
 
     <ProgressBar
         android:id="@+id/progressBar"
