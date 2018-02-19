@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_coord_layout"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,17 +22,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/main_activity_body"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/bottom_navbar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainactivity_toolbar">
 
-        </LinearLayout>
+        </FrameLayout>
 
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottom_navbar"
