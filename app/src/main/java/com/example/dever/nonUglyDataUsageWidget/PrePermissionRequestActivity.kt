@@ -1,5 +1,6 @@
 package  com.example.dever.nonUglyDataUsageWidget
 
+import android.Manifest.permission.READ_PHONE_STATE
 import android.app.AlertDialog
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -21,19 +22,17 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import com.example.dever.nonUglyDataUsageWidget.PermissionManager.PhonePermissionState.*
+import kotlinx.android.synthetic.main.activity_pre_permission_request.*
+import kotlinx.android.synthetic.main.prepermissionrequest_page2_fragment_layout.view.*
+import kotlinx.android.synthetic.main.prepermissionrequest_page3_fragment_layout.view.*
 
 class PrePermissionRequestActivity :
         AppCompatActivity(),
         View.OnClickListener,
         ViewPager.OnPageChangeListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
-    private lateinit var vp: ViewPager
     private lateinit var perm: PermissionManager
-    private lateinit var rightarrow: ImageView
-    private lateinit var leftarrow: ImageView
 
     private val permReqReadState = 1
 
@@ -42,15 +41,12 @@ class PrePermissionRequestActivity :
 
         setContentView(R.layout.activity_pre_permission_request)
 
-        vp = findViewById(R.id.perm_view_pager)
-        vp.adapter = PrePermissionRequestActivity.PrePermissionRequestPagerAdapter(supportFragmentManager)
-        vp.addOnPageChangeListener(this)
+        perm_view_pager.adapter = PrePermissionRequestActivity.PrePermissionRequestPagerAdapter(supportFragmentManager)
+        perm_view_pager.addOnPageChangeListener(this)
 
-        rightarrow = findViewById(R.id.imgPrePermRightArrow)
-        rightarrow.setOnClickListener(this)
-        leftarrow = findViewById(R.id.imgPrePermLeftArrow)
-        leftarrow.setOnClickListener(this)
-        leftarrow.visibility = INVISIBLE
+        imgPrePermRightArrow.setOnClickListener(this)
+        imgPrePermLeftArrow.setOnClickListener(this)
+        imgPrePermLeftArrow.visibility = INVISIBLE
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -103,11 +99,9 @@ class PrePermissionRequestActivity :
              - throw exception if somehow clicked when we already have permission
              */
             R.id.prepermission_phone_button -> when (perm.phonePermissionState) {
-                PermissionManager.PhonePermissionState.NeverRequested, PermissionManager.PhonePermissionState.Denied ->
-                    requestPermissions(arrayOf(android.Manifest.permission.READ_PHONE_STATE), permReqReadState)
-                PermissionManager.PhonePermissionState.Granted ->
-                    throw IllegalStateException("PrePermissionRequestActivity phone permission button visible but permission already granted")
-                PermissionManager.PhonePermissionState.DeniedNeverAskAgain -> {
+                NeverRequested, Denied -> requestPermissions(arrayOf(READ_PHONE_STATE), permReqReadState)
+                Granted -> throw IllegalStateException(getString(R.string.exception_ppra_phone_permission_already_granted))
+                DeniedNeverAskAgain -> {
                     // alert that you're now forced to display the App Info activity to grant permission
                     AlertDialog.Builder(this)
                             .setTitle(R.string.permission_denied_dialog_title)
@@ -130,12 +124,12 @@ class PrePermissionRequestActivity :
             R.id.usage_grant_permission_button -> ContextCompat.startActivity(this, Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), null)
 
         // page navigation arrows
-            R.id.imgPrePermRightArrow -> when (vp.currentItem) {
-                1 -> if (perm.havePhonePermission) vp.currentItem++ else showContinueWithoutPermissionDialog()
+            R.id.imgPrePermRightArrow -> when (perm_view_pager.currentItem) {
+                1 -> if (perm.havePhonePermission) perm_view_pager.currentItem++ else showContinueWithoutPermissionDialog()
                 2 -> if (perm.haveUsagePermission) finish() else showContinueWithoutPermissionDialog()
-                else -> vp.currentItem += if (vp.canScrollHorizontally(1)) 1 else 0
+                else -> perm_view_pager.currentItem += if (perm_view_pager.canScrollHorizontally(1)) 1 else 0
             }
-            R.id.imgPrePermLeftArrow -> vp.currentItem -= if (vp.canScrollHorizontally(-1)) 1 else 0
+            R.id.imgPrePermLeftArrow -> perm_view_pager.currentItem -= if (perm_view_pager.canScrollHorizontally(-1)) 1 else 0
 
             else -> throw IllegalStateException("PrePermissionRequestActivity unexpected click event on id $v?.id")
         }
@@ -154,9 +148,9 @@ class PrePermissionRequestActivity :
     override fun onPageSelected(position: Int) {
         // position is 0 based
         if (position == 0) {
-            leftarrow.visibility = INVISIBLE; rightarrow.visibility = VISIBLE
+            imgPrePermLeftArrow.visibility = INVISIBLE; imgPrePermRightArrow.visibility = VISIBLE
         } else {
-            leftarrow.visibility = VISIBLE; rightarrow.visibility = VISIBLE
+            imgPrePermLeftArrow.visibility = VISIBLE; imgPrePermRightArrow.visibility = VISIBLE
         }
     }
 
@@ -210,8 +204,8 @@ class PrePermissionRequestActivity :
             else {
                 activity = getActivity() as PrePermissionRequestActivity
                 v = inflater.inflate(layout!!, container, false)
-                v.findViewById<Button>(R.id.prepermission_phone_button)?.setOnClickListener(activity)
-                v.findViewById<Button>(R.id.usage_grant_permission_button)?.setOnClickListener(activity)
+                v.prepermission_phone_button?.setOnClickListener(activity)
+                v.usage_grant_permission_button?.setOnClickListener(activity)
 
                 updateLayoutForPermission()
 
@@ -225,16 +219,12 @@ class PrePermissionRequestActivity :
         private fun updateLayoutForPermission() {
             when (layout) {
                 R.layout.prepermissionrequest_page2_fragment_layout -> {
-                    v.findViewById<Button>(R.id.prepermission_phone_button).visibility =
-                            if (activity.perm.havePhonePermission) INVISIBLE else VISIBLE
-                    v.findViewById<TextView>(R.id.prepermission_granted_text).visibility =
-                            if (activity.perm.havePhonePermission) VISIBLE else INVISIBLE
+                    v.prepermission_phone_button.visibility = if (activity.perm.havePhonePermission) INVISIBLE else VISIBLE
+                    v.prepermission_granted_text_p2.visibility = if (activity.perm.havePhonePermission) VISIBLE else INVISIBLE
                 }
                 R.layout.prepermissionrequest_page3_fragment_layout -> {
-                    v.findViewById<Button>(R.id.usage_grant_permission_button).visibility =
-                            if (activity.perm.haveUsagePermission) INVISIBLE else VISIBLE
-                    v.findViewById<TextView>(R.id.prepermission_granted_text).visibility =
-                            if (activity.perm.haveUsagePermission) VISIBLE else INVISIBLE
+                    v.usage_grant_permission_button.visibility = if (activity.perm.haveUsagePermission) INVISIBLE else VISIBLE
+                    v.prepermission_granted_text_p3.visibility = if (activity.perm.haveUsagePermission) VISIBLE else INVISIBLE
                 }
                 else -> Unit
             }

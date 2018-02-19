@@ -3,47 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:paddingStart="@dimen/prepermission_page_margins"
-    android:paddingEnd="@dimen/prepermission_page_margins">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/prepermission_page_margins"
+    android:paddingStart="@dimen/prepermission_page_margins">
 
     <TextView
         android:id="@+id/prepermission_fragment_toptext"
         style="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/why_scary_phone_permission"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/prepermission_granted_text"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
-
-    <TextView
-        android:id="@+id/prepermission_granted_text"
-        android:text="@string/permission_granted"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintTop_toBottomOf="@id/prepermission_fragment_toptext"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/prepermission_tick_image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:drawableEnd="@drawable/ic_done_black_48dp"
-        android:drawableTint="@color/permissionGrantedTickTint"
-        />
+        android:text="@string/why_scary_phone_permission" />
 
     <Button
         android:id="@+id/prepermission_phone_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_marginTop="@dimen/ppra_page1_button_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.Button.Colored"
         android:text="@string/prepermission_button_grant_caption"
-        app:layout_constraintTop_toBottomOf="@id/prepermission_fragment_toptext"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:visibility="invisible"
-        />
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/prepermission_granted_text_p2"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_done_black_48dp"
+        android:drawableTint="@color/permissionGrantedTickTint"
+        android:text="@string/permission_granted"
+        android:visibility="visible" />
 
 </LinearLayout>

@@ -36,5 +36,6 @@
     <string name="about_headline_version">Version</string>
     <string name="about_headline_author">Author</string>
     <string name="app_author">Daniel Everett</string>
+    <string name="exception_ppra_phone_permission_already_granted">PrePermissionRequestActivity phone permission button visible but permission already granted</string>
 </resources>
 

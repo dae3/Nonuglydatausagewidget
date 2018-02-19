@@ -44,7 +44,7 @@
         android:text="@string/prepermission_button_grant_caption" />
 
     <TextView
-        android:id="@+id/prepermission_granted_text"
+        android:id="@+id/prepermission_granted_text_p3"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
