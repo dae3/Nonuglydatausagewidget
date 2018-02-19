@@ -24,7 +24,7 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <LinearLayout
-            android:id="@+id/main_linear_body"
+            android:id="@+id/main_activity_body"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"

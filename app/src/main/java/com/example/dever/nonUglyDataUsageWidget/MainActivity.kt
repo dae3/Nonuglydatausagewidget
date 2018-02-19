@@ -24,14 +24,16 @@ class MainActivity : AppCompatActivity()
     private lateinit var interval: NetworkStatsInterval
     private var fragment: Fragment? = PieChartFragment()
     private lateinit var perm: PermissionManager
+    private var curFrag: Int = R.id.bottomnav_home
+    private lateinit var bottomNavigationView : BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
-        findViewById<BottomNavigationView>(R.id.bottom_navbar)
-                .setOnNavigationItemSelectedListener(this)
+        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navbar)
+        bottomNavigationView.setOnNavigationItemSelectedListener(this)
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
         perm = PermissionManager(this)
@@ -51,9 +53,7 @@ class MainActivity : AppCompatActivity()
                 LENGTH_INDEFINITE
         ).setAction(R.string.snackbar_noperm_action, this)
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.main_linear_body, fragment, null)
-                .commit()
+        fragmentManager.beginTransaction().replace(R.id.main_activity_body, fragment).commit()
 
         // If missing any permission, display snackbar with button to launch PrePermissionRequestActivity
         if (!perm.havePhonePermission || !perm.haveUsagePermission)
@@ -88,20 +88,36 @@ class MainActivity : AppCompatActivity()
     /**
      * Inflate appropriate fragment when bottom nav bar used
      */
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    override fun onNavigationItemSelected(item: MenuItem): Boolean = setContent(item.itemId)
 
-        fragment = when (item.itemId) {
+    private fun setContent(layout: Int): Boolean {
+        fragment = when (layout) {
             R.id.bottomnav_home -> PieChartFragment()
             R.id.bottomnav_settings -> SettingsFragment()
             R.id.bottomnav_about -> AboutFragment()
             else -> null
         }
 
+        curFrag = layout
+
         return if (fragment == null)
             false
         else {
-            fragmentManager.beginTransaction().replace(R.id.main_linear_body, fragment, null).commit()
+            fragmentManager.beginTransaction().replace(R.id.main_activity_body, fragment).commit()
             true
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt("fragment", curFrag)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        var savedlayout = savedInstanceState?.getInt("fragment")
+        savedlayout?.let {
+            setContent(savedlayout)
+            bottomNavigationView.selectedItemId = savedlayout
         }
     }
 }
