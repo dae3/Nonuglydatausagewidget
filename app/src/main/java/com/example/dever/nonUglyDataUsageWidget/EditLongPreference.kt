@@ -16,6 +16,8 @@ import android.widget.TextView
  * - Up and down buttons to roll the number
  * - Upper and lower limits
  */
+private const val LAST_RESORT_DEFAULT = 1L
+
 open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
     private lateinit var mValueTextView: TextView
     private lateinit var mUnitTextView : TextView
@@ -33,7 +35,7 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
         dialogLayoutResource = R.layout.editnum_preferences_dialog
 
         keyname = attrs?.getAttributeValue("http://schemas.android.com/apk/res/android", "key") ?:
-            throw IllegalArgumentException("EditIntPreference requires an android:key attribute")
+            throw IllegalArgumentException("EditLongPreference requires an android:key attribute")
 
         minValue = attrs.getAttributeIntValue("http://dever.example.com", "minimum", Int.MIN_VALUE).toLong()
         maxValue = attrs.getAttributeIntValue("http://dever.example.com", "maximum", Int.MAX_VALUE).toLong()
@@ -42,7 +44,7 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
-        if (positiveResult) {
+        if (positiveResult && shouldPersist()) {
             val editor = prefs.edit()
             editor.putLong(key, value)
             editor.apply()
@@ -50,16 +52,16 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
     }
 
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
-        value = if (restorePersistedValue)
-            getPersistedLong(0)
-        else
-            defaultValue as Long
+        val v = if (restorePersistedValue) getPersistedLong(LAST_RESORT_DEFAULT) else defaultValue as Long
+        value = when {
+            v < minValue -> minValue
+            v > maxValue -> maxValue
+            else -> v
+        }
     }
 
     override fun onBindDialogView(view: View?) {
         super.onBindDialogView(view)
-
-        value = getValueFromSharedPreferences()
 
         if (view != null) {
             mValueTextView = view.findViewById(R.id.txtIntPrefInt)
@@ -77,10 +79,8 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
         }
     }
 
-    protected open fun getValueFromSharedPreferences() = prefs.getLong(key, 0)
-
     override fun onGetDefaultValue(a: TypedArray?, index: Int): Any {
-        return a?.getInt(index, 0)!!
+        return (a?.getString(index)?.toLongOrNull() ?: LAST_RESORT_DEFAULT)
     }
 
     inner class DialogListener : View.OnClickListener {

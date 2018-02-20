@@ -32,11 +32,9 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
 //        isPersistent = false
         dialogLayoutResource = R.layout.editnum_preferences_dialog
 
-        val k: String? = attrs?.getAttributeValue("http://schemas.android.com/apk/res/android", "key")
-        if (k == null)
+        keyname = attrs?.getAttributeValue("http://schemas.android.com/apk/res/android", "key") ?:
             throw IllegalArgumentException("EditIntPreference requires an android:key attribute")
-        else
-            keyname = k
+
 
         minValue = attrs.getAttributeIntValue("http://dever.example.com", "minimum", minValue)
         maxValue = attrs.getAttributeIntValue("http://dever.example.com", "maximum", maxValue)

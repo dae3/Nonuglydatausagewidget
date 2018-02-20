@@ -1,6 +1,7 @@
 package com.example.dever.nonUglyDataUsageWidget
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.util.AttributeSet
 
 /**
@@ -8,12 +9,16 @@ import android.util.AttributeSet
  */
 class EditGigabytePreference(context: Context?, attrs : AttributeSet?) : EditLongPreference(context, attrs) {
 
-    override fun getValueFromSharedPreferences() : Long {
-        return super.getValueFromSharedPreferences().asGb()
+    override fun onGetDefaultValue(a: TypedArray?, index: Int): Any = (super.onGetDefaultValue(a, index) as Long).asGb()
+
+    override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
+        // sets superclass value property
+        super.onSetInitialValue(restorePersistedValue, defaultValue)
+        value = value.asGb()
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
-        if (positiveResult) {
+        if (positiveResult && shouldPersist()) {
             val editor = prefs.edit()
             editor.putLong(key, value.asBytes())
             editor.apply()
