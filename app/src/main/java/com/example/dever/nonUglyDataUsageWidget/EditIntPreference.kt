@@ -10,20 +10,26 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 
+/**
+ * last resort default value used if the XML default is missing or attempt to retrieve persisted
+ * value from preference backing store fails
+ */
+private const val LAST_RESORT_DEFAULT = 1
+
 open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPreference(context, attrs) {
     private lateinit var mValueTextView: TextView
-    private lateinit var mUnitTextView : TextView
+    private lateinit var mUnitTextView: TextView
     protected var value: Int = 0
     private val buttonListener = DialogListener()
-    private val prefs : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var keyname: String
-    protected var minValue : Int = Int.MIN_VALUE
-    protected var maxValue : Int = Int.MAX_VALUE
-    protected var stepValue : Int = 1
-    private lateinit var unitCaptionText : String
+    protected var minValue: Int = Int.MIN_VALUE
+    protected var maxValue: Int = Int.MAX_VALUE
+    protected var stepValue: Int = 1
+    private lateinit var unitCaptionText: String
 
     init {
-        isPersistent = false
+//        isPersistent = false
         dialogLayoutResource = R.layout.editnum_preferences_dialog
 
         val k: String? = attrs?.getAttributeValue("http://schemas.android.com/apk/res/android", "key")
@@ -39,24 +45,35 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
-        if (positiveResult) {
+        if (positiveResult && shouldPersist()) {
             val editor = prefs.edit()
             editor.putInt(key, value)
             editor.apply()
         }
     }
 
+    /**
+     * set the preference's value
+     *
+     * Use the superclasses's getPersistedInt if restoring from preferences
+     *  otherwise the passed-in defaultValue, which has in turn been set by
+     *  out onGetDefaultValue()
+     *
+     *  Fall back to LAST_RESORT_DEFAULT if restorePersistedValue == true but
+     *   nothing found in persistent store, L_R_D == 1 which is a reasonable
+     *   default for an integer
+     */
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
-        value = if (restorePersistedValue)
-            getPersistedInt(0)
-        else
-            defaultValue as Int
+        val v = if (restorePersistedValue) getPersistedInt(LAST_RESORT_DEFAULT) else defaultValue as Int
+        value = when {
+            v < minValue -> minValue
+            v > maxValue -> maxValue
+            else -> v
+        }
     }
 
     override fun onBindDialogView(view: View?) {
         super.onBindDialogView(view)
-
-        value = getValueFromSharedPreferences()
 
         if (view != null) {
             mValueTextView = view.findViewById(R.id.txtIntPrefInt)
@@ -74,10 +91,11 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
         }
     }
 
-    protected open fun getValueFromSharedPreferences() = prefs.getInt(key, 0)
-
     override fun onGetDefaultValue(a: TypedArray?, index: Int): Any {
-        return a?.getInt(index, 0)!!
+        return a?.getInteger(
+                index,
+                LAST_RESORT_DEFAULT
+        ) as Any
     }
 
     inner class DialogListener : View.OnClickListener {
