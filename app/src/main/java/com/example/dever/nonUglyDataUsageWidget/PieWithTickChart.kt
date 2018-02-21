@@ -3,7 +3,6 @@ package com.example.dever.nonUglyDataUsageWidget
 import android.content.Context
 import android.graphics.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -76,8 +75,8 @@ class PieWithTickChart(
      */
     val daysText: String
         get() {
-            val currentDay = TimeUnit.DAYS.convert(GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis, TimeUnit.MILLISECONDS)+1
-            val duration = TimeUnit.DAYS.convert(interval.endDate.timeInMillis - interval.startDate.timeInMillis, TimeUnit.MILLISECONDS)+1
+            val currentDay = TimeUnit.DAYS.convert(GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis, TimeUnit.MILLISECONDS) + 1
+            val duration = TimeUnit.DAYS.convert(interval.endDate.timeInMillis - interval.startDate.timeInMillis, TimeUnit.MILLISECONDS) + 1
             return context.resources.getString(R.string.widget_days_template, currentDay, duration)
         }
 
@@ -99,12 +98,11 @@ class PieWithTickChart(
                     pieX() + pieRadius(),
                     pieY() + pieRadius()
             )
-            var sweepangle = min((stats.actualData.toDouble() / maxData * 360).toFloat(), 360F)
+            var sweepangle = Angle(min((stats.actualData.toDouble() / maxData * 360).toFloat(), 360F))
             val startangle = 0F - 90
-            val todayAngle: Float = ((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
-                    / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 2F * PI.toFloat()) - (PI.toFloat() / 2F)
-            val tickEndFudge = 1F
-            val tickStartFudge = 0.8F
+            val todayAngle = Angle(((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
+                    / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360F) - 90F)
+            val todayRadiusFudge = 1.2F
 
             // background
             canvas.drawColor(Color.TRANSPARENT)
@@ -126,13 +124,24 @@ class PieWithTickChart(
             donut.op(circle, hole, Path.Op.DIFFERENCE)
             canvas.drawPath(donut, paintbox.pieBg)
 
+            sweepangle = Angle(.7F * 360)
+
             // the full wedge, sadly no Path equivalent to canvas.drawArc with auto path close
             //  so draw the whole thing (centre, line to top, arc around, line to centre)
             val wedge = Path()
             wedge.moveTo(pieX(), pieY())
             wedge.lineTo(pieX(), pieRadius())
-            wedge.arcTo(rectWedge, startangle, sweepangle)
+            wedge.arcTo(rectWedge, startangle, sweepangle.inDegrees)
             wedge.lineTo(pieX(), pieY())
+
+            // circular ends are pretty
+            // donut width = 1-donutsize * pieRadius; circle end-cap radius is 0.5 * that
+            // Path's radial origin is at 3 o'clock, we want it at 12 o'clock
+            val capradius = pieRadius() * (1 - donutSize) / 2
+            val startCapXY = CircleCoords(pieX(), pieY(), pieRadius() - capradius, Angle(0 - 90F))
+            val endCapXY = startCapXY.copy(angle = Angle(sweepangle.inDegrees - 90F))
+            wedge.addCircle(startCapXY, capradius)
+            wedge.addCircle(endCapXY, capradius)
 
             // clip out the centre and draw
             val segment = Path()
@@ -140,13 +149,8 @@ class PieWithTickChart(
             canvas.drawPath(segment, paintbox.pieWedge)
 
             // today marker
-            canvas.drawLine(
-                    pieX() + (pieRadius() * tickStartFudge * cos(todayAngle)),
-                    pieY() + (pieRadius() * tickStartFudge * sin(todayAngle)),
-                    pieX() + (pieRadius() * tickEndFudge * cos(todayAngle)),
-                    pieY() + (pieRadius() * tickEndFudge * sin(todayAngle)),
-                    paintbox.pieTick
-            )
+            val todayXY = CircleCoords(pieX(), pieY(), pieRadius()-capradius, todayAngle)
+            canvas.drawCircle(todayXY, paintbox.pieWedge.strokeWidth * 2F * todayRadiusFudge, paintbox.pieTick)
 
             return field
         }
@@ -175,4 +179,42 @@ class PieWithTickChart(
             pieWedge.strokeWidth = 5F
         }
     }
+
+    /**
+     * Representation of an angle
+     *
+     * @param inDegrees  the angle, measured in degrees
+     */
+    data class Angle(var inDegrees: Float = 0F) {
+
+        private val d2r: Float = 2F * Math.PI.toFloat() / 360F
+
+        /**
+         * @return  this angle, measured in radians
+         */
+        var inRadians
+            get() = inDegrees * d2r
+            set(v) {
+                inDegrees = v / d2r
+            }
+    }
+
+    /**
+     * Representation of a coordinate on the radius of a circle
+     *
+     * @param originX  the x-coordinate of the centre of the circle
+     * @param originY  the y-coordinate of the centre of the circle
+     * @param offset   this coordinate's distance from the origin, along both axes
+     * @param angle   this coordinate's rotation from the radial origin (which is at 3 o'clock  TODO just make this 12 o'clock
+     */
+    data class CircleCoords(var originX: Float, var originY: Float, var offset: Float, var angle: PieWithTickChart.Angle) {
+
+        val x: Float
+            get() = originX + (offset * cos(angle.inRadians))
+        val y: Float
+            get() = originY + (offset * sin(angle.inRadians))
+    }
+
+    fun Path.addCircle(coords : PieWithTickChart.CircleCoords, radius : Float) = this.addCircle(coords.x, coords.y, radius, android.graphics.Path.Direction.CW)
+    fun Canvas.drawCircle(coords : PieWithTickChart.CircleCoords, radius : Float, paint : Paint) = this.drawCircle(coords.x, coords.y, radius, paint)
 }
