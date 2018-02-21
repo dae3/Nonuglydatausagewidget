@@ -11,16 +11,7 @@
         android:layout_height="match_parent"
         tools:context="com.example.dever.nonUglyDataUsageWidget.MainActivity">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/mainactivity_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
 
         <FrameLayout
             android:id="@+id/main_activity_body"
@@ -29,7 +20,7 @@
             app:layout_constraintBottom_toTopOf="@id/bottom_navbar"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainactivity_toolbar">
+            app:layout_constraintTop_toTopOf="parent">
 
         </FrameLayout>
 
