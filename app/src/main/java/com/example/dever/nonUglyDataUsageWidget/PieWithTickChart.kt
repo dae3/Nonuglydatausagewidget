@@ -2,7 +2,6 @@ package com.example.dever.nonUglyDataUsageWidget
 
 import android.content.Context
 import android.graphics.*
-import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.PI
 import kotlin.math.cos
@@ -77,7 +76,7 @@ class PieWithTickChart(
      */
     val daysText: String
         get() {
-            val currentDay = GregorianCalendarDefaultLocale().get(Calendar.DAY_OF_MONTH) - interval.startDate.get(Calendar.DAY_OF_MONTH) + 1
+            val currentDay = TimeUnit.DAYS.convert(GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis, TimeUnit.MILLISECONDS)+1
             val duration = TimeUnit.DAYS.convert(interval.endDate.timeInMillis - interval.startDate.timeInMillis, TimeUnit.MILLISECONDS)+1
             return context.resources.getString(R.string.widget_days_template, currentDay, duration)
         }
