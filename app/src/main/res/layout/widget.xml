@@ -2,8 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    android:gravity="fill_vertical"
     android:orientation="vertical"
+    android:gravity="fill_vertical"
     android:padding="@dimen/widget_margin">
 
     <ImageView
@@ -11,15 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/widget_chart_content_description"
-        android:elevation="2dp"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:elevation="10dp"
+        />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
+        />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -33,9 +35,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/widget_margin"
-            android:elevation="20dp"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
+            android:textColor="@color/widgetText"
             android:textSize="@dimen/widget_text_data_default" />
 
         <TextView
@@ -44,6 +46,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
+            android:textColor="@color/widgetText"
             android:textSize="@dimen/widget_text_days_default" />
 
     </LinearLayout>
@@ -55,6 +58,6 @@
         android:layout_centerInParent="true"
         android:src="@drawable/ic_error_black_48dp"
         android:tint="@color/pie_error_color_tint"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
 </RelativeLayout>
