@@ -9,12 +9,11 @@ import android.util.AttributeSet
  */
 class EditGigabytePreference(context: Context?, attrs : AttributeSet?) : EditLongPreference(context, attrs) {
 
-    override fun onGetDefaultValue(a: TypedArray?, index: Int): Any = (super.onGetDefaultValue(a, index) as Long).asGb()
+    override fun onGetDefaultValue(a: TypedArray?, index: Int): Any = super.onGetDefaultValue(a, index) as Long
 
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
-        // sets superclass value property
         super.onSetInitialValue(restorePersistedValue, defaultValue)
-        value = value.asGb()
+        value = if (restorePersistedValue) value.asGb() else defaultValue as Long
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
