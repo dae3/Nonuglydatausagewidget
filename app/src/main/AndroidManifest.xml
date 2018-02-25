@@ -39,6 +39,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
+        <activity android:name=".FirstRunPreferenceCaptureActivity"></activity>
     </application>
 
 </manifest>
