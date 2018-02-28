@@ -125,8 +125,6 @@ class PieWithTickChart(
             donut.op(circle, hole, Path.Op.DIFFERENCE)
             canvas.drawPath(donut, paintbox.pieBg)
 
-            sweepangle = Angle(.7F * 360)
-
             // the full wedge, sadly no Path equivalent to canvas.drawArc with auto path close
             //  so draw the whole thing (move centre, line to top, arc around, line to centre)
             val wedge = Path()
