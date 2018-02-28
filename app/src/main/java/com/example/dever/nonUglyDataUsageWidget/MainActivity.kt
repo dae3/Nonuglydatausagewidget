@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity()
     private var fragment: Fragment? = PieChartFragment()
     private lateinit var perm: PermissionManager
     private var curFrag: Int = R.id.bottomnav_home
-    private lateinit var bottomNavigationView : BottomNavigationView
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity()
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
         perm = PermissionManager(this)
+
+        if (firstRun) startActivityForResult(Intent(this, FirstRunPreferenceResult::class.java), 0)
     }
 
     @SuppressLint("SetTextI18n")
@@ -120,4 +122,14 @@ class MainActivity : AppCompatActivity()
             bottomNavigationView.selectedItemId = savedlayout
         }
     }
+
+    private val firstRun: Boolean
+        get() {
+            val key = resources.getString(R.string.prefs_itemkey_firstrun)
+            return if (prefs.getBoolean(key, true)) {
+                prefs.edit().putBoolean(key, false).apply()
+                true
+            }
+            else false
+        }
 }

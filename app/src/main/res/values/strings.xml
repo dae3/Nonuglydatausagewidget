@@ -10,6 +10,7 @@
     <string name="prefs_itemtitle_intervaltype">Interval type</string>
     <string name="prefs_itemkey_intervaltype">prefs_itemkey_intervaltype</string>
     <string name="prefs_itemkey_phonepermstate">prefs_itemkey_phonepermstate</string>
+    <string name="prefs_itemkey_firstrun">prefs_itemkey_firstrun</string>
     <string name="widget_chart_content_description">Chart showing your current data usage</string>
     <string name="prefs_key_maxdata">prefs_maxdata</string>
     <string name="menu_activity_title_settings">Settings</string>
@@ -37,5 +38,8 @@
     <string name="about_headline_author">Author</string>
     <string name="app_author">Daniel Everett</string>
     <string name="exception_ppra_phone_permission_already_granted">PrePermissionRequestActivity phone permission button visible but permission already granted</string>
+    <string name="firstrun_prefdefault_text">Name</string>
+    <string name="firstrun_continue_button_caption">Continue</string>
+    <string name="firstrun_settings_button_caption">Change settings</string>
 </resources>
 

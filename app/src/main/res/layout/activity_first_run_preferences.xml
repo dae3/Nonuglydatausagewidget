@@ -4,6 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/about_layout_padding"
     tools:context="com.example.dever.nonUglyDataUsageWidget.FirstRunPreferenceCaptureActivity">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_done"
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType="textPersonName"
+        android:text="@string/firstrun_prefdefault_text" />
+
+    <Button
+        android:id="@+id/button_changesettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_done"
+        android:onClick="onClickButton"
+        android:text="@string/firstrun_settings_button_caption" />
+
+    <Button
+        android:id="@+id/button_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:onClick="onClickButton"
+        android:text="@string/firstrun_continue_button_caption" />
 
 </android.support.constraint.ConstraintLayout>
