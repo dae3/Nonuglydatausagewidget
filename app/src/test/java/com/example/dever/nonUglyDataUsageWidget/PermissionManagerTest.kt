@@ -1,5 +1,6 @@
 package com.example.dever.nonUglyDataUsageWidget
 
+import android.app.Activity
 import android.app.AppOpsManager
 import android.content.Context.APP_OPS_SERVICE
 import android.test.suitebuilder.annotation.SmallTest
@@ -13,6 +14,7 @@ import org.mockito.Mockito.`when`
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
+import org.robolectric.shadows.ShadowApplication
 
 /**
  * Unit tests for PermissionManager
@@ -25,9 +27,9 @@ class PermissionManagerTest {
 
     private var aomGranted = Mockito.mock(AppOpsManager::class.java)
     private var aomNotGranted = Mockito.mock(AppOpsManager::class.java)
-    var main = Robolectric.buildActivity(MainActivity::class.java).get()
-    var app = Shadows.shadowOf(main.application)
-    lateinit var pm: PermissionManager
+    private var main: Activity = Robolectric.buildActivity(MainActivity::class.java).get()
+    private var app: ShadowApplication = Shadows.shadowOf(main.application)
+    private lateinit var pm: PermissionManager
 
     @Before
     fun setup() {

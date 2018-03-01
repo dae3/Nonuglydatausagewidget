@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar.LENGTH_INDEFINITE
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
@@ -20,20 +21,17 @@ class MainActivity : AppCompatActivity()
         , View.OnClickListener {
 
     private lateinit var prefs: SharedPreferences
-    private lateinit var stats: GetNetworkStats
     private lateinit var interval: NetworkStatsInterval
     private var fragment: Fragment? = PieChartFragment()
     private lateinit var perm: PermissionManager
     private var curFrag: Int = R.id.bottomnav_home
-    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
-        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navbar)
-        bottomNavigationView.setOnNavigationItemSelectedListener(this)
+        bottom_navbar.setOnNavigationItemSelectedListener(this)
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
         perm = PermissionManager(this)
@@ -49,11 +47,8 @@ class MainActivity : AppCompatActivity()
         // this is a stinky way of managing shared state but it'll do for now
         perm.refresh()
 
-        val sb = Snackbar.make(
-                findViewById(R.id.main_coord_layout),
-                getString(R.string.main_snackbar_nopermission),
-                LENGTH_INDEFINITE
-        ).setAction(R.string.snackbar_noperm_action, this)
+        val sb = Snackbar.make(main_coord_layout, getString(R.string.main_snackbar_nopermission), LENGTH_INDEFINITE)
+                .setAction(R.string.snackbar_noperm_action, this)
 
         fragmentManager.beginTransaction().replace(R.id.main_activity_body, fragment).commit()
 
@@ -69,8 +64,6 @@ class MainActivity : AppCompatActivity()
                                 resources.getInteger(R.integer.default_interval_startday)
                         )
                 )
-                stats = GetNetworkStats(this, interval)
-
             } catch (e: SecurityException) {
                 // belt and braces; permission *could* be revoked between checking
                 //  and actually using
@@ -116,10 +109,10 @@ class MainActivity : AppCompatActivity()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        var savedlayout = savedInstanceState?.getInt("fragment")
+        val savedlayout = savedInstanceState?.getInt("fragment")
         savedlayout?.let {
             setContent(savedlayout)
-            bottomNavigationView.selectedItemId = savedlayout
+            bottom_navbar.selectedItemId = savedlayout
         }
     }
 

@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
-    android:paddingStart="@dimen/prepermission_page_margins"
-    android:paddingEnd="@dimen/prepermission_page_margins">
+    android:paddingEnd="@dimen/prepermission_page_margins"
+    android:paddingStart="@dimen/prepermission_page_margins">
 
     <TextView
         style="@style/TextAppearance.AppCompat.Medium"
@@ -16,6 +16,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/preperm_req_screen1_image_content_description"
         android:src="@drawable/usage_perm_screen_1" />
 
     <TextView
@@ -27,6 +28,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/preperm_page3_image_content_description"
         android:src="@drawable/usage_perm_screen_2" />
 
 

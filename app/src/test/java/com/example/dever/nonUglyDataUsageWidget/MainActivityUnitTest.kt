@@ -23,9 +23,10 @@ import org.robolectric.android.controller.ActivityController
 @RunWith(RobolectricTestRunner::class)
 class MainActivityUnitTest {
 
-    lateinit var ac : ActivityController<MainActivity>
-    lateinit var ma: MainActivity
+    private lateinit var ac : ActivityController<MainActivity>
+    private lateinit var ma: MainActivity
 
+    @Suppress("MemberVisibilityCanBePrivate")
     @Before
     fun setUp() {
         ac = Robolectric.buildActivity(MainActivity::class.java)

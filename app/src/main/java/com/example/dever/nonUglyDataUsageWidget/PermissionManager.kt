@@ -97,6 +97,7 @@ class PermissionManager(private val activity: Activity) {
     /**
      * Callback for Activity.requestPermissions. Updates phonePermissionState
      */
+    @Suppress("UNUSED_PARAMETER")
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
 
         if (grantResults.isNotEmpty() && permissions[0] == READ_PHONE_STATE)

@@ -98,7 +98,7 @@ class PieWithTickChart(
             val canvas = Canvas(field)
             val donutSize = 0.75F
             val rectWedge = RectF(pieX - pieRadius, pieY - pieRadius, pieX + pieRadius, pieY + pieRadius)
-            var sweepangle = Angle(min((stats.actualData.toDouble() / maxData * 360).toFloat(), 360F))
+            val sweepangle = Angle(min((stats.actualData.toDouble() / maxData * 360).toFloat(), 360F))
             val startangle = Angle(0F)
             val todayAngle = Angle((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
                     / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360F)
@@ -205,7 +205,12 @@ class PieWithTickChart(
      * @param offset   this coordinate's distance from the origin, along both axes
      * @param angle   this coordinate's rotation from the radial origin at 12 o'clock
      */
-    data class CircleCoords(var originX: Float, var originY: Float, var offset: Float, var angle: PieWithTickChart.Angle) {
+    data class CircleCoords(
+            private var originX: Float,
+            private var originY: Float,
+            private var offset: Float,
+            private var angle: PieWithTickChart.Angle
+    ) {
 
         val x: Float
             get() = originX + (offset * cos(angle.inRadians - PI.toFloat() / 2F))

@@ -29,19 +29,20 @@ import org.junit.runner.RunWith
 @LargeTest
 class PrePermissionRequestActivityTest {
 
-    var device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    private var device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
     init {
         // reset "don't ask again" state, before activity is created
 //        device.executeShellCommand("pm clear com.example.dever.nonUglyDataUsageWidget")
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     @get:Rule
     var rule = ActivityTestRule(PrePermissionRequestActivity::class.java, true, false)
-    val p2btn = onView(withId(R.id.prepermission_phone_button))
-    val p2msg = onView(withId(R.id.prepermission_granted_text_p2))
-    val right = onView(withId(R.id.imgPrePermRightArrow))
-    val p3btn = onView(withId(R.id.usage_grant_permission_button))
-    val p3msg = onView(withId(R.id.prepermission_granted_text_p3))
+    private val p2btn = onView(withId(R.id.prepermission_phone_button))
+    private val p2msg = onView(withId(R.id.prepermission_granted_text_p2))
+    private val right = onView(withId(R.id.imgPrePermRightArrow))
+    private val p3btn = onView(withId(R.id.usage_grant_permission_button))
+    private val p3msg = onView(withId(R.id.prepermission_granted_text_p3))
 
     private val waitTimeout = 5000L
 

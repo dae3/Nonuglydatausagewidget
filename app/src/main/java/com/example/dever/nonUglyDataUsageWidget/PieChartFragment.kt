@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.pie_chart.*
 import kotlin.math.roundToInt
 
 /**
- * Subclass of fragment to display network ussage stats in main activity (and any other non-
+ * Subclass of fragment to display network usage stats in main activity (and any other non-
  * widget uses in the future
  */
 class PieChartFragment : Fragment(), ViewTreeObserver.OnGlobalLayoutListener {

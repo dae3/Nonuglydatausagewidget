@@ -21,9 +21,7 @@ import org.robolectric.shadows.ShadowActivity
 @RunWith(RobolectricTestRunner::class)
 class FirstRunPreferenceCaptureActivityTest {
 
-    private val requestCode = 0
     private lateinit var fpActivity: FirstRunPreferenceCaptureActivity
-    private lateinit var sp: SharedPreferences
     private lateinit var shadowActivity: ShadowActivity
 
     @Before

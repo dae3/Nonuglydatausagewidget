@@ -2,7 +2,6 @@ package com.example.dever.nonUglyDataUsageWidget
 
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_first_run_preferences.*
@@ -14,7 +13,6 @@ class FirstRunPreferenceCaptureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_first_run_preferences)
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         this.text_blurb.text = getString(
                 R.string.firstrun_blurb,

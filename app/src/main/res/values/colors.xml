@@ -2,18 +2,15 @@
 <resources>
     <color name="colorPrimaryDark">#00766c</color>
     <color name="colorPrimary">#26a69a</color>
-    <color name="colorPrimaryLight">#64d8cb</color>
     <color name="colorAccent">#1de9b6</color>
 
     <!--Define pie chart elements in terms of base theme elements?..-->
     <color name="colorPieBg">@color/colorPrimary</color>
     <color name="colorPieWedge">@color/colorPrimaryDark</color>
-    <color name="colorPieWedgeOutline">@android:color/background_dark</color>
     <color name="colorPieTick">@color/colorAccent</color>
 
     <!-- random other colors -->
     <color name="permissionGrantedTickTint">@android:color/holo_green_light</color>
     <color name="widgetText">@android:color/white</color>
-    <color name="MainActivityText">@android:color/black</color>
     <color name="pie_error_color_tint">@android:color/holo_red_dark</color>
 </resources>

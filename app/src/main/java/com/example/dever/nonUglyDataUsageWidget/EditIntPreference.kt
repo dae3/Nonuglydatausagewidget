@@ -26,7 +26,7 @@ open class EditIntPreference(context: Context?, attrs: AttributeSet?) : DialogPr
     protected var minValue: Int = Int.MIN_VALUE
     protected var maxValue: Int = Int.MAX_VALUE
     protected var stepValue: Int = 1
-    private lateinit var unitCaptionText: String
+    private var unitCaptionText: String
 
     init {
 //        isPersistent = false
