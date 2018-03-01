@@ -3,8 +3,9 @@ package com.example.dever.nonUglyDataUsageWidget
 import android.app.AppOpsManager
 import android.content.Context.APP_OPS_SERVICE
 import android.content.Intent
+import com.example.dever.nonUglyDataUsageWidget.MainActivityUnitTest.IntentMatcher.Companion.equalToIntent
 import junit.framework.Assert.assertNull
-import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.Description
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
@@ -45,17 +46,18 @@ class MainActivityUnitTest {
 
     @Test
     fun displaysFirstRunActivityOnFirstRun() {
+
         assertThat(
-                Shadows.shadowOf(ma.application).nextStartedActivity?.javaClass,
-                equalTo(Intent(ma, FirstRunPreferenceResult::class.java).javaClass)
+                Shadows.shadowOf(ma.application).nextStartedActivity,
+                equalToIntent(Intent(ma, FirstRunPreferenceCaptureActivity::class.java))
         )
     }
 
     @Test
     fun displaysFirstRunActivityOnlyOnFirstRun() {
         assertThat(
-                Shadows.shadowOf(ma.application).nextStartedActivity?.javaClass,
-                equalTo(Intent(ma, FirstRunPreferenceResult::class.java).javaClass)
+                Shadows.shadowOf(ma.application).nextStartedActivity,
+                equalToIntent(Intent(ma, FirstRunPreferenceCaptureActivity::class.java))
         )
 
         ac.stop().destroy()
@@ -64,4 +66,30 @@ class MainActivityUnitTest {
         assertNull(Shadows.shadowOf(ma.application).nextStartedActivity)
     }
 
+    @Test
+    fun openSettingsIfFirstRunActivityAsksForThem() {
+        assertThat(
+                Shadows.shadowOf(ma.application).nextStartedActivity,
+                equalToIntent(Intent(ma, FirstRunPreferenceCaptureActivity::class.java))
+        )
+
+//        assertThat(ma.)
+    }
+
+    private class IntentMatcher(private var actual : Intent) : org.hamcrest.TypeSafeMatcher<Intent>() {
+
+        companion object {
+            fun equalToIntent(actual: Intent) : IntentMatcher {
+                return IntentMatcher(actual)
+            }
+        }
+
+        override fun describeTo(description: Description?) {
+            description?.appendValue(actual)
+        }
+
+        override fun matchesSafely(expected: Intent?): Boolean {
+            return actual.component == expected?.component && actual.data == expected?.data
+        }
+    }
 }

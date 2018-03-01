@@ -2,22 +2,30 @@ package com.example.dever.nonUglyDataUsageWidget
 
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import kotlinx.android.synthetic.main.activity_first_run_preferences.*
 
 enum class FirstRunPreferenceResult { NoChoice, ChangePreferences, Continue }
 
 class FirstRunPreferenceCaptureActivity : AppCompatActivity() {
 
-    private var myResult : Int = FirstRunPreferenceResult.NoChoice.ordinal
-    private var canClose = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_first_run_preferences)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
+        this.text_blurb.text = getString(
+                R.string.firstrun_blurb,
+                resources.getInteger(R.integer.default_maxdata),
+                resources.getInteger(R.integer.default_interval_startday),
+                button_changesettings.text as String,
+                button_done.text as String
+        )
     }
 
-    public fun onClickButton(view: View) {
+    fun onClickButton(view: View) {
         setResult(
                 when (view.id) {
                     R.id.button_done -> FirstRunPreferenceResult.Continue.ordinal
@@ -26,5 +34,6 @@ class FirstRunPreferenceCaptureActivity : AppCompatActivity() {
                 },
                 Intent()
         )
+        finish()
     }
 }

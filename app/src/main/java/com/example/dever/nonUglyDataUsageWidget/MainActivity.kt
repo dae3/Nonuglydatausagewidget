@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity()
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
         perm = PermissionManager(this)
 
-        if (firstRun) startActivityForResult(Intent(this, FirstRunPreferenceResult::class.java), 0)
+        if (firstRun) startActivityForResult(Intent(this, FirstRunPreferenceCaptureActivity::class.java), 0)
     }
 
     @SuppressLint("SetTextI18n")

@@ -41,5 +41,6 @@
     <string name="firstrun_prefdefault_text">Name</string>
     <string name="firstrun_continue_button_caption">Continue</string>
     <string name="firstrun_settings_button_caption">Change settings</string>
+    <string name="firstrun_blurb">To get started we\'ve assumed you have a %1$d Gb data plan that starts on day %2$d of the month.\n\nIf this is correct just tap %3$s, otherwise tap %4$s to change it.</string>
 </resources>
 
