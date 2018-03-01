@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity()
                         today = GregorianCalendar(Locale.getDefault()),
                         dayOfMonth = prefs.getInt(
                                 resources.getString(R.string.prefs_key_billingcycle_startday),
-                                1
+                                resources.getInteger(R.integer.default_interval_startday)
                         )
                 )
                 stats = GetNetworkStats(this, interval)
