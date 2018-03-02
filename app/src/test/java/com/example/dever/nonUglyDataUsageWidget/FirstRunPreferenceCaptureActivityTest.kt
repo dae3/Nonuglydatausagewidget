@@ -1,7 +1,6 @@
 package com.example.dever.nonUglyDataUsageWidget
 
 
-import android.content.SharedPreferences
 import junit.framework.TestCase.assertTrue
 import kotlinx.android.synthetic.main.activity_first_run_preferences.*
 import org.hamcrest.CoreMatchers.containsString
@@ -49,12 +48,12 @@ class FirstRunPreferenceCaptureActivityTest {
 
         assertThat(
                 fpActivity.text_blurb.text as String,
-                containsString(fpActivity.button_changesettings.text as String)
+                containsString("correct just tap ${fpActivity.button_done.text}")
         )
 
         assertThat(
                 fpActivity.text_blurb.text as String,
-                containsString(fpActivity.button_done.text as String)
+                containsString("otherwise tap ${fpActivity.button_changesettings.text}")
         )
     }
 

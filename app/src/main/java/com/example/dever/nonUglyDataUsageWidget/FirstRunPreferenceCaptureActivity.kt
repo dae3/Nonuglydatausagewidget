@@ -18,8 +18,8 @@ class FirstRunPreferenceCaptureActivity : AppCompatActivity() {
                 R.string.firstrun_blurb,
                 resources.getInteger(R.integer.default_maxdata),
                 resources.getInteger(R.integer.default_interval_startday),
-                button_changesettings.text as String,
-                button_done.text as String
+                button_done.text as String,
+                button_changesettings.text as String
         )
     }
 
