@@ -15,6 +15,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
+const val requestFRPCA = 0
 
 class MainActivity : AppCompatActivity()
         , BottomNavigationView.OnNavigationItemSelectedListener
@@ -36,7 +37,14 @@ class MainActivity : AppCompatActivity()
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
         perm = PermissionManager(this)
 
-        if (firstRun) startActivityForResult(Intent(this, FirstRunPreferenceCaptureActivity::class.java), 0)
+        if (firstRun) {
+            startActivityForResult(Intent(this, FirstRunPreferenceCaptureActivity::class.java), requestFRPCA)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == requestFRPCA && resultCode == FirstRunPreferenceResult.ChangePreferences.ordinal)
+            bottom_navbar.selectedItemId = R.id.bottomnav_settings
     }
 
     @SuppressLint("SetTextI18n")
@@ -122,7 +130,6 @@ class MainActivity : AppCompatActivity()
             return if (prefs.getBoolean(key, true)) {
                 prefs.edit().putBoolean(key, false).apply()
                 true
-            }
-            else false
+            } else false
         }
 }

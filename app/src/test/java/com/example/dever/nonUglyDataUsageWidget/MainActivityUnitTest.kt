@@ -3,8 +3,10 @@ package com.example.dever.nonUglyDataUsageWidget
 import android.app.AppOpsManager
 import android.content.Context.APP_OPS_SERVICE
 import android.content.Intent
-import com.example.dever.nonUglyDataUsageWidget.MainActivityUnitTest.IntentMatcher.Companion.equalToIntent
+import com.example.dever.nonUglyDataUsageWidget.IntentMatcher.Companion.equalToIntent
 import junit.framework.Assert.assertNull
+import kotlinx.android.synthetic.main.activity_main.*
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.Description
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
@@ -23,12 +25,13 @@ import org.robolectric.android.controller.ActivityController
 @RunWith(RobolectricTestRunner::class)
 class MainActivityUnitTest {
 
-    private lateinit var ac : ActivityController<MainActivity>
+    private lateinit var ac: ActivityController<MainActivity>
     private lateinit var ma: MainActivity
 
     @Suppress("MemberVisibilityCanBePrivate")
     @Before
     fun setUp() {
+
         ac = Robolectric.buildActivity(MainActivity::class.java)
         ma = ac.get()
 
@@ -69,28 +72,43 @@ class MainActivityUnitTest {
 
     @Test
     fun openSettingsIfFirstRunActivityAsksForThem() {
-        assertThat(
-                Shadows.shadowOf(ma.application).nextStartedActivity,
-                equalToIntent(Intent(ma, FirstRunPreferenceCaptureActivity::class.java))
+
+        Shadows.shadowOf(ma).receiveResult(
+                Intent(ma, FirstRunPreferenceCaptureActivity::class.java),
+                FirstRunPreferenceResult.ChangePreferences.ordinal,
+                Intent()
         )
 
-//        assertThat(ma.)
+        assertThat(ma.bottom_navbar.selectedItemId, equalTo(R.id.bottomnav_settings))
     }
 
-    private class IntentMatcher(private var actual : Intent) : org.hamcrest.TypeSafeMatcher<Intent>() {
+    @Test
+    fun dontOpenSettingsIfNotAskedForThem() {
 
-        companion object {
-            fun equalToIntent(actual: Intent) : IntentMatcher {
-                return IntentMatcher(actual)
-            }
-        }
+        Shadows.shadowOf(ma).receiveResult(
+                Intent(ma, FirstRunPreferenceCaptureActivity::class.java),
+                FirstRunPreferenceResult.Continue.ordinal,
+                Intent()
+        )
 
-        override fun describeTo(description: Description?) {
-            description?.appendValue(actual)
-        }
+        assertThat(ma.bottom_navbar.selectedItemId, equalTo(R.id.bottomnav_home))
+    }
 
-        override fun matchesSafely(expected: Intent?): Boolean {
-            return actual.component == expected?.component && actual.data == expected?.data
+}
+
+private class IntentMatcher(private var actual: Intent) : org.hamcrest.TypeSafeMatcher<Intent>() {
+
+    companion object {
+        fun equalToIntent(actual: Intent): IntentMatcher {
+            return IntentMatcher(actual)
         }
+    }
+
+    override fun describeTo(description: Description?) {
+        description?.appendValue(actual)
+    }
+
+    override fun matchesSafely(expected: Intent?): Boolean {
+        return actual.component == expected?.component && actual.data == expected?.data
     }
 }
