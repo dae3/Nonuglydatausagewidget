@@ -36,9 +36,9 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
         keyname = attrs?.getAttributeValue("http://schemas.android.com/apk/res/android", "key") ?:
             throw IllegalArgumentException("EditLongPreference requires an android:key attribute")
 
-        minValue = attrs.getAttributeIntValue("http://dever.example.com", "minimum", Int.MIN_VALUE).toLong()
-        maxValue = attrs.getAttributeIntValue("http://dever.example.com", "maximum", Int.MAX_VALUE).toLong()
-        stepValue = attrs.getAttributeIntValue("http://dever.example.com", "step", Int.MIN_VALUE).toLong()
+        minValue = attrs.getAttributeLongValue("http://dever.example.com", "minimum", Long.MIN_VALUE)
+        maxValue = attrs.getAttributeLongValue("http://dever.example.com", "maximum", Long.MAX_VALUE)
+        stepValue = attrs.getAttributeLongValue("http://dever.example.com", "step", Long.MIN_VALUE+1)   
         unitCaptionText = attrs.getAttributeValue("http://dever.example.com", "unitcaption")
     }
 
@@ -97,4 +97,10 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
             mValueTextView.text = "$value"
         }
     }
+}
+
+// somewhat hackish way to get Long value from AttributeSet
+fun AttributeSet.getAttributeLongValue(namespace : String, attribute : String, defaultValue : Long) : Long {
+    val iv = this.getAttributeIntValue(namespace, attribute, Int.MAX_VALUE)
+    return if (iv == Int.MAX_VALUE) defaultValue else iv.toLong()
 }
