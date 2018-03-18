@@ -31,8 +31,7 @@ open class EditLongPreference(context: Context?, attrs: AttributeSet?) : DialogP
     private var unitCaptionText : String
 
     init {
-        isPersistent = false  // we handle our own persistence
-        dialogLayoutResource = R.layout.editnum_preferences_dialog
+         dialogLayoutResource = R.layout.editnum_preferences_dialog
 
         keyname = attrs?.getAttributeValue("http://schemas.android.com/apk/res/android", "key") ?:
             throw IllegalArgumentException("EditLongPreference requires an android:key attribute")
