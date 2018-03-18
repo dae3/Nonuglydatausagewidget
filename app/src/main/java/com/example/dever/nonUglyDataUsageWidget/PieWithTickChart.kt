@@ -98,7 +98,12 @@ class PieWithTickChart(
             val canvas = Canvas(field)
             val donutSize = 0.75F
             val rectWedge = RectF(pieX - pieRadius, pieY - pieRadius, pieX + pieRadius, pieY + pieRadius)
-            val sweepangle = Angle(min((stats.actualData.toDouble() / maxData * 360).toFloat(), 360F))
+            val sweepangle = Angle(
+                    min(
+                            (stats.actualData.toDouble() / maxData * 360).toFloat(),
+                            359F // 360 overlaps and looks like 0
+                    )
+            )
             val startangle = Angle(0F)
             val todayAngle = Angle((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
                     / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360F)
