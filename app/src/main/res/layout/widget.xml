@@ -38,7 +38,9 @@
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
             android:textColor="@color/widgetText"
-            android:textSize="@dimen/widget_text_data_default" />
+            android:textSize="@dimen/widget_text_data_default"
+            android:shadowColor="@color/widgetTextShadow"
+            android:shadowRadius="@integer/widget_text_shadow_blur_radius"/>
 
         <TextView
             android:id="@+id/txtWidgetDays"
@@ -47,7 +49,9 @@
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
             android:textColor="@color/widgetText"
-            android:textSize="@dimen/widget_text_days_default" />
+            android:textSize="@dimen/widget_text_days_default"
+            android:shadowColor="@color/widgetTextShadow"
+            android:shadowRadius="@integer/widget_text_shadow_blur_radius"/>
 
     </LinearLayout>
 

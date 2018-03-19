@@ -12,5 +12,6 @@
     <!-- random other colors -->
     <color name="permissionGrantedTickTint">@android:color/holo_green_light</color>
     <color name="widgetText">@android:color/white</color>
+    <color name="widgetTextShadow">@android:color/black</color>
     <color name="pie_error_color_tint">@android:color/holo_red_dark</color>
 </resources>
