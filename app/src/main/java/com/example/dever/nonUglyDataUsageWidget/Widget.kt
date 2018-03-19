@@ -113,7 +113,7 @@ class Widget : AppWidgetProvider() {
             try {
                 views.setImageViewBitmap(R.id.widgetChartImageView, pie.bitmap)
                 views.setTextViewText(R.id.txtWidgetActualData, pie.actualDataText)
-                views.setTextViewTextSize(R.id.txtWidgetActualData, COMPLEX_UNIT_PX, pie.actualDataTextSize-1.5F)
+                views.setTextViewTextSize(R.id.txtWidgetActualData, COMPLEX_UNIT_PX, pie.actualDataTextSize-2F)
                 views.setTextViewText(R.id.txtWidgetDays, pie.daysText)
                 views.setTextViewTextSize(R.id.txtWidgetDays, TypedValue.COMPLEX_UNIT_PX, pie.daysTextSize)
 
