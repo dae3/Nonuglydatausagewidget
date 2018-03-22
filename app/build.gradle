@@ -19,7 +19,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
         dummyData {
             initWith debug
         }
@@ -38,7 +37,7 @@ android {
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
@@ -48,6 +47,6 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:1.0.1'
     androidTestCompile 'com.android.support.test:rules:1.0.1'
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
-    testCompile "org.mockito:mockito-core:2.15.0"
-    testImplementation "org.robolectric:robolectric:3.7.1"
+    testCompile 'org.mockito:mockito-core:2.15.0'
+    testImplementation 'org.robolectric:robolectric:3.7.1'
 }
