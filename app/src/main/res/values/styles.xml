@@ -20,4 +20,8 @@
 
     </style>
 
+    <style name="ScreenOfTextView" parent="android:Widget.TextView">
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>
