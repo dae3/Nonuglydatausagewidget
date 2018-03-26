@@ -30,17 +30,38 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:foregroundGravity="center"
+            android:padding="0dp"
+            android:layout_margin="0dp">
+
+        <TextView
+            android:id="@+id/txtWidgetActualDataOutline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/widget_margin"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textAppearance="@android:style/TextAppearance.Material.Body1"
+            android:textColor="#000000"
+            android:textSize="@dimen/widget_text_data_default" />
+
         <TextView
             android:id="@+id/txtWidgetActualData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/widget_margin"
+            android:layout_gravity="center"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
             android:textColor="@color/widgetText"
             android:textSize="@dimen/widget_text_data_default"
             android:shadowColor="@color/widgetTextShadow"
             android:shadowRadius="@integer/widget_text_shadow_blur_radius"/>
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/txtWidgetDays"
