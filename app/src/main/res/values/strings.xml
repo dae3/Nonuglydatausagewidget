@@ -44,5 +44,9 @@
     <string name="error_indicator_content_description">Error indicator</string>
     <string name="preperm_req_screen1_image_content_description">A screenshot of the Android system permission request dialog</string>
     <string name="preperm_page3_image_content_description">A screenshot of the Android system Usage Permission screen</string>
+    <string name="about_headline_license">License</string>
+    <string name="about_headline_privacypolicy">Privacy Policy</string>
+    <string name="about_subhead_privacypolicy">How this app uses your personal information</string>
+    <string name="scrolling_screen_of_text_error">Raw text resource \'%1$d\' not found</string>
 </resources>
 

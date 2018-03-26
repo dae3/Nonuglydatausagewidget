@@ -2,6 +2,7 @@ package com.example.dever.nonUglyDataUsageWidget
 
 import android.app.Activity
 import android.app.Fragment
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -24,8 +25,16 @@ class AboutFragment : Fragment(), AdapterView.OnItemClickListener {
         mainview.about_listview.adapter = TwoLineArrayAdapter(activity, R.layout.aboutlist, arrayOf(
                 AboutItem(getString(R.string.about_headline_version), getString(R.string.app_version), null),
                 AboutItem(getString(R.string.about_headline_author), getString(R.string.app_author), null),
-                AboutItem("License", "", fun(v: View?): Boolean { startActivity(Intent(context, ScrollingScreenOfTextActivity::class.java)); return true}),
-                AboutItem("Privacy Policy", "How this app uses your personal information", null)
+                AboutItem(
+                        getString(R.string.about_headline_license),
+                        "",
+                        createPendingIntentForSSOT(getString(R.string.about_headline_license), R.raw.license)
+                ),
+                AboutItem(
+                        getString(R.string.about_headline_privacypolicy),
+                        getString(R.string.about_subhead_privacypolicy),
+                        createPendingIntentForSSOT(getString(R.string.about_headline_privacypolicy), R.raw.privacypolicy)
+                )
         ))
 
         mainview.about_listview.onItemClickListener = this
@@ -33,15 +42,22 @@ class AboutFragment : Fragment(), AdapterView.OnItemClickListener {
         return mainview
     }
 
+    private fun createPendingIntentForSSOT(title : String, textResource : Int) : PendingIntent {
+        val intent = Intent(context, ScrollingScreenOfTextActivity::class.java)
+        intent.putExtra(ScrollingScreenOfTextActivity.INTENT_TITLE_EXTRA, title)
+        intent.putExtra(ScrollingScreenOfTextActivity.INTENT_TEXTRESOURCE_EXTRA, textResource)
+        return PendingIntent.getActivity(context, textResource, intent, 0)
+    }
+
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val adapter = mainview.about_listview.adapter as TwoLineArrayAdapter
-        adapter.getItem(position).clickAction?.invoke(view)
+        adapter.getItem(position).clickAction?.send()
     }
 
     private data class AboutItem(
             var title: String,
             var subtitle: String,
-            var clickAction: ((view: View?) -> Boolean)?
+            var clickAction: PendingIntent?
     )
 
     private class ViewHolder(var headline: TextView, var subline: TextView)
