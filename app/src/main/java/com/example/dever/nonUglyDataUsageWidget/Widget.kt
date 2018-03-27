@@ -113,29 +113,23 @@ class Widget : AppWidgetProvider() {
             try {
                 views.setImageViewBitmap(R.id.widgetChartImageView, pie.bitmap)
                 views.setTextViewText(R.id.txtWidgetActualData, pie.actualDataText)
-                views.setTextViewTextSize(R.id.txtWidgetActualData, COMPLEX_UNIT_PX, pie.actualDataTextSize-2F)
+                views.setTextViewTextSize(R.id.txtWidgetActualData, COMPLEX_UNIT_PX, pie.actualDataTextSize)
                 views.setTextViewText(R.id.txtWidgetDays, pie.daysText)
                 views.setTextViewTextSize(R.id.txtWidgetDays, TypedValue.COMPLEX_UNIT_PX, pie.daysTextSize)
-
-                views.setTextViewText(R.id.txtWidgetActualDataOutline, pie.actualDataText)
-                views.setTextViewTextSize(R.id.txtWidgetActualDataOutline, COMPLEX_UNIT_PX, pie.actualDataTextSize)
 
                 val clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
                 views.setOnClickPendingIntent(R.id.widgetChartImageView, clickIntent)
                 views.setOnClickPendingIntent(R.id.txtWidgetActualData, clickIntent)
-                views.setOnClickPendingIntent(R.id.txtWidgetActualDataOutline, clickIntent)
                 views.setOnClickPendingIntent(R.id.txtWidgetDays, clickIntent)
 
                 views.setViewVisibility(R.id.widgetChartImageView, VISIBLE)
                 views.setViewVisibility(R.id.txtWidgetActualData, VISIBLE)
-                views.setViewVisibility(R.id.txtWidgetActualDataOutline, VISIBLE)
                 views.setViewVisibility(R.id.txtWidgetDays, VISIBLE)
                 views.setViewVisibility(R.id.widgetErrorImageView, INVISIBLE)
             } catch (e: SecurityException) {
                 // don't have permissions, but it'd be rude for the widget to jump straight to the perms activity
                 views.setViewVisibility(R.id.widgetChartImageView, INVISIBLE)
                 views.setViewVisibility(R.id.txtWidgetActualData, INVISIBLE)
-                views.setViewVisibility(R.id.txtWidgetActualDataOutline, INVISIBLE)
                 views.setViewVisibility(R.id.txtWidgetDays, INVISIBLE)
                 views.setViewVisibility(R.id.widgetErrorImageView, VISIBLE)
 
