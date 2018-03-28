@@ -96,10 +96,10 @@ class PieWithTickChart(
             // parameters
             val pieX = width.toFloat().div(2)
             val pieY = height.toFloat().div(2)
-            val shadowOffsetX = 5F
-            val shadowOffsetY = 10F
-            val ambientShadowRadiusFudge = 1.03F
-            val pieRadius = minOf(width.toFloat(), height.toFloat()).div(ambientShadowRadiusFudge).div(2)
+            val ambientShadowRadius = 5F
+            val keyShadowRadius = 15F
+            val keyShadowOffset = 5F
+            val pieRadius = minOf(width.toFloat(), height.toFloat()).minus(keyShadowRadius).minus(keyShadowOffset).div(2)
 
             val canvas = Canvas(field)
             val donutSize = 0.75F
@@ -114,10 +114,6 @@ class PieWithTickChart(
             val todayAngle = Angle((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
                     / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360F)
             val todayRadiusFudge = 0.8F
-            val mircleFudge = 0.9F
-            val ambientShadowRadius = 5F
-            val keyShadowRadius = 15F
-            val keyShadowOffset = 5F
 
             // background
             canvas.drawColor(Color.TRANSPARENT)
@@ -144,10 +140,6 @@ class PieWithTickChart(
             val donut = Path()
             donut.op(circle, hole, Path.Op.DIFFERENCE)
             canvas.drawPath(donut, paintbox.pieBg)
-
-            val mircle = Path()
-            mircle.addCircle(pieX, pieY, pieRadius * donutSize * mircleFudge, Path.Direction.CW)
-//            canvas.drawPath(mircle, paintbox.pieBg)
 
             // the full wedge, sadly no Path equivalent to canvas.drawArc with auto path close
             //  so draw the whole thing (move centre, line to top, arc around, line to centre)
