@@ -34,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/widget_margin"
             android:shadowColor="@color/widgetTextShadow"
             android:shadowRadius="@integer/widget_text_shadow_blur_radius"
             android:textAlignment="center"
@@ -50,6 +49,7 @@
             android:shadowColor="@color/widgetTextShadow"
             android:shadowRadius="@integer/widget_text_shadow_blur_radius"
             android:textAlignment="center"
+            android:layout_marginTop="@dimen/widget_margin"
             android:textAppearance="@android:style/TextAppearance.Material.Body1"
             android:textColor="@color/widgetText"
             android:textSize="@dimen/widget_text_days_default" />

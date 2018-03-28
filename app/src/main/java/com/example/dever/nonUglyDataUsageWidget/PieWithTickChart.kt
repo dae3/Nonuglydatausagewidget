@@ -43,7 +43,10 @@ class PieWithTickChart(
      * @return formatted text (String) using R.string.widget_data_template
      */
     val actualDataText: String
-        get() = context.resources.getString(R.string.widget_data_template, stats.actualData.toFloat() / 1024F / 1024F / 1024F)
+        get() = context.resources.getString(
+                if (availsize < context.resources.getInteger(R.integer.widget_small_threshold)) R.string.widget_data_template_small else R.string.widget_data_template,
+                stats.actualData.toFloat() / 1024F / 1024F / 1024F
+        )
 
     /**
      * Text size in dp for the actual data TextView, calculated from the widget size
@@ -91,9 +94,12 @@ class PieWithTickChart(
             if (maxData == 0.0) throw IllegalArgumentException("PieWithTickChart: maxData must be non-zero")
 
             // parameters
-            val pieRadius = minOf(width.toFloat(), height.toFloat()).div(2)
             val pieX = width.toFloat().div(2)
             val pieY = height.toFloat().div(2)
+            val shadowOffsetX = 5F
+            val shadowOffsetY = 10F
+            val ambientShadowRadiusFudge = 1.03F
+            val pieRadius = minOf(width.toFloat(), height.toFloat()).div(ambientShadowRadiusFudge).div(2)
 
             val canvas = Canvas(field)
             val donutSize = 0.75F
@@ -108,6 +114,10 @@ class PieWithTickChart(
             val todayAngle = Angle((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
                     / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360F)
             val todayRadiusFudge = 0.8F
+            val mircleFudge = 0.9F
+            val ambientShadowRadius = 5F
+            val keyShadowRadius = 15F
+            val keyShadowOffset = 5F
 
             // background
             canvas.drawColor(Color.TRANSPARENT)
@@ -123,12 +133,21 @@ class PieWithTickChart(
 
             // the full circle
             val circle = Path()
+            // draw with ambient shadow
+            paintbox.pieBg.setShadowLayer(ambientShadowRadius,0F,0F, R.color.colorPieShadow)
+            circle.addCircle(pieX, pieY, pieRadius, Path.Direction.CW)
+            // draw again with key shadow
+            paintbox.pieBg.setShadowLayer(keyShadowRadius,0F,keyShadowOffset, R.color.widget_text_shadow)
             circle.addCircle(pieX, pieY, pieRadius, Path.Direction.CW)
 
             // clip the centre of the circle and draw
             val donut = Path()
             donut.op(circle, hole, Path.Op.DIFFERENCE)
             canvas.drawPath(donut, paintbox.pieBg)
+
+            val mircle = Path()
+            mircle.addCircle(pieX, pieY, pieRadius * donutSize * mircleFudge, Path.Direction.CW)
+//            canvas.drawPath(mircle, paintbox.pieBg)
 
             // the full wedge, sadly no Path equivalent to canvas.drawArc with auto path close
             //  so draw the whole thing (move centre, line to top, arc around, line to centre)
@@ -166,6 +185,7 @@ class PieWithTickChart(
         val pieTick = Paint()
         val pieWedge = Paint()
         val pieBg = Paint()
+        val shadow = Paint()
 
         // TODO default colours if the resources aren't present in the theme
         init {
@@ -180,6 +200,11 @@ class PieWithTickChart(
             pieWedge.color = context.resources.getColor(R.color.colorPieWedge, context.theme)
             pieWedge.isAntiAlias = true
             pieWedge.strokeWidth = 5F
+
+            shadow.color = context.resources.getColor(R.color.colorPieShadow, context.theme)
+            shadow.strokeWidth = 5F
+            shadow.isAntiAlias = true
+            shadow.alpha = 50
         }
     }
 

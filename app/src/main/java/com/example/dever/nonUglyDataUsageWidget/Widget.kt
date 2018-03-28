@@ -1,5 +1,6 @@
 package com.example.dever.nonUglyDataUsageWidget
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
@@ -15,6 +16,9 @@ import android.util.TypedValue
 import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.View.*
 import android.widget.RemoteViews
+import com.example.dever.nonUglyDataUsageWidget.R.id
+import com.example.dever.nonUglyDataUsageWidget.R.layout
+import kotlin.math.min
 
 
 //private const val WIDGET_DATA_KEY = "nudwidgetdatakey"
@@ -27,6 +31,7 @@ class Widget : AppWidgetProvider() {
     private lateinit var prefs: SharedPreferences
     private lateinit var interval: NetworkStatsInterval
     private lateinit var stats: GetNetworkStats
+
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
 
@@ -102,39 +107,61 @@ class Widget : AppWidgetProvider() {
             )
         }
 
+        private val vvNormal = hashMapOf<Int, Int>()
+        private val vvNormalSmall = hashMapOf<Int, Int>()
+        private val vvError = hashMapOf<Int, Int>()
+
+        init {
+            vvNormal[id.widgetChartImageView] = VISIBLE
+            vvNormal[id.txtWidgetActualData] = VISIBLE
+            vvNormal[id.txtWidgetDays] = VISIBLE
+            vvNormal[id.widgetErrorImageView] = INVISIBLE
+            vvNormal[id.progressBar] = GONE
+
+            vvNormalSmall[id.widgetChartImageView] = VISIBLE
+            vvNormalSmall[id.txtWidgetActualData] = VISIBLE
+            vvNormalSmall[id.txtWidgetDays] = GONE
+            vvNormalSmall[id.widgetErrorImageView] = INVISIBLE
+            vvNormalSmall[id.progressBar] = GONE
+
+            vvError[id.txtWidgetActualData] = INVISIBLE
+            vvError[id.txtWidgetActualData] = INVISIBLE
+            vvError[id.txtWidgetDays] = INVISIBLE
+            vvError[id.widgetErrorImageView] = VISIBLE
+            vvNormal[id.progressBar] = GONE
+        }
+
         const val WIDGET_IDS_KEY = "nudwidgetkey"
 
+        @SuppressLint("NewApi")
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
                                      appWidgetId: Int, pie: PieWithTickChart) {
 
-            val views = RemoteViews(context.packageName, R.layout.widget)
-            views.setViewVisibility(R.id.progressBar, GONE)
+            val views = RemoteViews(context.packageName, layout.widget)
+            lateinit var vv: HashMap<Int, Int>
 
             try {
-                views.setImageViewBitmap(R.id.widgetChartImageView, pie.bitmap)
-                views.setTextViewText(R.id.txtWidgetActualData, pie.actualDataText)
-                views.setTextViewTextSize(R.id.txtWidgetActualData, COMPLEX_UNIT_PX, pie.actualDataTextSize)
-                views.setTextViewText(R.id.txtWidgetDays, pie.daysText)
-                views.setTextViewTextSize(R.id.txtWidgetDays, TypedValue.COMPLEX_UNIT_PX, pie.daysTextSize)
+                views.setImageViewBitmap(id.widgetChartImageView, pie.bitmap)
+                views.setTextViewText(id.txtWidgetActualData, pie.actualDataText)
+                views.setTextViewTextSize(id.txtWidgetActualData, COMPLEX_UNIT_PX, pie.actualDataTextSize)
+                views.setTextViewText(id.txtWidgetDays, pie.daysText)
+                views.setTextViewTextSize(id.txtWidgetDays, TypedValue.COMPLEX_UNIT_PX, pie.daysTextSize)
 
                 val clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
-                views.setOnClickPendingIntent(R.id.widgetChartImageView, clickIntent)
-                views.setOnClickPendingIntent(R.id.txtWidgetActualData, clickIntent)
-                views.setOnClickPendingIntent(R.id.txtWidgetDays, clickIntent)
+                views.setOnClickPendingIntent(id.widgetChartImageView, clickIntent)
+                views.setOnClickPendingIntent(id.txtWidgetActualData, clickIntent)
+                views.setOnClickPendingIntent(id.txtWidgetDays, clickIntent)
 
-                views.setViewVisibility(R.id.widgetChartImageView, VISIBLE)
-                views.setViewVisibility(R.id.txtWidgetActualData, VISIBLE)
-                views.setViewVisibility(R.id.txtWidgetDays, VISIBLE)
-                views.setViewVisibility(R.id.widgetErrorImageView, INVISIBLE)
+                val sizes = widgetSize(appWidgetManager, appWidgetId)
+                vv = if (min(sizes.first, sizes.second) < context.resources.getInteger(R.integer.widget_small_threshold)) vvNormalSmall else vvNormal
+
             } catch (e: SecurityException) {
                 // don't have permissions, but it'd be rude for the widget to jump straight to the perms activity
-                views.setViewVisibility(R.id.widgetChartImageView, INVISIBLE)
-                views.setViewVisibility(R.id.txtWidgetActualData, INVISIBLE)
-                views.setViewVisibility(R.id.txtWidgetDays, INVISIBLE)
-                views.setViewVisibility(R.id.widgetErrorImageView, VISIBLE)
+                vv = vvError
 
-                views.setOnClickPendingIntent(R.id.widgetErrorImageView, PendingIntent.getActivity(context, 0, Intent(context, PrePermissionRequestActivity::class.java), 0))
+                views.setOnClickPendingIntent(id.widgetErrorImageView, PendingIntent.getActivity(context, 0, Intent(context, PrePermissionRequestActivity::class.java), 0))
             }
+            vv.forEach({ k, v -> views.setViewVisibility(k, v) })
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }

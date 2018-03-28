@@ -8,6 +8,7 @@
     <color name="colorPieBg">@color/colorPrimary</color>
     <color name="colorPieWedge">@color/colorPrimaryDark</color>
     <color name="colorPieTick">@color/colorAccent</color>
+    <color name="colorPieShadow">@android:color/black</color>
 
     <!-- random other colors -->
     <color name="permissionGrantedTickTint">@android:color/holo_green_light</color>
