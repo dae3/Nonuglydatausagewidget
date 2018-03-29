@@ -96,10 +96,12 @@ class PieWithTickChart(
             // parameters
             val pieX = width.toFloat().div(2)
             val pieY = height.toFloat().div(2)
-            val ambientShadowRadius = 5F
-            val keyShadowRadius = 15F
-            val keyShadowOffset = 5F
-            val pieRadius = minOf(width.toFloat(), height.toFloat()).minus(keyShadowRadius).minus(keyShadowOffset).div(2)
+
+            // these 4 tweaked for aesthetics
+            val ambientShadowRadius = 2F
+            val keyShadowRadius = 10F
+            val keyShadowOffset = 2F
+            val pieRadius = minOf(width.toFloat(), height.toFloat().minus(keyShadowRadius*1.8F).minus(keyShadowOffset)).div(2)
 
             val canvas = Canvas(field)
             val donutSize = 0.75F
