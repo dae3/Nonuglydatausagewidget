@@ -131,17 +131,17 @@ class PieWithTickChart(
 
             // the full circle
             val circle = Path()
-            // draw with ambient shadow
-            paintbox.pieBg.setShadowLayer(ambientShadowRadius,0F,0F, R.color.colorPieShadow)
-            circle.addCircle(pieX, pieY, pieRadius, Path.Direction.CW)
-            // draw again with key shadow
-            paintbox.pieBg.setShadowLayer(keyShadowRadius,0F,keyShadowOffset, R.color.widget_text_shadow)
             circle.addCircle(pieX, pieY, pieRadius, Path.Direction.CW)
 
             // clip the centre of the circle and draw
             val donut = Path()
             donut.op(circle, hole, Path.Op.DIFFERENCE)
-            canvas.drawPath(donut, paintbox.pieBg)
+            canvas.drawPathWithShadow(
+                    donut,
+                    paintbox.pieBg,
+                    R.color.widget_shadow,
+                    context.resources.getInteger(R.integer.widget_elevation_circle)
+            )
 
             // the full wedge, sadly no Path equivalent to canvas.drawArc with auto path close
             //  so draw the whole thing (move centre, line to top, arc around, line to centre)
@@ -162,17 +162,26 @@ class PieWithTickChart(
             // clip out the centre and draw
             val segment = Path()
             segment.op(wedge, hole, Path.Op.DIFFERENCE)
-            canvas.drawPath(segment, paintbox.pieWedge)
+            canvas.drawPathWithShadow(
+                    segment,
+                    paintbox.pieWedge,
+                    R.color.widget_shadow,
+                    context.resources.getInteger(R.integer.widget_elevation_wedge)
+            )
 
             // today marker
-            canvas.drawCircle(
-                    CircleCoords(pieX, pieY, pieRadius - capradius, todayAngle),
-                    capradius * todayRadiusFudge,
-                    paintbox.pieTick
+            val todayCircle = Path()
+            todayCircle.addCircle(CircleCoords(pieX, pieY, pieRadius - capradius, todayAngle), capradius * todayRadiusFudge)
+            canvas.drawPathWithShadow(
+                    todayCircle,
+                    paintbox.pieTick,
+                    R.color.widget_shadow,
+                    context.resources.getInteger(R.integer.widget_elevation_todaymarker)
             )
 
             return field
         }
+
 
 
     private inner class PaintBox(context: Context) {
@@ -248,4 +257,29 @@ class PieWithTickChart(
     fun Path.addCircle(coords: PieWithTickChart.CircleCoords, radius: Float) = this.addCircle(coords.x, coords.y, radius, android.graphics.Path.Direction.CW)
     fun Canvas.drawCircle(coords: PieWithTickChart.CircleCoords, radius: Float, paint: Paint) = this.drawCircle(coords.x, coords.y, radius, paint)
     fun Path.arcTo(rect: RectF, startangle: Angle, sweepangle: Angle) = this.arcTo(rect, startangle.inDegrees - 90F, sweepangle.inDegrees)
+
+    /**
+     * Draw a Path on a Canvas using the provided Paint
+     * Create Material-ish ambient shadow and key shadow for specified elevation in dp
+     * @param path the Path to draw
+     * @param canvas the Canvas to draw it on
+     * @param basePaint Paint to draw the object. Set color, stroke, etc. on this
+     * @param shadowColor the resource ID for the shadow's colour. Should usually be black
+     * @param elevation the object's elevation in dp
+     */
+    private fun Canvas.drawPathWithShadow(path : Path, basePaint: Paint, shadowColor: Int, elevation : Int) {
+
+        val baseAmbientRadius = 2F
+        val baseKeyRadius = 10F
+        val baseKeyOffset = 2F
+        val elevationScaleFactor = 0.5F
+
+        val aPaint = Paint(basePaint)
+        aPaint.setShadowLayer(baseAmbientRadius * elevation * elevationScaleFactor, 0F, 0F, shadowColor)
+        this.drawPath(path, aPaint)
+
+        val kPaint = Paint(basePaint)
+        kPaint.setShadowLayer(baseKeyRadius * elevation * elevationScaleFactor, 0F, baseKeyOffset * elevation, shadowColor)
+        this.drawPath(path, kPaint)
+    }
 }

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="widget_text_shadow_blur_radius">10</integer>
     <integer name="widget_small_threshold">100</integer>
+
+    <!-- Shadow dimensions for PieWithTickChart -->
+    <integer name="widget_text_shadow_blur_radius">10</integer>
+    <integer name="widget_elevation_circle">2</integer>
+    <integer name="widget_elevation_wedge">7</integer>
+    <integer name="widget_elevation_todaymarker">9</integer>
 </resources>

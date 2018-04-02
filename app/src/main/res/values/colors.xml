@@ -16,5 +16,5 @@
     <color name="widgetTextShadow">@android:color/black</color>
     <color name="pie_error_color_tint">@android:color/holo_red_dark</color>
     <color name="launcher_icon_background">@android:color/white</color>
-    <color name="widget_text_shadow">#000000</color>
+    <color name="widget_shadow">#000000</color>
 </resources>
