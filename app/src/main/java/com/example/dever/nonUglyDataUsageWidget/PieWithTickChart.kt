@@ -36,7 +36,11 @@ class PieWithTickChart(
     }
 
     private val paintbox = PaintBox(context)
-    private val availsize: Float = min(width, height) * 0.7F
+    // 0.88 chosen experimentally in conjunction with shadow radius to avoid widget bottom shadow
+    //  being clipped
+    private val availsize: Float = min(width, height) * .86F
+
+    private val isSmall : Boolean = (availsize < context.resources.getInteger(R.integer.widget_small_threshold))
 
     /**
      * The text to display for actual data used
@@ -44,7 +48,7 @@ class PieWithTickChart(
      */
     val actualDataText: String
         get() = context.resources.getString(
-                if (availsize < context.resources.getInteger(R.integer.widget_small_threshold)) R.string.widget_data_template_small else R.string.widget_data_template,
+                if (isSmall) R.string.widget_data_template_small else R.string.widget_data_template,
                 stats.actualData.toFloat() / 1024F / 1024F / 1024F
         )
 
@@ -63,7 +67,7 @@ class PieWithTickChart(
      *  @return font size in dp
      */
     val actualDataTextSize: Float
-        get() = availsize * 0.6F
+        get() = availsize * if (isSmall) 0.6F else 0.4F
 
     /**
      * Text size in dp for the days TextView, calculated from the pie_chart size
@@ -71,7 +75,7 @@ class PieWithTickChart(
      *  @return font size in dp
      */
     val daysTextSize: Float
-        get() = availsize * 0.3F
+        get() = availsize * 0.225F
 
     /**
      * The text to display for the 'day N of M' TextView
@@ -97,25 +101,21 @@ class PieWithTickChart(
             val pieX = width.toFloat().div(2)
             val pieY = height.toFloat().div(2)
 
-            // these 4 tweaked for aesthetics
-            val ambientShadowRadius = 2F
-            val keyShadowRadius = 10F
-            val keyShadowOffset = 2F
-            val pieRadius = minOf(width.toFloat(), height.toFloat().minus(keyShadowRadius*1.8F).minus(keyShadowOffset)).div(2)
+            val pieRadius = availsize/2F
 
             val canvas = Canvas(field)
-            val donutSize = 0.75F
+            val donutSize = 0.75F  // aesthetic
             val rectWedge = RectF(pieX - pieRadius, pieY - pieRadius, pieX + pieRadius, pieY + pieRadius)
-            val sweepangle = Angle(
+            val sweepAngle = Angle(
                     min(
                             (stats.actualData.toDouble() / maxData * 360).toFloat(),
                             359F // 360 overlaps and looks like 0
                     )
             )
-            val startangle = Angle(0F)
+            val startAngle = Angle(0F)
             val todayAngle = Angle((GregorianCalendarDefaultLocale().timeInMillis - interval.startDate.timeInMillis).toFloat()
                     / (interval.endDate.timeInMillis - interval.startDate.timeInMillis).toFloat() * 360F)
-            val todayRadiusFudge = 0.8F
+            val todayRadiusFudge = 0.8F  // aesthetic
 
             // background
             canvas.drawColor(Color.TRANSPARENT)
@@ -148,16 +148,16 @@ class PieWithTickChart(
             val wedge = Path()
             wedge.moveTo(pieX, pieY)
             wedge.lineTo(pieX, pieRadius)
-            wedge.arcTo(rectWedge, startangle, sweepangle)
+            wedge.arcTo(rectWedge, startAngle, sweepAngle)
             wedge.lineTo(pieX, pieY)
 
             // circular ends are pretty
             // donut width = 1-donutsize * pieRadius; circle end-cap radius is 0.5 * that
-            val capradius = pieRadius * (1 - donutSize) / 2
-            val startCapXY = CircleCoords(pieX, pieY, pieRadius - capradius, Angle(0F))
-            val endCapXY = startCapXY.copy(angle = Angle(sweepangle.inDegrees))
-            wedge.addCircle(startCapXY, capradius)
-            wedge.addCircle(endCapXY, capradius)
+            val capRadius = pieRadius * (1 - donutSize) / 2
+            val startCapXY = CircleCoords(pieX, pieY, pieRadius - capRadius, Angle(0F))
+            val endCapXY = startCapXY.copy(angle = Angle(sweepAngle.inDegrees))
+            wedge.addCircle(startCapXY, capRadius)
+            wedge.addCircle(endCapXY, capRadius)
 
             // clip out the centre and draw
             val segment = Path()
@@ -171,7 +171,7 @@ class PieWithTickChart(
 
             // today marker
             val todayCircle = Path()
-            todayCircle.addCircle(CircleCoords(pieX, pieY, pieRadius - capradius, todayAngle), capradius * todayRadiusFudge)
+            todayCircle.addCircle(CircleCoords(pieX, pieY, pieRadius - capRadius, todayAngle), capRadius * todayRadiusFudge)
             canvas.drawPathWithShadow(
                     todayCircle,
                     paintbox.pieTick,
@@ -269,9 +269,11 @@ class PieWithTickChart(
      */
     private fun Canvas.drawPathWithShadow(path : Path, basePaint: Paint, shadowColor: Int, elevation : Int) {
 
-        val baseAmbientRadius = 2F
-        val baseKeyRadius = 10F
-        val baseKeyOffset = 2F
+        // TODO align these shadow parameters with those in the base class
+
+        val baseAmbientRadius = 1F
+        val baseKeyRadius = 2F
+        val baseKeyOffset = 1F
         val elevationScaleFactor = 0.5F
 
         val aPaint = Paint(basePaint)
