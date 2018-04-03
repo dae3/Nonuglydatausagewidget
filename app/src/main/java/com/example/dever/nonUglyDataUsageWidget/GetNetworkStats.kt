@@ -33,10 +33,10 @@ class GetNetworkStats(private val context: Context, private var interval: Networ
         }
 
     // TODO remove coupling from here direct to PreferenceManager
-    var maxData: Long = 0L
-        get() = PreferenceManager.getDefaultSharedPreferences(context).getLong(
+    var maxData: Float = 0F
+        get() = PreferenceManager.getDefaultSharedPreferences(context).getFloat(
                 context.resources.getString(R.string.prefs_key_maxdata),
-                context.resources.getInteger(R.integer.default_maxdata).toLong().asBytes()
+                context.resources.getInteger(R.integer.default_maxdata).toFloat().asBytes()
         )
 }
 
