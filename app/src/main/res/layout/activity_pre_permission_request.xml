@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/AppTheme.PrePermissionRequestActivity"
-    tools:context="com.example.dever.nonUglyDataUsageWidget.PrePermissionRequestActivity">
+    tools:context="com.github.dae3.datadial.PrePermissionRequestActivity">
 
     <ImageView
         android:id="@+id/imgPrePermLeftArrow"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/about_layout_padding"
-    tools:context="com.example.dever.nonUglyDataUsageWidget.FirstRunPreferenceCaptureActivity">
+    tools:context="com.github.dae3.datadial.FirstRunPreferenceCaptureActivity">
 
     <TextView
         android:id="@+id/text_blurb"

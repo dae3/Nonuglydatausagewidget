@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://dever.example.com"
+    xmlns:custom="https://github.com/dae3"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -14,7 +14,7 @@
             android:key="@string/prefs_itemkey_intervaltype"
             android:title="@string/prefs_itemtitle_intervaltype" />
 
-        <com.example.dever.nonUglyDataUsageWidget.EditIntPreference
+        <com.github.dae3.datadial.EditIntPreference
             android:defaultValue="1"
             android:key="@string/prefs_key_billingcycle_startday"
             android:title="@string/prefs_title_startdate"
@@ -22,7 +22,7 @@
             custom:minimum="1"
             custom:unitcaption=""/>
 
-        <com.example.dever.nonUglyDataUsageWidget.EditGigabytePreference
+        <com.github.dae3.datadial.EditGigabytePreference
             android:key="@string/prefs_key_maxdata"
             android:title="@string/prefs_itemtitle_maxdata"
             android:defaultValue="2.0"

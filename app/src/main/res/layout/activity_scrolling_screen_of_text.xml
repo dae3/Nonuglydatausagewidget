@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.dever.nonUglyDataUsageWidget.ScrollingScreenOfTextActivity">
+    tools:context="com.github.dae3.datadial.ScrollingScreenOfTextActivity">
 
     <TextView
         android:id="@+id/textView"
