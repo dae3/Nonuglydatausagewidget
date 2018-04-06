@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "905866231564",
+    "firebase_url": "https://nud4-7948d.firebaseio.com",
+    "project_id": "nud4-7948d",
+    "storage_bucket": "nud4-7948d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905866231564:android:216849bc1d79e82e",
+        "android_client_info": {
+          "package_name": "com.github.dae3.datadial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905866231564-120fjt0673ll43i09lsvkev8rk5441in.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.dae3.datadial",
+            "certificate_hash": "8ea7c87c02c7aae69265142375e200f6c7071d27"
+          }
+        },
+        {
+          "client_id": "905866231564-msamv39epfvcu3r1vr43karufu3g9bpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAh88OSTVfZKpt6MFudt9SQ0gjPusCkVlo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905866231564-msamv39epfvcu3r1vr43karufu3g9bpo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
