@@ -22,6 +22,9 @@ class AboutFragment : Fragment(), AdapterView.OnItemClickListener {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
         mainview = inflater?.inflate(R.layout.fragment_about, container, false)!!
+
+        val pai = Intent(context, PurchasePremiumActivity::class.java)
+
         mainview.about_listview.adapter = TwoLineArrayAdapter(activity, R.layout.aboutlist, arrayOf(
                 AboutItem(getString(R.string.about_headline_version), getString(R.string.app_version), null),
                 AboutItem(getString(R.string.about_headline_author), getString(R.string.app_author), null),
@@ -34,6 +37,11 @@ class AboutFragment : Fragment(), AdapterView.OnItemClickListener {
                         getString(R.string.about_headline_privacypolicy),
                         getString(R.string.about_subhead_privacypolicy),
                         createPendingIntentForSSOT(getString(R.string.about_headline_privacypolicy), R.raw.privacypolicy)
+                ),
+                AboutItem(
+                        title = "buy premium",
+                        subtitle = "it's really good",
+                        clickAction = PendingIntent.getActivity(context, 0, pai, 0)
                 )
         ))
 

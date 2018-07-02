@@ -40,7 +40,8 @@
         </receiver>
 
         <activity android:name=".FirstRunPreferenceCaptureActivity" />
-        <activity android:name=".ScrollingScreenOfTextActivity"></activity>
+        <activity android:name=".ScrollingScreenOfTextActivity" />
+        <activity android:name=".PurchasePremiumActivity"></activity>
     </application>
 
 </manifest>
