@@ -1,0 +1,5 @@
+One gigabyte is sometimes defined as 1,000,000,000 bytes and sometimes as 1,073,741,824 bytes. See https://en.wikipedia.org/wiki/Gigabyte.
+
+Android measures your mobile data usage in bytes. We use this setting to convert from bytes to gigabytes.
+
+WARNING: make sure this setting is the same as how your provider measures gigabytes. You can check your contract, the provider's website, or call the provider's helpline.

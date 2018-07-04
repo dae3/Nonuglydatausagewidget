@@ -2,11 +2,9 @@ package com.github.dae3.datadial
 
 import android.content.Context
 import android.graphics.*
+import android.preference.PreferenceManager
 import java.util.concurrent.TimeUnit
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.min
-import kotlin.math.sin
+import kotlin.math.*
 
 /**
  * Encapsulation of the drawing and caption generation for a 'pie' chart representation
@@ -46,10 +44,12 @@ class PieWithTickChart(
      * The text to display for actual data used
      * @return formatted text (String) using R.string.widget_data_template
      */
+
+    val gbFactor : Float = if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.resources.getString(R.string.pref_key_decimalGb), false)) 1000F else 1024F
     val actualDataText: String
         get() = context.resources.getString(
                 if (isSmall) R.string.widget_data_template_small else R.string.widget_data_template,
-                stats.actualData.toFloat() / 1024F / 1024F / 1024F
+                stats.actualData.toFloat() / gbFactor.pow(3)
         )
 
     /**

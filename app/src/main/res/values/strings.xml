@@ -49,5 +49,10 @@
     <string name="about_headline_privacypolicy">Privacy Policy</string>
     <string name="about_subhead_privacypolicy">How this app uses your personal information</string>
     <string name="scrolling_screen_of_text_error">Raw text resource \'%1$d\' not found</string>
+    <string name="pref_key_decimalGb">prefs_GbIs1000Bytes</string>
+    <string name="pref_GbIs1000Bytes_title">Use decimal definition of Gb (1 Gb = 1000^3)</string>
+    <string name="pref_GbIs1000Bytes_summaryOff">Long tap here for more information</string>
+    <string name="pref_decimalGb_moreinfoTitle">Use decimal definition of Gb</string>
+    <string name="longclickswitchpref_missingTitle">Missing title resource</string>
 </resources>
 

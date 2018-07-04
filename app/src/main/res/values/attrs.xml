@@ -7,4 +7,9 @@
         <attr name="android:colorPrimaryDark" />
         <attr name="android:colorAccent" />
     </declare-styleable>
+
+    <declare-styleable name="LongClickableSwitchPreference">
+        <attr name="moreInfoTitle" format="reference" />
+        <attr name="moreInfoTextResource" format="reference" />
+    </declare-styleable>
 </resources>

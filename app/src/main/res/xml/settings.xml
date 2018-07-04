@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="https://github.com/dae3"
+    xmlns:custom2="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -29,6 +30,15 @@
             custom:minimum="0.0"
             custom:step="0.5"
             custom:unitcaption="Gb"/>
+
+        <com.github.dae3.datadial.LongClickableSwitchPreference
+            android:key="@string/pref_key_decimalGb"
+            android:title="@string/pref_GbIs1000Bytes_title"
+            android:summaryOn="@string/pref_GbIs1000Bytes_summaryOff"
+            android:summaryOff="@string/pref_GbIs1000Bytes_summaryOff"
+            custom2:moreInfoTitle="@string/pref_decimalGb_moreinfoTitle"
+            custom2:moreInfoTextResource="@raw/gb1024vs1000"
+            android:defaultValue="true" />
 
     </PreferenceCategory>
 </PreferenceScreen>
