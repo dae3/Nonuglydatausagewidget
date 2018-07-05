@@ -23,14 +23,14 @@ import kotlin.math.*
  */
 class PieWithTickChart(
         private val context: Context,
-        private val width: Int,
-        private val height: Int,
+        private val width: Float,
+        private val height: Float,
         private val interval: NetworkStatsInterval,
         private val stats: GetNetworkStats
 ) {
 
     init {
-        if (width == 0 || height == 0) throw IllegalArgumentException("both width and height must be non-zero")
+        if (width == 0F || height == 0F) throw IllegalArgumentException("both width and height must be non-zero")
     }
 
     private val paintbox = PaintBox(context)
@@ -38,14 +38,14 @@ class PieWithTickChart(
     //  being clipped
     private val availsize: Float = min(width, height) * .86F
 
-    private val isSmall : Boolean = (availsize < context.resources.getInteger(R.integer.widget_small_threshold))
+    private val isSmall: Boolean = (availsize < context.resources.getInteger(R.integer.widget_small_threshold))
 
     /**
      * The text to display for actual data used
      * @return formatted text (String) using R.string.widget_data_template
      */
 
-    val gbFactor : Float = if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.resources.getString(R.string.pref_key_decimalGb), false)) 1000F else 1024F
+    val gbFactor: Float = if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.resources.getString(R.string.pref_key_decimalGb), false)) 1000F else 1024F
     val actualDataText: String
         get() = context.resources.getString(
                 if (isSmall) R.string.widget_data_template_small else R.string.widget_data_template,
@@ -67,7 +67,7 @@ class PieWithTickChart(
      *  @return font size in dp
      */
     val actualDataTextSize: Float
-        get() = availsize * if (isSmall) 0.6F else 0.4F
+        get() = availsize/2 * 0.4F
 
     /**
      * Text size in dp for the days TextView, calculated from the pie_chart size
@@ -75,7 +75,7 @@ class PieWithTickChart(
      *  @return font size in dp
      */
     val daysTextSize: Float
-        get() = availsize * 0.225F
+        get() = actualDataTextSize / 2F
 
     /**
      * The text to display for the 'day N of M' TextView
@@ -92,7 +92,11 @@ class PieWithTickChart(
      * Bitmap representation of data used, as a 'pie' chart
      * @return bitmap object, size set by class constructor width and height parameters
      */
-    val bitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444)
+    val bitmap: Bitmap = Bitmap.createBitmap(
+            (width*context.resources.displayMetrics.density/160).roundToInt(),
+            (height*context.resources.displayMetrics.density/160).roundToInt(),
+            Bitmap.Config.ARGB_4444
+    )
         get() {
             val maxData = stats.maxData.toDouble()
             if (maxData == 0.0) throw IllegalArgumentException("PieWithTickChart: maxData must be non-zero")
@@ -101,7 +105,7 @@ class PieWithTickChart(
             val pieX = width.toFloat().div(2)
             val pieY = height.toFloat().div(2)
 
-            val pieRadius = availsize/2F
+            val pieRadius = availsize / 2F
 
             val canvas = Canvas(field)
             val donutSize = 0.75F  // aesthetic
@@ -183,7 +187,6 @@ class PieWithTickChart(
         }
 
 
-
     private inner class PaintBox(context: Context) {
         val pieTick = Paint()
         val pieWedge = Paint()
@@ -255,6 +258,7 @@ class PieWithTickChart(
      * Some extensions to allow passing CircleCoords and Angle objects to Path and Canvas methods
      */
     fun Path.addCircle(coords: PieWithTickChart.CircleCoords, radius: Float) = this.addCircle(coords.x, coords.y, radius, android.graphics.Path.Direction.CW)
+
     fun Canvas.drawCircle(coords: PieWithTickChart.CircleCoords, radius: Float, paint: Paint) = this.drawCircle(coords.x, coords.y, radius, paint)
     fun Path.arcTo(rect: RectF, startangle: Angle, sweepangle: Angle) = this.arcTo(rect, startangle.inDegrees - 90F, sweepangle.inDegrees)
 
@@ -267,7 +271,7 @@ class PieWithTickChart(
      * @param shadowColor the resource ID for the shadow's colour. Should usually be black
      * @param elevation the object's elevation in dp
      */
-    private fun Canvas.drawPathWithShadow(path : Path, basePaint: Paint, shadowColor: Int, elevation : Int) {
+    private fun Canvas.drawPathWithShadow(path: Path, basePaint: Paint, shadowColor: Int, elevation: Int) {
 
         // TODO align these shadow parameters with those in the base class
 
