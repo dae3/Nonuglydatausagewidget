@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Data Dial</string>
-    <string name="usage_permission_text_1">Usage access is required to see your actual mobile data usage.\n\nFirst, click the "Grant permission" button to open the system Usage access screen.</string>
-    <string name="usage_permission_text_2">Next, click on NUD to open the screen shown below, and click the switch to enable usage access.</string>
-    <string name="usage_permission_text_3">Finally, keep clicking back until you return to this screen.</string>
+    <string name="usage_permission_text_1">Usage access is required to see your actual mobile data usage.\n\nFirst, tap the "Grant permission" button to open the system Usage access screen.</string>
+    <string name="usage_permission_text_2">Next, tap on Data Dial to open the screen shown below, and tap the switch to enable usage access.</string>
+    <string name="usage_permission_text_3">Finally, keep tapping back until you return to this screen.</string>
     <string name="why_scary_phone_permission">Permission to \"make and manage phone calls\" is required to see your mobile data usage.\n\nThis app will never actually make phone calls.</string>
     <string name="prefs_title_startdate">Start day</string>
     <string name="prefs_categorytitle_billingcycle">Mobile plan</string>

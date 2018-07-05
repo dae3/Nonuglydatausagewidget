@@ -7,16 +7,16 @@
 
     <TextView
         android:id="@+id/txtIntPrefInt"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.3"
-        android:layout_height="wrap_content"
         style="@style/Base.TextAppearance.AppCompat.Display2"
-        android:text="dummy for layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="000"
         android:textAlignment="center"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/btnEditIntDown"
+        app:layout_constraintRight_toLeftOf="@id/txtIntPrefUnitCaption"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.25"
         tools:ignore="HardcodedText" />
 
     <TextView
@@ -24,10 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/Base.TextAppearance.AppCompat.Display2"
-        android:textAlignment="textStart"
+        android:textAlignment="viewStart"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/txtIntPrefInt"
+        app:layout_constraintStart_toEndOf="@id/txtIntPrefInt"
+        app:layout_constraintEnd_toStartOf="@id/btnEditIntDown"
         android:text="XX"
         tools:ignore="HardcodedText" />
 
@@ -41,8 +42,8 @@
         android:contentDescription="@string/image_description_up_arrow"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnEditIntDown"
-        app:layout_constraintLeft_toRightOf="@id/txtIntPrefInt"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintStart_toEndOf="@id/txtIntPrefUnitCaption"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
      <ImageButton
          android:id="@+id/btnEditIntDown"
@@ -53,8 +54,8 @@
          android:contentDescription="@string/image_description_down_arrow"
          app:layout_constraintTop_toBottomOf="@id/btnEditIntUp"
          app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintLeft_toRightOf="@id/txtIntPrefInt"
-         app:layout_constraintRight_toRightOf="parent"
+         app:layout_constraintStart_toEndOf="@id/txtIntPrefUnitCaption"
+         app:layout_constraintEnd_toEndOf="parent"
          />
 </android.support.constraint.ConstraintLayout>
 
