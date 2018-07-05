@@ -13,7 +13,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.TypedValue
-import android.util.TypedValue.COMPLEX_UNIT_PX
+import android.util.TypedValue.*
 import android.view.View.*
 import android.widget.RemoteViews
 import com.github.dae3.datadial.R.id
@@ -61,11 +61,13 @@ class Widget : AppWidgetProvider() {
 
             setProps(context)
 
+            val ws = widgetSize(appWidgetManager, appWidgetId)
+
             updateAppWidget(
                     context,
                     appWidgetManager,
                     appWidgetId,
-                    PieWithTickChart(context, newOptions.getInt(OPTION_APPWIDGET_MAX_WIDTH), newOptions.getInt(OPTION_APPWIDGET_MAX_HEIGHT), interval, stats)
+                    PieWithTickChart(context, ws.first, ws.second, interval, stats)
             )
         }
     }
@@ -143,9 +145,9 @@ class Widget : AppWidgetProvider() {
             try {
                 views.setImageViewBitmap(id.widgetChartImageView, pie.bitmap)
                 views.setTextViewText(id.txtWidgetActualData, pie.actualDataText)
-                views.setTextViewTextSize(id.txtWidgetActualData, COMPLEX_UNIT_PX, pie.actualDataTextSize)
+                views.setTextViewTextSize(id.txtWidgetActualData, COMPLEX_UNIT_DIP, pie.actualDataTextSize)
                 views.setTextViewText(id.txtWidgetDays, pie.daysText)
-                views.setTextViewTextSize(id.txtWidgetDays, TypedValue.COMPLEX_UNIT_PX, pie.daysTextSize)
+                views.setTextViewTextSize(id.txtWidgetDays, TypedValue.COMPLEX_UNIT_DIP, pie.daysTextSize)
 
                 val clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
                 views.setOnClickPendingIntent(id.widgetChartImageView, clickIntent)

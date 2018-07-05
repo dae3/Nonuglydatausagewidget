@@ -1,12 +1,12 @@
 package com.github.dae3.datadial
 
 import android.app.Fragment
+import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Environment
-import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
@@ -16,7 +16,6 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.pie_chart.*
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.math.roundToInt
 
 /**
  * Subclass of fragment to display network usage stats in main activity (and any other non-
@@ -47,6 +46,10 @@ class PieChartFragment : Fragment(), ViewTreeObserver.OnGlobalLayoutListener, On
         if (layoutDone) onGlobalLayout()
     }
 
+    private fun pxToDp(pixels : Float, context : Context) : Float = pixels * context.resources.displayMetrics.density * 160
+
+    private fun dpToPx(dp : Float, context : Context) : Float = dp * 160 / context.resources.displayMetrics.density
+
     override fun onGlobalLayout() {
 
         rootView.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -55,17 +58,17 @@ class PieChartFragment : Fragment(), ViewTreeObserver.OnGlobalLayoutListener, On
             progressBar.visibility = GONE
         }
 
-        val density = resources.displayMetrics.density
-        pie = PieWithTickChart(context, rootView.width / density.roundToInt(), rootView.height / density.roundToInt(), statsInterval, networkStats)
+        val density =  resources.displayMetrics.density
+        pie = PieWithTickChart(context, pxToDp(rootView.width), pxToDp(rootView.height), statsInterval, networkStats)
 
         try {
             widgetChartImageView.setImageBitmap(pie.bitmap)
+
             txtWidgetActualData.text = pie.actualDataText
-            // this doesn't make sense since we gave the PieWithTickChart constructor dimensions
-            // in DP, but hey, it works
-            txtWidgetActualData.setTextSize(COMPLEX_UNIT_PX, pie.actualDataTextSize)
+            txtWidgetActualData.textSize = pie.actualDataTextSize
+
             txtWidgetDays.text = pie.daysText
-            txtWidgetDays.setTextSize(COMPLEX_UNIT_PX, pie.daysTextSize)
+            txtWidgetDays.textSize = pie.daysTextSize
 
             widgetChartImageView.visibility = VISIBLE
             txtWidgetActualData.visibility = VISIBLE
