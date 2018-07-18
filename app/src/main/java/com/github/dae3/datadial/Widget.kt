@@ -3,8 +3,7 @@ package com.github.dae3.datadial
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
-import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
+import android.appwidget.AppWidgetManager.*
 import android.appwidget.AppWidgetProvider
 import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
@@ -12,6 +11,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.util.TypedValue.*
 import android.view.View.*
@@ -38,7 +38,7 @@ class Widget : AppWidgetProvider() {
         setProps(context)
 
         for (appWidgetId in appWidgetIds) {
-            val ws = widgetSize(appWidgetManager, appWidgetId)
+            val ws = widgetSize(appWidgetManager, appWidgetId, context)
             updateAppWidget(context, appWidgetManager, appWidgetId, PieWithTickChart(context, ws.first, ws.second, interval, stats))
         }
     }
@@ -61,7 +61,7 @@ class Widget : AppWidgetProvider() {
 
             setProps(context)
 
-            val ws = widgetSize(appWidgetManager, appWidgetId)
+            val ws = widgetSize(appWidgetManager, appWidgetId, context)
 
             updateAppWidget(
                     context,
@@ -97,15 +97,16 @@ class Widget : AppWidgetProvider() {
          * or from appWidgetManager.getAppWidgetInfo otherwise
          * @param appWidgetManager the AppWidgetManager instance that owns this widget
          * @param appWidgetId the unique ID of this widget within the AppWidgetManager instance
-         * @return widget width and height (in that order) as a Pair<Int, Int>
+         * @return Pair<widget width,  height> in px
          */
-        private fun widgetSize(appWidgetManager: AppWidgetManager, appWidgetId: Int): Pair<Int, Int> {
+        private fun widgetSize(appWidgetManager: AppWidgetManager, appWidgetId: Int, context: Context): Pair<Int, Int> {
             val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
             val info: AppWidgetProviderInfo = appWidgetManager.getAppWidgetInfo(appWidgetId)
+            val scaledDensity = context.resources.displayMetrics.scaledDensity
 
             return Pair(
-                    if (options.getInt(OPTION_APPWIDGET_MAX_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
-                    if (options.getInt(OPTION_APPWIDGET_MAX_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
+                    ((if (options.getInt(OPTION_APPWIDGET_MIN_WIDTH) == 0) info.minWidth else options.getInt(OPTION_APPWIDGET_MIN_WIDTH)) * scaledDensity).toInt(),
+                    ((if (options.getInt(OPTION_APPWIDGET_MIN_HEIGHT) == 0) info.minHeight else options.getInt(OPTION_APPWIDGET_MIN_HEIGHT)) * scaledDensity).toInt()
             )
         }
 
@@ -145,17 +146,17 @@ class Widget : AppWidgetProvider() {
             try {
                 views.setImageViewBitmap(id.widgetChartImageView, pie.bitmap)
                 views.setTextViewText(id.txtWidgetActualData, pie.actualDataText)
-                views.setTextViewTextSize(id.txtWidgetActualData, COMPLEX_UNIT_DIP, pie.actualDataTextSize)
+                views.setTextViewTextSize(id.txtWidgetActualData, COMPLEX_UNIT_SP, pie.actualDataTextSize)
                 views.setTextViewText(id.txtWidgetDays, pie.daysText)
-                views.setTextViewTextSize(id.txtWidgetDays, TypedValue.COMPLEX_UNIT_DIP, pie.daysTextSize)
+                views.setTextViewTextSize(id.txtWidgetDays, TypedValue.COMPLEX_UNIT_SP, pie.daysTextSize)
 
                 val clickIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
                 views.setOnClickPendingIntent(id.widgetChartImageView, clickIntent)
                 views.setOnClickPendingIntent(id.txtWidgetActualData, clickIntent)
                 views.setOnClickPendingIntent(id.txtWidgetDays, clickIntent)
 
-                val sizes = widgetSize(appWidgetManager, appWidgetId)
-                vv = if (min(sizes.first, sizes.second) < context.resources.getInteger(R.integer.widget_small_threshold)) vvNormalSmall else vvNormal
+                val sizes = widgetSize(appWidgetManager, appWidgetId, context)
+                vv = if (pie.isSmall) vvNormalSmall else vvNormal
 
             } catch (e: SecurityException) {
                 // don't have permissions, but it'd be rude for the widget to jump straight to the perms activity

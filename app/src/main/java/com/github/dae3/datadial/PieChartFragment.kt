@@ -46,9 +46,6 @@ class PieChartFragment : Fragment(), ViewTreeObserver.OnGlobalLayoutListener, On
         if (layoutDone) onGlobalLayout()
     }
 
-    private fun pxToDp(pixels : Float, context : Context) : Float = pixels * context.resources.displayMetrics.density * 160
-
-    private fun dpToPx(dp : Float, context : Context) : Float = dp * 160 / context.resources.displayMetrics.density
 
     override fun onGlobalLayout() {
 
@@ -59,7 +56,7 @@ class PieChartFragment : Fragment(), ViewTreeObserver.OnGlobalLayoutListener, On
         }
 
         val density =  resources.displayMetrics.density
-        pie = PieWithTickChart(context, pxToDp(rootView.width), pxToDp(rootView.height), statsInterval, networkStats)
+        pie = PieWithTickChart(context, rootView.width, rootView.height, statsInterval, networkStats)
 
         try {
             widgetChartImageView.setImageBitmap(pie.bitmap)

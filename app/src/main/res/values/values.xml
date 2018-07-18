@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="widget_small_threshold">100</integer>
+    <integer name="widget_small_threshold">150</integer>
 
     <!-- Shadow dimensions for PieWithTickChart -->
     <integer name="widget_text_shadow_blur_radius">10</integer>

@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/widget_chart_content_description"
-        android:elevation="10dp"
+        android:elevation="2dp"
+        android:scaleType="center"
         android:visibility="invisible" />
 
     <ProgressBar
@@ -33,7 +34,7 @@
             android:id="@+id/txtWidgetActualData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/widget_margin"
             android:shadowColor="@color/widgetTextShadow"
             android:shadowRadius="@integer/widget_text_shadow_blur_radius"
             android:textAlignment="center"

@@ -3,6 +3,7 @@ package com.github.dae3.datadial
 import android.content.Context
 import android.graphics.*
 import android.preference.PreferenceManager
+import android.util.Log
 import java.util.concurrent.TimeUnit
 import kotlin.math.*
 
@@ -15,30 +16,33 @@ import kotlin.math.*
  * Intended for use with R.layout.pie_chart
  *
  * @param context Context from containing activity, view, etc.
- * @param width width in dp of the outermost ImageView
- * @param height height in dp of the outermost ImageView
+ * @param width width in px of the outermost ImageView
+ * @param height height in px of the outermost ImageView
  * @param interval an object implementing NetworkStatsInterval which
  * will provide start and end dates for the period
  * @param stats a GetNetworkStats object to provide actual data usage
  */
 class PieWithTickChart(
         private val context: Context,
-        private val width: Float,
-        private val height: Float,
+        private val width: Int,
+        private val height: Int,
         private val interval: NetworkStatsInterval,
-        private val stats: GetNetworkStats
-) {
+        private val stats: GetNetworkStats) {
 
     init {
-        if (width == 0F || height == 0F) throw IllegalArgumentException("both width and height must be non-zero")
+        if (width == 0 || height == 0) throw IllegalArgumentException("both width and height must be non-zero")
     }
+
+    private fun pxToDp(pixels: Float, context: Context): Float = pixels / context.resources.displayMetrics.scaledDensity
+//    private fun dpToPx(dp: Float, context: Context): Float = dp * 160 / context.resources.displayMetrics.density
+
 
     private val paintbox = PaintBox(context)
     // 0.88 chosen experimentally in conjunction with shadow radius to avoid widget bottom shadow
     //  being clipped
     private val availsize: Float = min(width, height) * .86F
 
-    private val isSmall: Boolean = (availsize < context.resources.getInteger(R.integer.widget_small_threshold))
+    val isSmall: Boolean = (availsize < context.resources.getInteger(R.integer.widget_small_threshold))
 
     /**
      * The text to display for actual data used
@@ -67,7 +71,9 @@ class PieWithTickChart(
      *  @return font size in dp
      */
     val actualDataTextSize: Float
-        get() = availsize/2 * 0.4F
+        get() {
+            return pxToDp(availsize * 0.2F, context)
+        }
 
     /**
      * Text size in dp for the days TextView, calculated from the pie_chart size
@@ -92,18 +98,14 @@ class PieWithTickChart(
      * Bitmap representation of data used, as a 'pie' chart
      * @return bitmap object, size set by class constructor width and height parameters
      */
-    val bitmap: Bitmap = Bitmap.createBitmap(
-            (width*context.resources.displayMetrics.density/160).roundToInt(),
-            (height*context.resources.displayMetrics.density/160).roundToInt(),
-            Bitmap.Config.ARGB_4444
-    )
+    val bitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444)
         get() {
             val maxData = stats.maxData.toDouble()
             if (maxData == 0.0) throw IllegalArgumentException("PieWithTickChart: maxData must be non-zero")
 
             // parameters
-            val pieX = width.toFloat().div(2)
-            val pieY = height.toFloat().div(2)
+            val pieX = width / 2F
+            val pieY = height / 2F
 
             val pieRadius = availsize / 2F
 
